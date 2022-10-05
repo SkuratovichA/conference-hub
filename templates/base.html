@@ -26,15 +26,21 @@
                 <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarToggle">
+
                     <div class="navbar-nav mr-auto">
                         <a class="nav-item nav-link" href="{% url 'ch:home-page' %}">Home</a>
+                        <a class="nav-item nav-link" href="{% url 'ch:popular_conferences-page' %}">Popular Conferences</a>
+                        <a class="nav-item nav-link" href="{% url 'ch:search_conferences-page' %}">Search Conferences</a>
+                        <a class="nav-item nav-link" href="{% url 'ch:users_and_organizations-page' %}">Users and Organizations</a>
                         <a class="nav-item nav-link" href="{% url 'ch:about-page' %}">About</a>
                     </div>
+
                     <!-- Navbar Right side -->
                     <div class="navbar-nav">
                         <a class="nav-item nav-link" href="{% url 'ch:login-page' %}">Sign In</a>
                         <a class="nav-item nav-link" href="{% url 'ch:signup-page' %}'">Sign Up</a>
                     </div>
+
                 </div>
             </div>
         </nav>
