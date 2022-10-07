@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'ch',
     'users',
-   'django.contrib.admin',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

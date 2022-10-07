@@ -1,11 +1,17 @@
 {% extends 'base.html' %}
-
-
+{% load static %}
 {% block content %}
-<h2>Sign up</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Sign Up</button>
-    </form>
+    {% load crispy_forms_tags %}
+    <div class="signup">
+        <form method="POST">{% csrf_token %}
+            <label for="chk" aria-hidden="true">Sign Up</label>
+            {{ form.email }}
+            {{ form.first_name }}
+            {{ form.last_name }}
+            {{ form.password1 }}
+            {{ form.password2 }}
+            {{ form.date_of_birth }}
+            <button name="sign-up">Sign Up</button>
+        </form>
+    </div>
 {% endblock content %}

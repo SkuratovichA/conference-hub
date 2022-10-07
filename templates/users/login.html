@@ -1,4 +1,13 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
-    <h1>Hello world from index.html</h1>
+    {% load crispy_forms_tags %}
+    <div class="login">
+        <form method="GET">{% csrf_token %}
+            <label for="chk" aria-hidden="true">Login</label>
+            <input type="text" name="email" placeholder="Email" required="">
+            <input type="password" name="pswd" placeholder="Password" required="">
+            <button name="sign-in">Login</button>
+        </form>
+    </div>
 {% endblock content %}
