@@ -1,12 +1,6 @@
 from django.views import generic
-from django.http import HttpResponse, Http404
-from django.template import loader
-from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
-from django.utils import timezone
 
-
-# from .models import ClassName1, ClassName2
+# from .models import ClassName1, ClassName2 # to connect frontend with models
 
 class IndexView(generic.TemplateView):
     template_name = 'ch/index.html'
@@ -18,11 +12,17 @@ class AboutView(generic.TemplateView):
     pass
 
 
-class LoginView(generic.TemplateView):
-    template_name = 'ch/index.html'
+class PopularConferencesView(generic.TemplateView):
+    template_name = 'ch/popular_conferences.html'
     pass
 
 
-class SignupView(generic.TemplateView):
-    template_name = 'ch/index.html'
+class SearchConferencesView(generic.TemplateView):
+    template_name = 'ch/search_conferences.html'
     pass
+
+
+class UsersAndOrganizations(generic.TemplateView):
+    template_name = 'ch/users_and_organizations.html'
+    pass
+
