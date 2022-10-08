@@ -1,17 +1,21 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% block content %}
-    {% load crispy_forms_tags %}
-    <div class="signup">
+    <div class="content-section">
         <form method="POST">{% csrf_token %}
-            <label for="chk" aria-hidden="true">Sign Up</label>
-            {{ form.email }}
-            {{ form.first_name }}
-            {{ form.last_name }}
-            {{ form.password1 }}
-            {{ form.password2 }}
-            {{ form.date_of_birth }}
-            <button name="sign-up">Sign Up</button>
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Join today</legend>
+                {{ form|crispy }}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Sign Up</button>
+            </div>
         </form>
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                Already have an account?<a class="ml-2" href="{% url 'users:login-page' %}">Sign In</a>
+            </small>
+        </div>
     </div>
 {% endblock content %}

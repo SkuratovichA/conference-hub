@@ -52,7 +52,8 @@ class UserForm(UserCreationForm):
         max_length=128
     )
     date_of_birth = forms.DateField(
-        widget=forms.TextInput(
+        input_formats=[f'%d{s}%m{s}%Y' for s in '. / -'.split()],
+        widget=forms.DateInput(
             attrs={
                 'type': 'date of birth',
                 'class': 'form-control',
@@ -65,7 +66,8 @@ class UserForm(UserCreationForm):
         fields = [
             'email',
             'first_name',
+            'last_name',
             'password1',
             'password2',
-            'date_of_birth'
+            'date_of_birth',
         ]
