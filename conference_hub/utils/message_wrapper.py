@@ -2,7 +2,7 @@
     A file containing classes/functions which could make the application more consistent.
     Inspired by .yaml parameters and similar stuff.
 
-    TODO: include constants for database fields>
+    TODO: add constants for database fields.
 """
 
 

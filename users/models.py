@@ -37,13 +37,11 @@ class UserManager(BaseUserManager):
 
     def create_users(self, email, password, first_name, last_name, **kwargs):
         user = self.create_user(email=email, password=password, first_name=first_name, last_name=last_name, **kwargs)
-        # TODO: add date_of_birth?
         user.save(using=self.db)
         return user
 
 
-# TODO: https://medium.com/@harshithyadav96/e-mail-as-primary-key-in-custom-user-model-in-django-6f41eda2b394
-# make this done
+# https://medium.com/@harshithyadav96/e-mail-as-primary-key-in-custom-user-model-in-django-6f41eda2b394
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.CharField(primary_key=True, max_length=128)
     first_name = models.CharField(max_length=256)

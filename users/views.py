@@ -17,10 +17,10 @@ from conference_hub.utils.message_wrapper import MessageWrapper
 
 
 class SignupView(SuccessMessageMixin, CreateView):
-    model = User  # FIXME: not sure if it is necessary here
-    form_class = UserForm  # FIXME: not sure if it is necessary here
-    template_name = 'users/signup.html'  # FIXME: not sure if it is necessary here
-    success_url = reverse_lazy('users:login-page')  # FIXME: not sure if it is necessary here
+    model = User
+    form_class = UserForm
+    template_name = 'users/signup.html'
+    success_url = reverse_lazy('users:login-page')
     success_message = MessageWrapper.messages.USERS.signup_success
 
 
@@ -36,4 +36,4 @@ class HomeView(View):
     # TODO: find out how to deal with different kind of users (i.e. orrganization...)
 
     def get(self, request):
-        return render(request, 'users/login.html')
+        return render(request, 'users/hom-.html')
