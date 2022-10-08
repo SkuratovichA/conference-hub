@@ -1,0 +1,7 @@
+asgiref==3.5.2
+crispy-bootstrap5==0.7
+Django==4.1.1
+django-crispy-forms @ git+https://github.com/django-crispy-forms/django-crispy-forms@165e2b6d428ae70787635c35a2074492de6fc1c7
+mysqlclient==2.1.1
+protobuf==4.21.7
+sqlparse==0.4.3
