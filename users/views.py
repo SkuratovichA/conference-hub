@@ -31,9 +31,9 @@ class LogoutView(View):
         messages.success(request, MessageWrapper.messages.USERS.logout)
 
 
-@method_decorator(login_required(login_url='users/login-page/'), name='dispatch')
-class HomeView(View):
+class ProfileView(View):
     # TODO: find out how to deal with different kind of users (i.e. orrganization...)
 
+    @method_decorator(login_required(login_url='users/login-page/'), name='dispatch')
     def get(self, request):
-        return render(request, 'users/hom-.html')
+        return render(request, 'users/profile.html')
