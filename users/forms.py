@@ -15,21 +15,11 @@ class UserForm(UserCreationForm):
         max_length=128,
         min_length=1
     )
-    first_name = forms.CharField(
+    name = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                'type': 'first_name',
-                'placeholder': ('First Name')
-            }
-        ),
-        max_length=128,
-        min_length=1
-    )
-    last_name = forms.CharField(
-        widget=forms.TextInput(
-            attrs={
-                'type': 'last_name',
-                'placeholder': ('Last Name')
+                'type': 'name',
+                'placeholder': ('Name')
             }
         ),
         max_length=128,
@@ -65,8 +55,7 @@ class UserForm(UserCreationForm):
         model = User
         fields = [
             'email',
-            'first_name',
-            'last_name',
+            'name',
             'password1',
             'password2',
             'date_of_birth',
@@ -78,7 +67,7 @@ class UserUpdateForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email']
+        fields = ['name', 'email']
 
 
 class ProfileUpdateForm(forms.ModelForm):
