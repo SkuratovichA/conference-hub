@@ -14,18 +14,63 @@ from django.contrib import messages
 from django.views import View
 
 from django.views import generic
-from .forms import UserForm
-from .models import User
+from .forms import ConferenceUserForm, ResearcherForm, OrganizationForm
+from .models import Researcher, Organization, ConferenceUser
 from conference_hub.utils.message_wrapper import MessageMixin
-from .forms import UserCreationForm, UserUpdateForm, ProfileUpdateForm
+from .forms import UserUpdateForm, ProfileUpdateForm
 
 
-class SignupView(SuccessMessageMixin, CreateView):
-    model = User
-    form_class = UserForm
+class SignupView(TemplateView):
+    """
+    First page where user chooses, which type he is
+    """
+    # model = ConferenceUser  # commented out, because it could rise integrity error
+    # form_class = ConferenceUserForm  # commented out, because it could rise integrity error
     template_name = 'users/signup.html'
+
+
+class ResearcherSignupView(SuccessMessageMixin, CreateView):
+    model = ConferenceUser
+    form_class = ResearcherForm
+    template_name = 'users/signup_form.html'
     success_url = reverse_lazy('users:login-page')
     success_message = MessageMixin.messages.USERS.signup_success
+
+    def get_context_data(self, **kwargs):
+        kwargs['user_type'] = 'researcher'
+        return super().get_context_data(**kwargs)
+
+    # def post(self, request, *args, **kwargs):
+    #     """
+    #     Handle POST requests: instantiate a form instance with the passed POST variables and then check it it's valid
+    #     """
+    #     form = self.get_form()
+    #     if form.is_valid():
+    #         return self.form_valid(form)
+    #     else:
+    #         return self.form_invalid(form)
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return redirect('users:profile-page')
+
+
+class OrganizationSignupView(SuccessMessageMixin, CreateView):
+    model = ConferenceUser
+    form_class = OrganizationForm
+    template_name = 'users/signup_form.html'
+    success_url = reverse_lazy('users:login-page')
+    success_message = MessageMixin.messages.USERS.signup_success
+
+    def get_context_data(self, **kwargs):
+        kwargs['user_type'] = 'organization'
+        return super().get_context_data(**kwargs)
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return redirect('users:profile-page')
 
 
 class LogoutView(View):
@@ -48,3 +93,23 @@ class ProfileView(ContextMixin, LoginRequiredMixin, View):
             'p_form': ProfileUpdateForm(instance=request.user.profile)
         }
         return render(request, 'users/profile.html', context)
+
+
+# see more:
+# https://simpleisbetterthancomplex.com/tutorial/2018/01/18/how-to-implement-multiple-user-types-with-django.html
+# from .decorators import researcher_required, organization_required
+# class ProfileView(ContextMixin, View):
+#     form_class = UserUpdateForm
+#     # mixin
+#     login_url = None
+#     permission_denied_message = MessageMixin.messages.USERS.login_fail
+#     redirect_field_name = 'users:login-page'
+#
+#     @login_required
+#     @researcher_required  # TODO: add this decorator to a function we want to be accessible only for certain types of users
+#     def get(self, request):
+#         context = {
+#             'u_form': UserUpdateForm(instance=request.user),  # edit forms & add current information
+#             'p_form': ProfileUpdateForm(instance=request.user.profile)
+#         }
+#         return render(request, 'users/profile.html', context)
