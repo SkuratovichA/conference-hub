@@ -45,7 +45,7 @@ class UserManager(BaseUserManager):
 # https://medium.com/@harshithyadav96/e-mail-as-primary-key-in-custom-user-model-in-django-6f41eda2b394
 class User(AbstractBaseUser, PermissionsMixin):
     id = models.AutoField(primary_key=True)
-    email = models.CharField(max_length=128)
+    email = models.CharField(max_length=128, unique=True)
     name = models.CharField(max_length=64)
 
     active = models.BooleanField(default=True)
@@ -54,8 +54,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     time_stamp = models.TimeField(auto_now_add=True)
 
-    USERNAME_FIELD = 'id'
-    REQUIRED_FIELDS = ['name', 'email']
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['name']
 
     objects = UserManager()
 
