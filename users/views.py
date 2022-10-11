@@ -16,7 +16,7 @@ from django.views import View
 from django.views import generic
 from .forms import UserForm
 from .models import User
-from conference_hub.utils.message_wrapper import MessageWrapper
+from conference_hub.utils.message_wrapper import MessageMixin
 from .forms import UserCreationForm, UserUpdateForm, ProfileUpdateForm
 
 
@@ -25,21 +25,21 @@ class SignupView(SuccessMessageMixin, CreateView):
     form_class = UserForm
     template_name = 'users/signup.html'
     success_url = reverse_lazy('users:login-page')
-    success_message = MessageWrapper.messages.USERS.signup_success
+    success_message = MessageMixin.messages.USERS.signup_success
 
 
 class LogoutView(View):
 
     def get(self, request):
         logout(request)
-        messages.success(request, MessageWrapper.messages.USERS.logout)
+        messages.success(request, MessageMixin.messages.USERS.logout)
 
 
 class ProfileView(ContextMixin, LoginRequiredMixin, View):
     form_class = UserUpdateForm
     # mixin
     login_url = None
-    permission_denied_message = MessageWrapper.messages.USERS.login_fail
+    permission_denied_message = MessageMixin.messages.USERS.login_fail
     redirect_field_name = 'users:login-page'
 
     def get(self, request):
