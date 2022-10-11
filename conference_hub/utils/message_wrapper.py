@@ -17,3 +17,15 @@ class MessageMixin:
             signup_success = 'Welcome!'
             signup_fail = 'Cannot sign up!'
             logout = 'See you later!'
+
+
+class ConstraintsMixin:
+    """ A class with constraints for database fields """
+    email_len = 128
+    first_name_len = 64
+    last_name_len = 64
+    country_len = 128
+    city_len = 64
+    address_len = 128
+    password_len = 128
+    street_len = 128
