@@ -1,5 +1,6 @@
-from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.db import models
+from enum import Enum
 
 
 class UserManager(BaseUserManager):
@@ -7,6 +8,7 @@ class UserManager(BaseUserManager):
     def create_user(self, **kwargs):
         """
         kwargs:
+            - id is a primary key - don't need to pass i (i suppose)
             - email
             - password
             - name
@@ -42,28 +44,39 @@ class UserManager(BaseUserManager):
 
 # https://medium.com/@harshithyadav96/e-mail-as-primary-key-in-custom-user-model-in-django-6f41eda2b394
 class User(AbstractBaseUser, PermissionsMixin):
-    email = models.CharField(primary_key=True, max_length=128)
-    name = models.CharField(max_length=256)
+    id = models.AutoField(primary_key=True)
+    email = models.CharField(max_length=128)
+    name = models.CharField(max_length=64)
 
     active = models.BooleanField(default=True)
-    validated = models.BooleanField(default=False)
+    verified = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     time_stamp = models.TimeField(auto_now_add=True)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name']
+    USERNAME_FIELD = 'id'
+    REQUIRED_FIELDS = ['name', 'email']
 
     objects = UserManager()
 
-    def get_name(self):
-        return self.name
-
-    def get_email(self):
-        return self.email
-
     def __str__(self):
         return self.email
+
+
+class LocationMixin:
+    country = models.CharField(max_length=128)
+    city = models.CharField(max_length=64)
+    address = models.CharField(max_length=128)
+
+
+class Organization(LocationMixin, User):
+    user = models.OneToOneField(User, related_name='organization_base', on_delete=models.CASCADE, primary_key=True)
+
+
+class Researcher(LocationMixin, User):
+    user = models.OneToOneField(User, related_name='user_base', on_delete=models.CASCADE, primary_key=True)
+    last_name = models.CharField(max_length=64)
+    organization_user = models.ForeignKey(Organization, null=True, on_delete=models.SET_NULL)
 
 
 class Profile(models.Model):
@@ -71,4 +84,4 @@ class Profile(models.Model):
     image = models.ImageField(default='static/default.png', upload_to='profiles/profile_pics')
 
     def __str__(self):
-        return f'{self.user.email} Profile'
+        return f'[{self.user.id}] {self.user.email} Profile'
