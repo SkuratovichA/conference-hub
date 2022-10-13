@@ -1,23 +1,17 @@
-from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
-from django.utils.decorators import method_decorator
-from django.views.generic import ListView
 from django.views.generic.base import ContextMixin, TemplateView
+from users.forms.forms import UserUpdateForm, ProfileUpdateForm
+from conference_hub.utils.message_wrapper import MessageMixin
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+from users.models.conferenceuser import ConferenceUser
+from users.forms.organization import OrganizationForm
+from users.forms.researcher import ResearcherForm
 from django.views.generic.edit import CreateView
+from django.contrib.auth import login, logout
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import Group
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.views import View
-
-from django.views import generic
-from .forms import ConferenceUserForm, ResearcherForm, OrganizationForm
-from .models import Researcher, Organization, ConferenceUser
-from conference_hub.utils.message_wrapper import MessageMixin
-from .forms import UserUpdateForm, ProfileUpdateForm
 
 
 class SignupView(TemplateView):
