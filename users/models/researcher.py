@@ -1,18 +1,17 @@
-from .organization import Organization
-from .conferenceuser import ConferenceUser
+from users.models import OrganizationModel, ConferenceUserModel
 from django.db import models
 
 
-class Researcher(models.Model):
+class ResearcherModel(models.Model):
     user = models.OneToOneField(
-        ConferenceUser,
+        ConferenceUserModel,
         related_name='conferenceuser_base',
         on_delete=models.CASCADE,
         primary_key=True
     )
     last_name = models.CharField(max_length=64)
     organization_user = models.ForeignKey(
-        Organization,
+        OrganizationModel,
         null=True,
         on_delete=models.SET_NULL
     )

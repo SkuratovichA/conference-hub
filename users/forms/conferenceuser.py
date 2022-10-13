@@ -1,6 +1,6 @@
-from users.models.conferenceuser import ConferenceUser
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import gettext_lazy as _
+from users.models import ConferenceUserModel
 from django import forms
 
 
@@ -41,7 +41,7 @@ class ConferenceUserForm(UserCreationForm):
     )
 
     class Meta(UserCreationForm.Meta):
-        model = ConferenceUser
+        model = ConferenceUserModel
         fields = (
             'name',
             'email',

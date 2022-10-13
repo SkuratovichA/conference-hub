@@ -1,7 +1,6 @@
-from users.forms.conferenceuser import ConferenceUserForm
 from django.utils.translation import gettext_lazy as _
-from users.models.conferenceuser import ConferenceUser
-from users.models.researcher import Researcher
+from users.models import ConferenceUserModel, ResearcherModel
+from users.forms import ConferenceUserForm
 from django.db import transaction
 from django import forms
 
@@ -28,7 +27,7 @@ class ResearcherForm(ConferenceUserForm):
     )
 
     class Meta:
-        model = ConferenceUser
+        model = ConferenceUserModel
         fields = ('email', 'name', 'last_name', 'date_of_birth', 'password1', 'password2')
 
     @transaction.atomic
@@ -38,7 +37,7 @@ class ResearcherForm(ConferenceUserForm):
         user = super().save(commit=False)
         user.is_researcher = True
         user.save()
-        researcher = Researcher.objects.create(
+        researcher = ResearcherModel.objects.create(
             user=user,
             last_name=self.cleaned_data.get('last_name'),
             date_of_birth=self.cleaned_data.get('date_of_birth')

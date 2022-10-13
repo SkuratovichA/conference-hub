@@ -1,12 +1,12 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils.translation import gettext_lazy as _
-from .managers import UserManager
+from .managers import ConferenceUserManager
 from django.core.mail import send_mail
 from django.utils import timezone
 from django.db import models
 
 
-class ConferenceUser(AbstractBaseUser, PermissionsMixin):
+class ConferenceUserModel(AbstractBaseUser, PermissionsMixin):
     # required fields
     email = models.CharField("email address", max_length=128, unique=True, null=False)
     name = models.CharField("name", max_length=64)
@@ -26,7 +26,7 @@ class ConferenceUser(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'id'
     REQUIRED_FIELDS = ['name']
 
-    objects = UserManager()
+    objects = ConferenceUserManager()
 
     class Meta:
         verbose_name = _("User")

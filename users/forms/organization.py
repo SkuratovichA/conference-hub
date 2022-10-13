@@ -1,5 +1,5 @@
-from users.forms.conferenceuser import ConferenceUserForm
-from users.models.organization import Organization
+from users.forms import ConferenceUserForm
+from users.models import OrganizationModel
 
 
 class OrganizationForm(ConferenceUserForm):
@@ -8,7 +8,7 @@ class OrganizationForm(ConferenceUserForm):
         user = super().save(commit=False)
         user.is_organization = True
         user.save()
-        organization = Organization.objects.create(user=user)
+        organization = OrganizationModel.objects.create(user=user)
         organization.save()
         return user
 

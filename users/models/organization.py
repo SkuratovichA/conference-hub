@@ -1,10 +1,10 @@
-from .conferenceuser import ConferenceUser
+from users.models import ConferenceUserModel
 from django.db import models
 
 
-class Organization(models.Model):
+class OrganizationModel(models.Model):
     user = models.OneToOneField(
-        ConferenceUser,
+        ConferenceUserModel,
         related_name='organization_base',
         on_delete=models.CASCADE,
         primary_key=True

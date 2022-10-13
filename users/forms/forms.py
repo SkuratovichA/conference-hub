@@ -1,5 +1,4 @@
-from users.models.conferenceuser import ConferenceUser
-from users.models.profile import Profile
+from users.models import ConferenceUserModel, ProfileModel
 from django import forms
 
 
@@ -8,11 +7,11 @@ class UserUpdateForm(forms.ModelForm):
     email = forms.EmailField()
 
     class Meta:
-        model = ConferenceUser
+        model = ConferenceUserModel
         fields = ('name', 'email')
 
 
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
-        model = Profile
+        model = ProfileModel
         fields = ('image',)

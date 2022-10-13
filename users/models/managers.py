@@ -2,8 +2,9 @@
 from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth.hashers import make_password
 
+
 # TODO 2: add PermissionsMixin. Why? Because AbstractUser class has it. By adding PermisionsMixin it is not necessary to set some attributes & implement some functions
-class UserManager(BaseUserManager):
+class ConferenceUserManager(BaseUserManager):
     use_in_migrations = True
 
     def _create_user(self, **extra_fields):
@@ -33,4 +34,3 @@ class UserManager(BaseUserManager):
             if (kd := kwargs.get(d)) is not True:
                 raise ValueError(f'Superuser must have {d}==True. {kd} provided')
         return self._create_user(**kwargs)
-
