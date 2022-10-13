@@ -13,17 +13,13 @@ class UserManager(BaseUserManager):
     use_in_migrations = True
 
     def _create_user(self, **extra_fields):
-        required_fields = (
-            # 'id', # django does it implicitly
-            'email', 'password', 'name')
+        required_fields = ('email', 'password', 'name')
         for attr in required_fields:
             if attr not in extra_fields.keys() or not extra_fields.get(attr):
                 raise ValueError(f'Attribute ({attr}) must be set')
-        # id = extra_fields.pop('id') # django does it implicitly
         email = self.normalize_email(extra_fields.pop('email'))
         password = extra_fields.pop('password')
         user = self.model(
-            # id=id,
             email=email,
             **extra_fields
         )
@@ -45,6 +41,16 @@ class UserManager(BaseUserManager):
         return self._create_user(**kwargs)
 
 
+# TODO: add a constraint, that if street is not null, then street_number must not be null
+# TODO: add more fields to this database
+# TODO: manage how to create a database for Addresses, and attach an address from the database to the new registered user
+class AddressModel(models.Model):
+    country = models.CharField(_('Country'), max_length=128)
+    city = models.CharField(_('City'), max_length=64)
+    street = models.CharField(_('street'), max_length=128)
+    street_number = models.IntegerField(_('street number'))
+
+
 class ConferenceUser(AbstractBaseUser, PermissionsMixin):
     """
     Initially taken from:
@@ -54,18 +60,19 @@ class ConferenceUser(AbstractBaseUser, PermissionsMixin):
     """
 
     # required fields
-    id = models.AutoField(_("id"), primary_key=True) # django does it implicitly
-    email = models.CharField(_("email address"), max_length=128, unique=True)
+    email = models.CharField(_("email address"), max_length=128, unique=True, null=False)
     name = models.CharField(_("name"), max_length=64)
-
+    # dev flags
     is_active = models.BooleanField(_("active"), default=True)
     is_superuser = models.BooleanField(_("superuser"), default=False)
     is_staff = models.BooleanField(_("staff status"), default=False)  # TODO 1: remove? AbstractUser has it, but we probably dont need to
-    date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
-
-    verified = models.BooleanField(default=False)
+    # roles
     is_researcher = models.BooleanField(default=False)
     is_organization = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
+    date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
+    # address
+    # address = models.ForeignKey(to=AddressModel, on_delete=models.SET_NULL, related_name='Address')
 
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'id'
@@ -92,13 +99,7 @@ class ConferenceUser(AbstractBaseUser, PermissionsMixin):
         return self.name
 
 
-class LocationMixin:
-    country = models.CharField(max_length=128)
-    city = models.CharField(max_length=64)
-    address = models.CharField(max_length=128)
-
-
-class Organization(LocationMixin, ConferenceUser):
+class Organization(models.Model):
     user = models.OneToOneField(
         ConferenceUser,
         related_name='organization_base',
@@ -107,7 +108,7 @@ class Organization(LocationMixin, ConferenceUser):
     )
 
 
-class Researcher(LocationMixin, ConferenceUser):
+class Researcher(models.Model):
     user = models.OneToOneField(
         ConferenceUser,
         related_name='conferenceuser_base',
@@ -120,12 +121,13 @@ class Researcher(LocationMixin, ConferenceUser):
         null=True,
         on_delete=models.SET_NULL
     )
+    date_of_birth = models.DateField()
 
     def get_full_name(self):
         """
         Return the first_name + the last_name, with a space in between
         """
-        full_name = f"{self.name} {self.last_name}"
+        full_name = f"{self.user.name} {self.last_name}"
         return full_name
 
 

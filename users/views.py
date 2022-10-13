@@ -24,8 +24,6 @@ class SignupView(TemplateView):
     """
     First page where user chooses, which type he is
     """
-    # model = ConferenceUser  # commented out, because it could rise integrity error
-    # form_class = ConferenceUserForm  # commented out, because it could rise integrity error
     template_name = 'users/signup.html'
 
 
@@ -39,16 +37,6 @@ class ResearcherSignupView(SuccessMessageMixin, CreateView):
     def get_context_data(self, **kwargs):
         kwargs['user_type'] = 'researcher'
         return super().get_context_data(**kwargs)
-
-    # def post(self, request, *args, **kwargs):
-    #     """
-    #     Handle POST requests: instantiate a form instance with the passed POST variables and then check it it's valid
-    #     """
-    #     form = self.get_form()
-    #     if form.is_valid():
-    #         return self.form_valid(form)
-    #     else:
-    #         return self.form_invalid(form)
 
     def form_valid(self, form):
         user = form.save()

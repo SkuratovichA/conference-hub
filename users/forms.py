@@ -12,7 +12,7 @@ class ConferenceUserForm(UserCreationForm):
         strip=False,
         widget=forms.PasswordInput(attrs={
             "autocomplete": "new-password",
-            'type': 'password1',
+            'type': 'password',
             'placeholder': _('Enter Password')
         }),
     )
@@ -22,7 +22,7 @@ class ConferenceUserForm(UserCreationForm):
         help_text=_("Enter the same password as before, for verification."),
         widget=forms.PasswordInput(attrs={
             "autocomplete": "new-password",
-            'type': 'password2',
+            'type': 'password',
             'placeholder': _('Repeat Password')
         }),
     )
@@ -35,7 +35,7 @@ class ConferenceUserForm(UserCreationForm):
         widget=forms.TextInput(
             attrs={
                 'type': 'name',
-                'placeholder': _('Name')
+                'placeholder': _('First Name')
             }
         ),
         max_length=128,
@@ -44,12 +44,12 @@ class ConferenceUserForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         model = ConferenceUser
-        fields = [
-            'email',
+        fields = (
             'name',
+            'email',
             'password1',
             'password2',
-        ]
+        )
 
 
 class ResearcherForm(ConferenceUserForm):
@@ -75,15 +75,22 @@ class ResearcherForm(ConferenceUserForm):
 
     class Meta:
         model = ConferenceUser
-        fields = ['last_name', 'date_of_birth']
+        fields = ('email', 'name', 'last_name', 'date_of_birth', 'password1', 'password2')
 
     @transaction.atomic
     def save(self):
+        # first, create a user
         user = super().save(commit=False)
         user.is_researcher = True
         user.save()
         # FIXME: create function is fucked up
-        researcher = Researcher.objects.create(user=user, last_name=self.cleaned_data.get('last_name'))
+        # then, create a researcher and attach a user to it
+        researcher = Researcher.objects.create(
+            user=user,
+            last_name=self.cleaned_data.get('last_name'),
+            date_of_birth=self.cleaned_data.get('date_of_birth')
+        )
+        # researcher.save()
         return user
 
 
@@ -92,8 +99,9 @@ class OrganizationForm(ConferenceUserForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.is_organization = True
-        if commit:
-            user.save()
+        user.save()
+        organization = Organization.objects.create(user=user)
+        organization.save()
         return user
 
 
@@ -102,10 +110,10 @@ class UserUpdateForm(forms.ModelForm):
 
     class Meta:
         model = ConferenceUser
-        fields = ['name', 'email']
+        fields = ('name', 'email')
 
 
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['image']
+        fields = ('image',)
