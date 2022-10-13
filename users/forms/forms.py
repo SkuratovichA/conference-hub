@@ -8,7 +8,7 @@ class UserUpdateForm(forms.ModelForm):
 
     class Meta:
         model = ConferenceUserModel
-        fields = ('name', 'email')
+        fields = ('username', 'name', 'email')
 
 
 class ProfileUpdateForm(forms.ModelForm):

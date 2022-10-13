@@ -1,4 +1,4 @@
-from users.forms import ConferenceUserForm
+from users.forms import ConferenceUserSignupForm
 from users.models import ConferenceUserModel
 from django.contrib import admin
 
@@ -8,8 +8,8 @@ class ConferenceAdmin(admin.ModelAdmin):
     """
     taken from here: https://stackoverflow.com/questions/58951777/how-do-i-register-a-custom-django-user-model-to-the-admin-page
     """
-    add_form = ConferenceUserForm  # TODO 4: use two different forms for add_form and form ???
-    form = ConferenceUserForm
+    add_form = ConferenceUserSignupForm  # TODO 4: use two different forms for add_form and form ???
+    form = ConferenceUserSignupForm
     model = ConferenceUserModel
     list_display = ('email', 'name', 'is_staff', 'is_active', )
     list_filter = ('email', 'name', 'is_staff', 'is_active', )

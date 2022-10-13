@@ -1,10 +1,11 @@
 from users.decorators import researcher_required, organization_required
 from conference_hub.utils.message_wrapper import MessageMixin
+from django.contrib.auth.decorators import login_required
 from users.forms import UserUpdateForm, ProfileUpdateForm
 from django.views.generic.base import ContextMixin
-from django.contrib.auth import logout
+from django.contrib.auth import logout, views
+from users.forms import ConferenceUserSigninForm
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.views import View
 
@@ -34,3 +35,8 @@ class ProfileView(ContextMixin, View):
             'p_form': ProfileUpdateForm(instance=request.user.profilemodel)
         }
         return render(request, 'users/profile.html', context)
+
+
+class LoginView(views.LoginView):
+    template_name = 'users/login.html'
+    form = ConferenceUserSigninForm
