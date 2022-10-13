@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth import REDIRECT_FIELD_NAME
 
 
-# TODO 5: decorators and permissions for different users.
+# TODO 5: TODO 10: decorators and permissions for different users. Combined with views.py
 def researcher_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url='login-page'):
     """
     Decorator for views that checks that the logged in user is a student,
