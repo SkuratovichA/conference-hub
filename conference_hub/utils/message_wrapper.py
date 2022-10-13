@@ -6,7 +6,7 @@
 """
 
 
-class MessageWrapper:
+class MessageMixin:
     """ A class with different kinds of messages. """
     class messages:
         """ Must be here to access messages """
