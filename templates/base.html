@@ -67,6 +67,52 @@
 <div class='container'>
     {% block content %}{% endblock %}
 </div>
+
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <div class="sidebar">
+        <div class="logo_content">
+            <i class='bx bx-menu' id="btn"></i>
+        </div>
+        <ul class="nav_list">
+            <li>
+                <a href="#">
+                    <span class="links_name">Textholder11</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="links_name">Textholder3</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="links_name">Textholder4Tex</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="links_name">Textholder5</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="links_name">Textholder6</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        let btn = document.querySelector("#btn");
+        let sidebar = document.querySelector(".sidebar");
+
+        btn.onclick = function() {
+            sidebar.classList.toggle("active");
+        }
+    </script>
+
+
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
