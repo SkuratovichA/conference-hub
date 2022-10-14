@@ -1,42 +1,48 @@
 from users.decorators import researcher_required, organization_required
 from conference_hub.utils.message_wrapper import MessageMixin
-from django.contrib.auth.decorators import login_required
-from users.forms import UserUpdateForm, ProfileUpdateForm
+from django.utils.decorators import method_decorator
 from django.views.generic.base import ContextMixin
+from users.forms import ConferenceUserSigninForm, EditUserProfileForm
 from django.contrib.auth import logout, views
-from users.forms import ConferenceUserSigninForm
 from django.contrib import messages
 from django.shortcuts import render
-from django.views import View
+from django.views import View, generic
+from django.urls import reverse_lazy
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.messages.views import SuccessMessageMixin
 
 
 class LogoutView(View):
-
     def get(self, request):
         logout(request)
         messages.success(request, MessageMixin.messages.USERS.logout)
 
 
-# TODO 10: TODO 5: add decorators for functions to make them accessible only for certain types of users. OR USE MIXINS INSTEAD
-# see more:
-# https://simpleisbetterthancomplex.com/tutorial/2018/01/18/how-to-implement-multiple-user-types-with-django.html
+@method_decorator(researcher_required(login_url='/login', redirect_field_name=''), name='get')
 class ProfileView(ContextMixin, View):
-    form_class = UserUpdateForm
-    # mixin
-    login_url = None
     permission_denied_message = MessageMixin.messages.USERS.login_fail
     redirect_field_name = 'users:login-page'
 
-    @login_required
-    @researcher_required
     def get(self, request):
-        context = {
-            'u_form': UserUpdateForm(instance=request.user),  # edit forms & add current information
-            'p_form': ProfileUpdateForm(instance=request.user.profilemodel)
-        }
-        return render(request, 'users/profile.html', context)
+        return render(request, 'users/profile.html')
 
 
 class LoginView(views.LoginView):
     template_name = 'users/login.html'
     form = ConferenceUserSigninForm
+
+
+class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
+    template_name = 'users/change_password.html'
+    success_message = "Successfully Changed Your Password"
+    success_url = reverse_lazy('users:profile-page')
+
+
+@method_decorator(researcher_required(login_url='/login', redirect_field_name=''), name='get')
+class UpdateUserView(generic.UpdateView):
+    form_class = EditUserProfileForm
+    template_name = "users/edit_profile.html"
+    success_url = reverse_lazy('users:profile-page')
+
+    def get_object(self):
+        return self.request.user

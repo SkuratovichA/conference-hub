@@ -1,42 +1,68 @@
-{% extends 'base.html' %}
-{% load static %}
-{% load crispy_forms_tags %}
+{% extends "base.html" %}
+{% block title %}Profile Page{% endblock title %}
 {% block content %}
-    {% if user.is_researcher %}
-        <h1> Hi, {{ user.name }} (researcher) </h1>
-    {% elif user.is_organization %}
-        <h1> Hi, {{ user.name }} (organization) </h1>
-    {% else %}
-        <h1> Hi, {{ user.name }} (admin?) </h1>
-    {% endif %}
-
+    <div class="row my-3 p-3">
+        <h1>This is the profile page for {{user.username}}</h1>
+    </div>
+    
     <div class="content-section">
         <div class="media">
-            <img class="rounded-circle account-img" src=" {{ user.profile.image.url }}">
+            <img class="rounded-circle account-img" src=" {{ user.profile.avatar.url }} ">
             <div class="media-body">
-                <h2 class="account-heading">{{ user.first_name }} {{ user.last_name }}</h2>
+                <h2 class="account-heading">{{ user.username }}</h2>
                 <p class="text-secondary">{{ user.email }}</p>
+                <p class="text-secondary">{{ user.name }}</p>
             </div>
         </div>
-
-        <!-- FORM HERE -->
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Profile Info</legend>
-                {{ u_form|crispy }}
-                {{ p_form|crispy }}
-            </fieldset>
 
-            <div class="form-group">
-                <button class="btn-outline-info" type="submit">Update</button>
-            </div>
-
+            <a class="btn btn-sm btn-info" href="{% url 'users:edit_profile-page' %}">Edit profile</a>
+            <a class="btn btn-sm btn-info" href="{% url 'users:password_change-page' %}">Change password</a>
         </form>
     </div>
+{% endblock content %}
 
+{#{% extends 'base.html' %}#}
+{#{% load static %}#}
+{#{% load crispy_forms_tags %}#}
+{#{% block content %}#}
+{#    {% if user.is_researcher %}#}
+{#        <h1> Hi, {{ user.name }} (researcher) </h1>#}
+{#    {% elif user.is_organization %}#}
+{#        <h1> Hi, {{ user.name }} (organization) </h1>#}
+{#    {% else %}#}
+{#        <h1> Hi, {{ user.name }} (admin?) </h1>#}
+{#    {% endif %}#}
+{##}
+{#    <div class="content-section">#}
+{#        <div class="media">#}
+{#            <img#}
+{#              class="rounded-circle account-img"#}
+{#              src="{{ user.profile.image.url }}"#}
+{#            />#}
+{#            <div class="media-body">#}
+{#              <h2 class="account-heading">{{ user.username }}</h2>#}
+{#              <p class="text-secondary">{{ user.email }}</p>#}
+{#            </div>#}
+{#        </div>#}
+{##}
+{#        <!-- FORM HERE -->#}
+{#        <form method="POST" enctype="multipart/form-data">#}
+{#            {% csrf_token %}#}
+{#            <fieldset class="form-group">#}
+{#                <legend class="border-bottom mb-4">Profile Info</legend>#}
+{#                {{ u_form|crispy }}#}
+{#                {{ p_form|crispy }}#}
+{#            </fieldset>#}
+{##}
+{#            <a class="btn btn-sm btn-info" href="{% url 'users:edit_profile-page' %}">Edit profile</a>#}
+{#            <a class="btn btn-sm btn-info" href="{% url 'users:password_change-page' %}">Change password</a>#}
+{#        </form>#}
+{#    </div>#}
+{##}
 {#    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>#}
-{#    #}
+{##}
 {#    <div class="sidebar">#}
 {#        <div class="logo_content">#}
 {#            <i class='bx bx-menu' id="btn"></i>#}
@@ -69,11 +95,11 @@
 {#            </li>#}
 {#        </ul>#}
 {#    </div>#}
-
-    <div class="home_text">
-        <h1> Hi, {{ user.first_name }} {{ user.last_name }} </h1>
-    </div>
-
+{##}
+{#    <div class="home_text">#}
+{#        <h1> Hi, {{ user.first_name }} {{ user.last_name }} </h1>#}
+{#    </div>#}
+{##}
 {#    <script>#}
 {#        let btn = document.querySelector("#btn");#}
 {#        let sidebar = document.querySelector(".sidebar");#}
@@ -82,4 +108,4 @@
 {#            sidebar.classList.toggle("active");#}
 {#        }#}
 {#    </script>#}
-{% endblock content %}
+{#{% endblock content %}#}

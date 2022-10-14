@@ -3,15 +3,17 @@ from django import forms
 
 
 # TODO 8: add different forms for different types of users (move them to appropriate files)
-class UserUpdateForm(forms.ModelForm):
-    email = forms.EmailField()
+
+class EditUserProfileForm(forms.ModelForm):
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control',
+                                                            'placeholder': 'Enter your email'}))
+
+    name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',
+                                                            'placeholder': 'Enter your name'}))
+
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',
+                                                            'placeholder': 'Enter your username'}))
 
     class Meta:
         model = ConferenceUserModel
-        fields = ('username', 'name', 'email')
-
-
-class ProfileUpdateForm(forms.ModelForm):
-    class Meta:
-        model = ProfileModel
-        fields = ('image',)
+        fields = ['email', 'username', 'name']

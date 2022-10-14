@@ -16,6 +16,7 @@ class ResearcherModel(models.Model):
         on_delete=models.SET_NULL
     )
     date_of_birth = models.DateField()
+    avatar = models.ImageField(default='default.png', upload_to='profile_images')
 
     def get_full_name(self):
         """
@@ -23,4 +24,3 @@ class ResearcherModel(models.Model):
         """
         full_name = f"{self.user.name} {self.last_name}"
         return full_name
-
