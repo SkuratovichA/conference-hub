@@ -6,6 +6,7 @@ from django import forms
 
 
 class ResearcherSignupForm(ConferenceUserSignupForm):
+    # TODO 14: change 'name' -> First Name in html attributes
     last_name = forms.CharField(
         widget=forms.TextInput(
             attrs={
