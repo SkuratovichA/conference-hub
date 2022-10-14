@@ -8,14 +8,18 @@ class ConferenceUserManager(BaseUserManager):
     use_in_migrations = True
 
     def _create_user(self, **extra_fields):
-        required_fields = ('email', 'password', 'name')
+        required_fields = ('email', 'password', 'name', 'username')
         for attr in required_fields:
             if attr not in extra_fields.keys() or not extra_fields.get(attr):
                 raise ValueError(f'Attribute ({attr}) must be set')
-        email = self.normalize_email(extra_fields.pop('email'))
-        password = extra_fields.pop('password')
+        email, username, password = (
+            self.normalize_email(extra_fields.pop('email')),
+            extra_fields.pop('username'),
+            extra_fields.pop('password')
+        )
         user = self.model(
             email=email,
+            username=username,
             **extra_fields
         )
         user.password = make_password(password)

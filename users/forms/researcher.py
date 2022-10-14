@@ -1,11 +1,11 @@
 from django.utils.translation import gettext_lazy as _
 from users.models import ConferenceUserModel, ResearcherModel
-from users.forms import ConferenceUserForm
+from users.forms import ConferenceUserSignupForm
 from django.db import transaction
 from django import forms
 
 
-class ResearcherForm(ConferenceUserForm):
+class ResearcherSignupForm(ConferenceUserSignupForm):
     last_name = forms.CharField(
         widget=forms.TextInput(
             attrs={
@@ -28,7 +28,7 @@ class ResearcherForm(ConferenceUserForm):
 
     class Meta:
         model = ConferenceUserModel
-        fields = ('email', 'name', 'last_name', 'date_of_birth', 'password1', 'password2')
+        fields = ('username', 'email', 'name', 'last_name', 'date_of_birth', 'password1', 'password2')
 
     @transaction.atomic
     # TODO 6: remove kostyli ebanye
