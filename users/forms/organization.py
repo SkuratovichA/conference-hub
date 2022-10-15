@@ -1,9 +1,10 @@
 from users.forms import ConferenceUserSignupForm
-from users.models import OrganizationModel
+from users.models import OrganizationModel, ConferenceUserModel
 
 
 class OrganizationSignupForm(ConferenceUserSignupForm):
     class Meta(ConferenceUserSignupForm):
+        model = ConferenceUserModel
         fields = ('username', 'name', 'password1', 'password2')
 
     def save(self, commit=True):
