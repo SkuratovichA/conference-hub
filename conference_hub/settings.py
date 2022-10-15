@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'address',
+    'djmoney',
     'crispy_forms',
     'crispy_bootstrap5',
     'ch',
