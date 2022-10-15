@@ -1,4 +1,3 @@
-# TODO 6: remove kostyli ebanye
 from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth.hashers import make_password
 
@@ -38,3 +37,4 @@ class ConferenceUserManager(BaseUserManager):
             if (kd := kwargs.get(d)) is not True:
                 raise ValueError(f'Superuser must have {d}==True. {kd} provided')
         return self._create_user(**kwargs)
+

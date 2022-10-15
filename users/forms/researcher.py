@@ -6,6 +6,7 @@ from django import forms
 
 
 class ResearcherSignupForm(ConferenceUserSignupForm):
+    # TODO 14: change 'name' -> First Name in html attributes
     last_name = forms.CharField(
         widget=forms.TextInput(
             attrs={
@@ -31,7 +32,6 @@ class ResearcherSignupForm(ConferenceUserSignupForm):
         fields = ('username', 'email', 'name', 'last_name', 'date_of_birth', 'password1', 'password2')
 
     @transaction.atomic
-    # TODO 6: remove kostyli ebanye
     def save(self):
         # first, create a user
         user = super().save(commit=False)
