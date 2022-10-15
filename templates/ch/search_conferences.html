@@ -1,4 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h1>Hello world from search conferences</h1>
+{% if upcoming_events %}
+<ul>
+    {% for conf in upcoming_events %}
+    <li><a href="{% url 'ch:conf_detail' conf.conf_id%}">{{ conf.name }}</a></li>
+    {% endfor %}
+</ul>
+{% else %}
+<h1>Hello world from index.html</h1>
+{% endif %}
 {% endblock content %}
