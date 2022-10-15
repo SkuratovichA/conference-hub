@@ -1,9 +1,8 @@
-from enum import unique
-from sys import maxsize
-from django.db import models
-from address.models import AddressField
 from djmoney.models.fields import MoneyField
-from users.models import User
+from users.models import ConferenceUserModel, ResearcherModel
+from address.models import AddressField
+from django.db import models
+
 
 class Conference(models.Model):
 	conf_id = models.AutoField(primary_key=True)
@@ -13,11 +12,12 @@ class Conference(models.Model):
 	address = AddressField(on_delete=models.CASCADE, null=True)
 	price = MoneyField(max_digits=10, decimal_places=2, default_currency='EUR', null=True)
 
-	#organization = models.ForeignKey(Organization)
-	visitors = models.ManyToManyField(User)
+	# organization = models.ForeignKey(Organization)
+	visitors = models.ManyToManyField(ResearcherModel)
 
 	def __str__(self):
-		return '%s %s %s' % (self.name, self.date_from, self.date_to)
+		return f'{self.name} {self.date_from} {self.date_to}'
+
 
 class Event(models.Model):
 	conference = models.ForeignKey(Conference, on_delete=models.CASCADE)
@@ -34,8 +34,9 @@ class Event(models.Model):
 class Lunch(Event):
 	price = MoneyField(max_digits=10, decimal_places=2, default_currency='EUR')
 	menu = models.CharField(max_length=250)
-	customers = models.ManyToManyField(User)
+	customers = models.ManyToManyField(ConferenceUserModel)
+
 
 class Lecture(Event):
 	name = models.CharField(max_length=250)
-	reaserchers = models.ManyToManyField(User)
+	researchers = models.ManyToManyField(ResearcherModel)
