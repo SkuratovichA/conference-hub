@@ -13,6 +13,7 @@ class ConferenceUserSignupView(TemplateView):
 class ConferenceUserLogoutView(View, SuccessMessageMixin):
     success_message = MessageMixin.messages.USERS.success.logout
 
+    # TODO 20: add MessagesMixin
     def get(self, request):
         logout(request)
 
@@ -21,3 +22,4 @@ class ConferenceUserSigninView(views.LoginView, SuccessMessageMixin):
     success_message = MessageMixin.messages.USERS.success.login
     template_name = 'users/login.html'
     form = ConferenceUserSigninForm
+    # TODO 20: add MessagesMixin

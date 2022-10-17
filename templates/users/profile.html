@@ -10,7 +10,7 @@
 
         <fieldset>
             {% if user.is_researcher %}
-                <p class="account-heading">{{ user.researcher.last_name }}</p>
+                <p class="account-heading">{{ user.name }} {{ user.researcher.last_name }}</p>
                 <p class="text-secondary">Researcher</p>
             {% elif user.is_organization %}
                 <p class="account-heading">{{ user.name }}</p>
