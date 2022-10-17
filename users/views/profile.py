@@ -3,11 +3,15 @@ from django.contrib.messages.views import SuccessMessageMixin
 from conference_hub.utils.message_wrapper import MessageMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import PasswordChangeView
-from django.views.generic import TemplateView, UpdateView
-from django.contrib import messages
+from django.views.generic import TemplateView
 from users.forms import ProfileUpdateForm
 from django.urls import reverse_lazy
+from django.contrib import messages
 from django.shortcuts import render
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 class ProfileView(LoginRequiredMixin, TemplateView):
@@ -50,11 +54,11 @@ class ProfileUpdateView(TemplateView, LoginRequiredMixin):
     def post(self, request, *args, **kwargs):
         context = self.get_context(request, request_type='POST')
         are_valid = [f.is_valid() for f in context.values()]
+        logger.debug(list(zip(context.keys(), are_valid)))
         if all(are_valid):
             map(lambda x: x.save(), context.items())
             messages.success(self.request, MessageMixin.messages.USERS.success.update_profile)
         else:
-            print(list(zip(context.keys(), are_valid)))
             messages.error(self.request, MessageMixin.messages.USERS.fail.update_profile)
 
         return super(TemplateView, self).render_to_response(context)
