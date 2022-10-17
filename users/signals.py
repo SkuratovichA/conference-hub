@@ -13,4 +13,4 @@ def create_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=ConferenceUserModel)
 def save_profile(sender, created, instance, **kwargs):
     if not created:
-        instance.profilemodel.save()
+        instance.profile.save()

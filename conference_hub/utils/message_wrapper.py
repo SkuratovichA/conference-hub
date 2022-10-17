@@ -2,23 +2,32 @@
     A file containing classes/functions which could make the application more consistent.
     Inspired by .yaml parameters and similar stuff.
 
-    TODO: add constants for database fields.
 """
 
 
+# TODO 20:
 class MessageMixin:
+    # def form_valid(); ... see SuccessMessageMixin
+    # def form_invalid(): ...
     """ A class with different kinds of messages. """
     class messages:
         """ Must be here to access messages """
         class USERS:
-            """ App name """
-            login_success = 'Welcome back!'
-            login_fail = 'Cannot log in!'
-            signup_success = 'Welcome!'
-            signup_fail = 'Cannot sign up!'
-            logout = 'See you later!'
+            class success:
+                login = 'Welcome back!'
+                signup = 'Welcome!'
+                logout = 'See you later!'
+                update_profile = 'Profile has been updated'
+                change_password = "Password has been changed"
+
+            class fail:
+                login = 'Cannot log in!'
+                signup = 'Cannot sign up!'
+                update_profile = 'Cannot Update profile'
+                permissions = 'You must sign in first'
 
 
+# TODO 21: make subclasses as in MessageMixin
 class ConstraintsMixin:
     """ A class with constraints for database fields """
     email_len = 128

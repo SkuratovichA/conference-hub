@@ -5,7 +5,7 @@ from django.db import models
 class ResearcherModel(models.Model):
     user = models.OneToOneField(
         ConferenceUserModel,
-        related_name='conferenceuser_base',
+        related_name='researcher',
         on_delete=models.CASCADE,
         primary_key=True
     )
@@ -23,4 +23,3 @@ class ResearcherModel(models.Model):
         """
         full_name = f"{self.user.name} {self.last_name}"
         return full_name
-

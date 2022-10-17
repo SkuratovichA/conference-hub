@@ -1,5 +1,12 @@
-from .conferenceuser import ConferenceUserSignupView
+from .conferenceuser import (
+    ConferenceUserSignupView,
+    ConferenceUserSigninView,
+    ConferenceUserLogoutView
+)
 from .organization import OrganizationSignupView
 from .researcher import ResearcherSignupView
-from .profile import ProfileView
-from .views import *
+from .profile import (
+    ProfileUpdateView,
+    ProfileView,
+    ProfileChangePasswordView
+)

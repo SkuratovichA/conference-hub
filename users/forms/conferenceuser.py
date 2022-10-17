@@ -1,9 +1,15 @@
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import UserCreationForm
 from django.utils.translation import gettext_lazy as _
 from users.models import ConferenceUserModel
 from django import forms
 from users.auth_backend import ConferenceAuthenticationForm
 from django.contrib.auth import views as views
+
+
+class ConferenceUserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = ConferenceUserModel
+        fields = ('email', 'username', 'name')
 
 
 class ConferenceUserSignupForm(UserCreationForm):
