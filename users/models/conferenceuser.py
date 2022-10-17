@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils.translation import gettext_lazy as _
-from .managers import ConferenceUserManager
+from users.models.managers import ConferenceUserManager
 from django.core.mail import send_mail
 from django.utils import timezone
 from django.db import models
@@ -21,8 +21,6 @@ class ConferenceUserModel(AbstractBaseUser, PermissionsMixin):
     is_organization = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
     date_joined = models.DateTimeField("date joined", default=timezone.now)
-    # address  # TODO 3: add address
-    # address = models.ForeignKey(to=AddressModel, on_delete=models.SET_NULL, related_name='Address')
 
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'username'  # use username as a username field, but actually there are two username fields

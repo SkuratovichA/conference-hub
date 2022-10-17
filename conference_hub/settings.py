@@ -12,7 +12,11 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from django.contrib.messages import constants as messages
 from pathlib import Path
+import environ
 import os
+
+env = environ.Env()
+environ.Env.read_env()
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
@@ -168,7 +172,7 @@ LOGGING = {
         },
     },
     'loggers': {
-        '': {
+        'users': {
             'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': True
@@ -177,8 +181,14 @@ LOGGING = {
         #     'handlers': ['console'],
         #     'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         #     'propagate': False
+        # },
+        # 'users.views': {
+        #     'handlers': ['console'],
+        #     'level': 'INFO',
+        #     'propagate': False
         # }
-        # 'users' ...
         # 'users.views': ...
     }
 }
+
+GOOGLE_API_KEY = env('GOOGLE_API_KEY')
