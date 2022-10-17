@@ -11,6 +11,7 @@ class OrganizationUpdateForm(forms.ModelForm):
 
 
 class OrganizationSignupForm(ConferenceUserSignupForm):
+
     # TODO 14: change html from 'name' to 'Company name',
     class Meta(ConferenceUserSignupForm):
         fields = ('username', 'name', 'password1', 'password2')

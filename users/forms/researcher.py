@@ -39,7 +39,6 @@ class ResearcherSignupForm(ConferenceUserSignupForm):
         fields = ('username', 'email', 'name', 'last_name', 'date_of_birth', 'password1', 'password2')
 
     @transaction.atomic
-    # TODO 6: remove kostyli ebanye
     def save(self):
         # first, create a user
         user = super().save(commit=False)
