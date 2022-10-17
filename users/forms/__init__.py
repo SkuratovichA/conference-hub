@@ -1,4 +1,4 @@
-from .conferenceuser import ConferenceUserSignupForm, ConferenceUserSigninForm
-from .organization import OrganizationSignupForm
-from .researcher import ResearcherSignupForm
-from .forms import *
+from .conferenceuser import ConferenceUserSignupForm, ConferenceUserUpdateForm, ConferenceUserSigninForm
+from .organization import OrganizationSignupForm, OrganizationUpdateForm
+from .researcher import ResearcherSignupForm, ResearcherUpdateForm
+from .profile import *

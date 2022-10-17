@@ -11,12 +11,18 @@ class MessageMixin:
     class messages:
         """ Must be here to access messages """
         class USERS:
-            """ App name """
-            login_success = 'Welcome back!'
-            login_fail = 'Cannot log in!'
-            signup_success = 'Welcome!'
-            signup_fail = 'Cannot sign up!'
-            logout = 'See you later!'
+            class success:
+                login = 'Welcome back!'
+                signup = 'Welcome!'
+                logout = 'See you later!'
+                update_profile = 'Profile has been updated'
+                change_password = "Password has been changed"
+
+            class fail:
+                login = 'Cannot log in!'
+                signup = 'Cannot sign up!'
+                update_profile = 'Cannot Update profile'
+                permissions = 'You must sign in first'
 
 
 class ConstraintsMixin:

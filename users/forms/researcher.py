@@ -5,6 +5,13 @@ from django.db import transaction
 from django import forms
 
 
+class ResearcherUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = ResearcherModel
+        fields = ('last_name', )
+
+
 class ResearcherSignupForm(ConferenceUserSignupForm):
     # TODO 14: change 'name' -> First Name in html attributes
     last_name = forms.CharField(

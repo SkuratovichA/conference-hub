@@ -1,5 +1,13 @@
 from users.forms import ConferenceUserSignupForm
 from users.models import OrganizationModel
+from django import forms
+
+
+class OrganizationUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = OrganizationModel
+        fields = []
 
 
 class OrganizationSignupForm(ConferenceUserSignupForm):

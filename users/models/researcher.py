@@ -5,7 +5,7 @@ from django.db import models
 class ResearcherModel(models.Model):
     user = models.OneToOneField(
         ConferenceUserModel,
-        related_name='conferenceuser_base',
+        related_name='researcher',
         on_delete=models.CASCADE,
         primary_key=True
     )
@@ -16,7 +16,6 @@ class ResearcherModel(models.Model):
         on_delete=models.SET_NULL
     )
     date_of_birth = models.DateField()
-    avatar = models.ImageField(default='default.png', upload_to='profile_images')
 
     def get_full_name(self):
         """

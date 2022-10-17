@@ -52,3 +52,6 @@ class ConferenceUserModel(AbstractBaseUser, PermissionsMixin):
 
     def get_short_name(self):
         return self.name
+
+    def get_full_name(self):
+        return self.name

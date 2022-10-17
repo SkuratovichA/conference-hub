@@ -1,24 +1,29 @@
 {% extends "base.html" %}
 {% block title %}Profile Page{% endblock title %}
 {% block content %}
-    <div class="row my-3 p-3">
-        <h1>This is the profile page for {{user.username}}</h1>
-    </div>
 
+    {# TODO 19 add styles #}
     <div class="content-section">
         <div class="media">
-            <img class="rounded-circle account-img" src=" {{ user.profile.avatar.url }} ">
-            <div class="media-body">
-                <h2 class="account-heading">{{ user.username }}</h2>
-                <p class="text-secondary">{{ user.email }}</p>
-                <p class="text-secondary">{{ user.name }}</p>
-            </div>
+            <img class="rounded-circle account-img" src=" {{ user.profile.image.url }} ">
         </div>
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
 
-            <a class="btn btn-sm btn-info" href="{% url 'users:edit_profile-page' %}">Edit profile</a>
-            <a class="btn btn-sm btn-info" href="{% url 'users:password_change-page' %}">Change password</a>
-        </form>
+        <fieldset>
+            {% if user.is_researcher %}
+                <p class="account-heading">{{ user.researcher.last_name }}</p>
+                <p class="text-secondary">Researcher</p>
+            {% elif user.is_organization %}
+                <p class="account-heading">{{ user.name }}</p>
+                <h2 class="account-heading">Organization</h2>
+            {% else %}
+                {#             admin?#}
+            {% endif %}
+            <p class="text-secondary">{{ user.username }}</p>
+            <p class="text-secondary">{{ user.email }}</p>
+        </fieldset>
     </div>
+
+    <a class="btn btn-sm btn-info" href="{% url 'users:profile_update-page' %}">Edit profile</a>
+    <a class="btn btn-sm btn-info" href="{% url 'users:password_change-page' %}">Change password</a>
+
 {% endblock content %}

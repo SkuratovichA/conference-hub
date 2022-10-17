@@ -13,7 +13,7 @@ class ResearcherSignupView(SuccessMessageMixin, CreateView):
     form_class = ResearcherSignupForm
     template_name = 'users/signup_form.html'
     success_url = reverse_lazy('users:login-page')
-    success_message = MessageMixin.messages.USERS.signup_success
+    success_message = MessageMixin.messages.USERS.success.signup
 
     def get_context_data(self, **kwargs):
         kwargs['user_type'] = 'researcher'

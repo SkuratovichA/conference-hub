@@ -6,6 +6,12 @@ from users.auth_backend import ConferenceAuthenticationForm
 from django.contrib.auth import views as views
 
 
+class ConferenceUserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = ConferenceUserModel
+        fields = ('email', 'username', 'name')
+
+
 class ConferenceUserSignupForm(UserCreationForm):
     username = forms.CharField(
         widget=forms.TextInput(attrs={
