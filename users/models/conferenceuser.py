@@ -54,7 +54,6 @@ class ConferenceUserModel(AbstractBaseUser, PermissionsMixin):
     is_organization = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
     date_joined = models.DateTimeField("date joined", default=timezone.now)
-    # address  # TODO 3: add address
 
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'username'  # use username as a username field, but actually there are two username fields

@@ -20,6 +20,9 @@
             {% endif %}
             <p class="text-secondary">{{ object.username }}</p>
             <p class="text-secondary">{{ object.email }}</p>
+            {% if object.profile.has_address %}
+                <p class="text-secondary">Address: {{ user.profile.get_address }}</p>
+            {% endif %}
         </fieldset>
     </div>
 
