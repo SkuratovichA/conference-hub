@@ -1,4 +1,3 @@
-from users.forms import ConferenceUserUpdateForm, ResearcherUpdateForm, OrganizationUpdateForm
 from django.contrib.messages.views import SuccessMessageMixin
 from conference_hub.utils.message_wrapper import MessageMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -8,8 +7,12 @@ from users.forms import ProfileUpdateForm
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.shortcuts import render
+from users.forms import (
+    ConferenceUserUpdateForm,
+    ResearcherUpdateForm,
+    OrganizationUpdateForm,
+)
 import logging
-
 
 logger = logging.getLogger(__name__)
 
@@ -35,15 +38,17 @@ class ProfileUpdateView(TemplateView, LoginRequiredMixin):
 
         args = [request.POST] if request_type == 'POST' else []
         profile_args = request.FILES if request_type == 'POST' else []
+        logger.debug(request.user)
+        logger.debug(request.user.profile)
 
         context = {
-            'u_form': ConferenceUserUpdateForm(instance=request.user, *args),  # edit forms & add current information
+            'u_form': ConferenceUserUpdateForm(instance=request.user, *args),
             'p_form': ProfileUpdateForm(instance=request.user.profile, *args, *profile_args),
             'ro_form': (
                 ResearcherUpdateForm(instance=request.user.researcher, *args)
-                if request.user.is_researcher
-                else OrganizationUpdateForm(instance=request.user.organization, *args)
-            ),
+                if request.user.is_researcher else
+                OrganizationUpdateForm(instance=request.user.organization, *args)
+            )
         }
         return context
 
@@ -56,7 +61,7 @@ class ProfileUpdateView(TemplateView, LoginRequiredMixin):
         are_valid = [f.is_valid() for f in context.values()]
         logger.debug(list(zip(context.keys(), are_valid)))
         if all(are_valid):
-            map(lambda x: x.save(), context.items())
+            map(lambda f: f.save(), context.values())
             messages.success(self.request, MessageMixin.messages.USERS.success.update_profile)
         else:
             messages.error(self.request, MessageMixin.messages.USERS.fail.update_profile)
