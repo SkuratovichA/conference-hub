@@ -3,8 +3,10 @@ from django.contrib.messages.views import SuccessMessageMixin
 from conference_hub.utils.message_wrapper import MessageMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import PasswordChangeView
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
+from django.shortcuts import get_object_or_404
 from users.forms import ProfileUpdateForm
+from users.models import ProfileModel, ConferenceUserModel
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.shortcuts import render
@@ -14,11 +16,22 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class ProfileView(LoginRequiredMixin, TemplateView):
-    login_url = '/login'
+class ProfileView(DetailView):
     template_name = 'users/profile.html'
-    redirect_field_name = ''  # TODO 18
-    permission_denied_message = MessageMixin.messages.USERS.fail.permissions
+    model = ConferenceUserModel
+    slug_field = 'slug'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        context['object'] = get_object_or_404(ConferenceUserModel, username=self.kwargs.get(self.slug_field))
+        logger.debug(f'context: {context}')
+        return context
+
+    def get_object(self, queryset=None):
+        logger.debug(f'kwargs: {self.kwargs}')
+        # user = get_object_or_404(ConferenceUserModel, username=self.kwargs.get(self.slug_field))
+        return self.request.user
 
 
 class ProfileUpdateView(TemplateView, LoginRequiredMixin):

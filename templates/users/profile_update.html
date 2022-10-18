@@ -18,7 +18,7 @@
                     <button class="btn-outline-info" type="submit">Save</button>
                 </div>
             </form>
-            <a class="btn btn-sm btn-info" href="{% url 'users:profile-page' %}">Back</a>
+            <a class="btn btn-sm btn-info" href="{% url 'users:profile-page' user.username %}">Back</a>
 
         </div>
     </div>
