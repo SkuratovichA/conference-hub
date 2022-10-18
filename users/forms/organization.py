@@ -1,5 +1,6 @@
 from users.forms import ConferenceUserSignupForm
-from users.models import OrganizationModel
+from users.models import OrganizationModel, ConferenceUserModel
+from django.db import transaction
 from django import forms
 
 
@@ -14,12 +15,13 @@ class OrganizationSignupForm(ConferenceUserSignupForm):
 
     # TODO 14: change html from 'name' to 'Company name',
     class Meta(ConferenceUserSignupForm):
-        fields = ('username', 'name', 'password1', 'password2')
+        model = ConferenceUserModel
+        fields = ('email', 'username', 'name', 'password1', 'password2')
 
+    @transaction.atomic
     def save(self, commit=True):
         user = super().save(commit=False)
         user.is_organization = True
         user.save()
         organization = OrganizationModel.objects.create(user=user)
-        organization.save()
         return user

@@ -36,7 +36,7 @@ class ResearcherSignupForm(ConferenceUserSignupForm):
 
     class Meta:
         model = ConferenceUserModel
-        fields = ('username', 'email', 'name', 'last_name', 'date_of_birth', 'password1', 'password2')
+        fields = ('email', 'username', 'name', 'last_name', 'date_of_birth', 'password1', 'password2')
 
     @transaction.atomic
     def save(self):

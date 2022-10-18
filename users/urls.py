@@ -5,7 +5,6 @@ from users import views
 app_name = 'users'
 
 urlpatterns = [
-    path('profile/', views.ProfileView.as_view(), name='profile-page'),
     path('login', views.ConferenceUserSigninView.as_view(), name='login-page'),
     path('logout', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout-page'),
 
@@ -15,4 +14,5 @@ urlpatterns = [
 
     path('profile/edit_profile', views.ProfileUpdateView.as_view(), name='profile_update-page'),
     path('profile/password_change/', views.ProfileChangePasswordView.as_view(), name='password_change-page'),
+    path('<slug>', views.ProfileView.as_view(), name='profile-page'),
 ]

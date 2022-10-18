@@ -1,21 +1,54 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils.translation import gettext_lazy as _
-from users.models.managers import ConferenceUserManager
+from .managers import ConferenceUserManager
+from django.core.validators import EmailValidator, validate_slug
 from django.core.mail import send_mail
 from django.utils import timezone
+from django.urls import reverse
 from django.db import models
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 class ConferenceUserModel(AbstractBaseUser, PermissionsMixin):
     # required fields
-    username = models.CharField('username', max_length=64, unique=True, null=False, blank=False)
-    email = models.CharField("email address", max_length=64, unique=True, null=False, blank=False)
-
-    name = models.CharField("name", max_length=64)
+    username = models.CharField(
+        'username',
+        max_length=64,
+        validators=[validate_slug],
+        unique=True,
+        null=False,
+        blank=False
+    )
+    email = models.CharField(
+        "email address",
+        max_length=64,
+        validators=[EmailValidator(message="invalid email")],
+        unique=True,
+        null=False,
+        blank=False
+    )
+    name = models.CharField(
+        "name",
+        max_length=64,
+        null=False,
+        blank=False,
+    )
     # dev flags
-    is_active = models.BooleanField("active", default=True)
-    is_superuser = models.BooleanField("superuser", default=False)
-    is_staff = models.BooleanField("staff status", default=False)  # TODO 1: remove? AbstractUser has it, but we probably dont need to
+    is_active = models.BooleanField(
+        "active",
+        default=True
+    )
+    is_superuser = models.BooleanField(
+        "superuser",
+        default=False
+    )
+    is_staff = models.BooleanField(
+        "staff status",
+        default=False
+    )  # TODO 1: remove? AbstractUser has it, but we probably dont need to
     # roles
     is_researcher = models.BooleanField(default=False)
     is_organization = models.BooleanField(default=False)
@@ -53,3 +86,6 @@ class ConferenceUserModel(AbstractBaseUser, PermissionsMixin):
 
     def get_full_name(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("users:profile-page", kwargs={"slug": self.username})

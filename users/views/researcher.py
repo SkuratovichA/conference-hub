@@ -5,6 +5,10 @@ from users.forms import ResearcherSignupForm
 from django.shortcuts import redirect
 from django.contrib.auth import login
 from django.contrib import messages
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 class ResearcherSignupView(CreateView):
@@ -21,7 +25,7 @@ class ResearcherSignupView(CreateView):
         user = form.save()
         login(self.request, user)
         messages.success(self.request, MessageMixin.messages.USERS.success.signup)
-        return redirect('users:profile-page')
+        return redirect(user.get_absolute_url())
 
     def form_invalid(self, form):
         messages.error(self.request, MessageMixin.messages.USERS.fail.signup)

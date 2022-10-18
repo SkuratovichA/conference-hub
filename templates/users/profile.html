@@ -5,29 +5,30 @@
     {# TODO 19 add styles #}
     <div class="content-section">
         <div class="media">
-            <img class="rounded-circle account-img" src=" {{ user.profile.image.url }} ">
+            <img class="rounded-circle account-img" src=" {{ object.profile.image.url }} ">
         </div>
 
         <fieldset>
-            {% if user.is_researcher %}
-                <p class="account-heading">{{ user.name }} {{ user.researcher.last_name }}</p>
+            {% if object.is_researcher %}
+                <p class="account-heading">{{ object.name }} {{ object.researcher.last_name }}</p>
                 <p class="text-secondary">Researcher</p>
             {% elif user.is_organization %}
-                <p class="account-heading">Organization name: {{ user.name }}</p>
+                <p class="account-heading">{{ object.name }}</p>
                 <h2 class="account-heading">Organization</h2>
             {% else %}
                 {#             admin?#}
             {% endif %}
-            <p class="text-secondary">Username: {{ user.username }}</p>
-            <p class="text-secondary">Email: {{ user.email }}</p>
-
-            {% if user.profile.has_address %}
+            <p class="text-secondary">{{ object.username }}</p>
+            <p class="text-secondary">{{ object.email }}</p>
+            {% if object.profile.has_address %}
                 <p class="text-secondary">Address: {{ user.profile.get_address }}</p>
             {% endif %}
         </fieldset>
     </div>
 
-    <a class="btn btn-sm btn-info" href="{% url 'users:profile_update-page' %}">Edit profile</a>
-    <a class="btn btn-sm btn-info" href="{% url 'users:password_change-page' %}">Change password</a>
+    {% if user.is_authenticated and object == user %}
+        <a class="btn btn-sm btn-info" href="{% url 'users:profile_update-page' %}">Edit profile</a>
+        <a class="btn btn-sm btn-info" href="{% url 'users:password_change-page' %}">Change password</a>
+    {% endif %}
 
 {% endblock content %}

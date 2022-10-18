@@ -31,6 +31,7 @@ class ConferenceUserSignupForm(UserCreationForm):
     name = forms.CharField(
         widget=forms.TextInput(attrs={  # TODO 14: probably, remove 'type' here. I don't know what it does tbh
             'type': 'name',
+            'placeholder': _('First Name')
         }),
         max_length=128,
         min_length=1
