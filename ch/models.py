@@ -17,6 +17,9 @@ class Conference(models.Model):
 
 	def __str__(self):
 		return f'{self.name} {self.date_from} {self.date_to}'
+	@property
+	def events_list(self):
+		return self.event_set.all()
 
 
 class Event(models.Model):
