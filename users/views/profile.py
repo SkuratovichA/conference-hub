@@ -51,8 +51,6 @@ class ProfileUpdateView(TemplateView, LoginRequiredMixin):
 
         args = [request.POST] if request_type == 'POST' else []
         profile_args = request.FILES if request_type == 'POST' else []
-        logger.debug(request.user)
-        logger.debug(request.user.profile)
 
         context = {
             'u_form': ConferenceUserUpdateForm(instance=request.user, *args),
@@ -74,12 +72,14 @@ class ProfileUpdateView(TemplateView, LoginRequiredMixin):
         are_valid = [f.is_valid() for f in context.values()]
         logger.debug(list(zip(context.keys(), are_valid)))
         if all(are_valid):
-            map(lambda f: f.save(), context.values())
+            for i, f in context.items():
+                f.save()
+                logger.debug(f'{i} saved')
             messages.success(self.request, MessageMixin.messages.USERS.success.update_profile)
         else:
             messages.error(self.request, MessageMixin.messages.USERS.fail.update_profile)
 
-        return super(TemplateView, self).render_to_response(context)
+        return super().render_to_response(context)
 
 
 class ProfileChangePasswordView(SuccessMessageMixin, PasswordChangeView):

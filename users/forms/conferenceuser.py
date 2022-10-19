@@ -9,7 +9,7 @@ from django import forms
 class ConferenceUserUpdateForm(forms.ModelForm):
     class Meta:
         model = ConferenceUserModel
-        fields = ('email', 'username', 'name')
+        fields = ('email', 'username', 'name', 'country', 'city')
 
 
 class ConferenceUserSignupForm(UserCreationForm):
@@ -55,6 +55,20 @@ class ConferenceUserSignupForm(UserCreationForm):
             'placeholder': _('Repeat Password')
         }),
     )
+    country = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'autocomplete': 'country',
+            # 'type': 'country',
+            'placeholder': _('Country')
+        })
+    )
+    city = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'autocomplete': 'city',
+            # 'type': 'city',
+            'placeholder': _('city')
+        })
+    )
 
     class Meta(UserCreationForm.Meta):
         model = ConferenceUserModel
@@ -62,6 +76,8 @@ class ConferenceUserSignupForm(UserCreationForm):
             'username',
             'name',
             'email',
+            'country',
+            'city',
             'password1',
             'password2',
         )
