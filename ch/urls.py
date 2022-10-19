@@ -9,5 +9,6 @@ urlpatterns = [
     path('popular_conferences', views.PopularConferencesView.as_view(), name='popular_conferences-page'),
     path('search', views.SearchConferencesView.as_view(), name='conf_search'),
     path('search/<int:pk>/', views.ConfInfoView.as_view(), name='conf_detail'),
+    path('conf/create', views.CreateConferenceView.as_view(), name='conf_create'),
     path('users_and_organizations', views.UsersAndOrganizations.as_view(), name='users_and_organizations-page')
 ]

@@ -1,7 +1,8 @@
 from django.utils import timezone
 from django.views import generic
-from ch.models import Conference
-
+from django.shortcuts import redirect
+from ch.models import Conference, Event
+from ch.forms.conference import CreateConferenceForm, CreateEventForm
 
 class IndexView(generic.TemplateView):
     template_name = 'ch/index.html'
@@ -13,6 +14,19 @@ class AboutView(generic.TemplateView):
 
 class PopularConferencesView(generic.TemplateView):
     template_name = 'ch/popular_conferences.html'
+
+
+class CreateConferenceView(generic.CreateView):
+    model = Conference
+    form_class = CreateConferenceForm
+    template_name = 'ch/create_conference.html'
+
+    def form_valid(self, form):
+        conf = form.save()
+        return redirect('ch:conf_search')
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)
 
 
 class SearchConferencesView(generic.ListView):
