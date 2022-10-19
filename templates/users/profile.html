@@ -14,14 +14,14 @@
                 <p class="text-secondary">Researcher</p>
             {% elif user.is_organization %}
                 <p class="account-heading">{{ object.name }}</p>
-                <h2 class="account-heading">Organization</h2>
+                <p class="text-secondary">Organization</p>
             {% else %}
                 {#             admin?#}
             {% endif %}
             <p class="text-secondary">{{ object.username }}</p>
             <p class="text-secondary">{{ object.email }}</p>
-            {% if object.profile.has_address %}
-                <p class="text-secondary">Address: {{ user.profile.get_address }}</p>
+            {% if object.address %}
+                <p class="text-secondary">Address: {{ object.address }}</p>
             {% endif %}
         </fieldset>
     </div>

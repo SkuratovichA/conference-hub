@@ -55,6 +55,9 @@ class ConferenceUserModel(AbstractBaseUser, PermissionsMixin):
     is_verified = models.BooleanField(default=False)
     date_joined = models.DateTimeField("date joined", default=timezone.now)
 
+    country = models.CharField(null=True, blank=False, max_length=64)
+    city = models.CharField(null=True, blank=False, max_length=64)
+
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'username'  # use username as a username field, but actually there are two username fields
 
@@ -73,6 +76,11 @@ class ConferenceUserModel(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+    def address(self):
+        if not self.country or not self.city:
+            return False
+        return f'{self.city}, {self.country}'
 
     def clean(self):
         super().clean()
