@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
 
+
 {% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/ch/style.css' %}">
     <h1>Search</h1>
     <ul>
         {% for conferenceuser in object_list %}
