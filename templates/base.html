@@ -30,9 +30,11 @@
             <div class="collapse navbar-collapse" id="navbarToggle">
 
                 <!-- Navbar Left side -->
+                <form class="d-flex" method="post" action="{% url 'ch:search-page' %}">{% csrf_token %}
+                    <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search">
+                    <button class="btn" type="submit">Search</button>
+                </form>
                 <div class="navbar-nav mr-auto">
-                    <a class="nav-item nav-link" href="{% url 'conferences:conf_search' %}">Search Conferences</a>
-                    <a class="nav-item nav-link" href="{% url 'users:users_and_organizations-page' %}">Users and Organizations</a>
                     <a class="nav-item nav-link" href="{% url 'ch:about-page' %}">About Us</a>
                 </div>
 

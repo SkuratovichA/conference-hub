@@ -5,8 +5,6 @@ from users import views
 app_name = 'users'
 
 urlpatterns = [
-    # TODO: move to ch
-    path('', views.UsersAndOrganizations.as_view(), name='users_and_organizations-page'),
     path('login', views.ConferenceUserSigninView.as_view(), name='login-page'),
     path('logout', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout-page'),
     path('signup', views.ConferenceUserSignupView.as_view(), name='signup-page'),

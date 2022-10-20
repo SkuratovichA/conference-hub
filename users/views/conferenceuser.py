@@ -24,7 +24,3 @@ class ConferenceUserSigninView(views.LoginView, SuccessMessageMixin):
     template_name = 'users/login.html'
     form = ConferenceUserSigninForm
     # TODO 20: add MessagesMixin
-
-
-class UsersAndOrganizations(generic.TemplateView):
-    template_name = 'ch/users_and_organizations.html'
