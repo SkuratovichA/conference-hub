@@ -3,6 +3,7 @@ from conference_hub.utils.message_wrapper import MessageMixin
 from django.views.generic.base import TemplateView
 from users.forms import ConferenceUserSigninForm
 from django.contrib.auth import logout, views
+from django.views import generic
 from django.views import View
 
 
@@ -23,3 +24,7 @@ class ConferenceUserSigninView(views.LoginView, SuccessMessageMixin):
     template_name = 'users/login.html'
     form = ConferenceUserSigninForm
     # TODO 20: add MessagesMixin
+
+
+class UsersAndOrganizations(generic.TemplateView):
+    template_name = 'ch/users_and_organizations.html'

@@ -31,10 +31,8 @@
 
                 <!-- Navbar Left side -->
                 <div class="navbar-nav mr-auto">
-                    <a class="nav-item nav-link" href="{% url 'ch:popular_conferences-page' %}">Popular Conferences</a>
-                    <a class="nav-item nav-link" href="{% url 'ch:conf_search' %}">Search Conferences</a>
-                    <a class="nav-item nav-link" href="{% url 'ch:users_and_organizations-page' %}">Users and
-                        Organizations</a>
+                    <a class="nav-item nav-link" href="{% url 'conferences:conf_search' %}">Search Conferences</a>
+                    <a class="nav-item nav-link" href="{% url 'users:users_and_organizations-page' %}">Users and Organizations</a>
                     <a class="nav-item nav-link" href="{% url 'ch:about-page' %}">About Us</a>
                 </div>
 

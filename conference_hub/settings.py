@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'ch',
     'users',
+    'conferences',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
