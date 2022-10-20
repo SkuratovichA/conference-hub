@@ -1,8 +1,7 @@
+from users.models import ConferenceUserModel, ResearcherModel
+from djmoney.models.fields import MoneyField
 from address.models import AddressField
 from django.db import models
-from djmoney.models.fields import MoneyField
-
-from users.models import ConferenceUserModel, ResearcherModel
 
 
 class Conference(models.Model):

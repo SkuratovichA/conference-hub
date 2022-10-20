@@ -96,4 +96,4 @@ class ConferenceUserModel(AbstractBaseUser, PermissionsMixin):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("users:profile-page", kwargs={"slug": self.username})
+        return reverse("profile-page", kwargs={"slug": self.username})

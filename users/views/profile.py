@@ -33,7 +33,6 @@ class ProfileView(DetailView):
 
     def get_object(self, queryset=None):
         logger.debug(f'kwargs: {self.kwargs}')
-        # user = get_object_or_404(ConferenceUserModel, username=self.kwargs.get(self.slug_field))
         return self.request.user
 
 
@@ -41,7 +40,9 @@ class ProfileUpdateView(TemplateView, LoginRequiredMixin):
     template_name = "users/profile_update.html"
     login_url = '/login'
     permission_denied_message = MessageMixin.messages.USERS.fail.permissions
-    redirect_field_name = reverse_lazy('users:profile-page')  # return to user profile page
+
+    def get_redirect_field_name(self):
+        return reverse_lazy('users:profile-page', args=[self.kwargs['slug']])
 
     @staticmethod
     def get_context(request, request_type):
@@ -85,6 +86,7 @@ class ProfileUpdateView(TemplateView, LoginRequiredMixin):
 class ProfileChangePasswordView(SuccessMessageMixin, PasswordChangeView):
     template_name = 'users/profile_password_change.html'
     success_message = MessageMixin.messages.USERS.success.change_password
-    success_url = reverse_lazy('users:profile-page')
 
     # TODO 20: add MessagesMixin & remove SuccessMessageMixin
+    def get_success_url(self, *args, **kwargs):
+        return reverse_lazy('users:profile-page', args=[self.kwargs['slug']])

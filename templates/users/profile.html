@@ -27,8 +27,8 @@
     </div>
 
     {% if user.is_authenticated and object == user %}
-        <a class="btn btn-sm btn-info" href="{% url 'users:profile_update-page' %}">Edit profile</a>
-        <a class="btn btn-sm btn-info" href="{% url 'users:password_change-page' %}">Change password</a>
+        <a class="btn btn-sm btn-info" href="{% url 'users:profile_update-page' user.username %}">Edit profile</a>
+        <a class="btn btn-sm btn-info" href="{% url 'users:password_change-page' user.username %}">Change password</a>
     {% endif %}
 
 {% endblock content %}
