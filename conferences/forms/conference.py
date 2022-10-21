@@ -2,7 +2,7 @@ from django import forms
 from django.db import transaction
 from django.forms import ModelForm
 
-from conferences.models.models import ConferenceModel, Event
+from conferences.models.models import ConferenceModel, EventModel
 
 
 class CreateConferenceForm(ModelForm):
@@ -47,7 +47,7 @@ class CreateEventForm(ModelForm):
     )
 
     class Meta:
-        model = Event
+        model = EventModel
         fields = '__all__'
 
     # def __init__(self, *args, **kwargs):

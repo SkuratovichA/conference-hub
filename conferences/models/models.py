@@ -23,7 +23,7 @@ class ConferenceModel(models.Model):
         return self.event_set.all()
 
 
-class Event(models.Model):
+class EventModel(models.Model):
     conference = models.ForeignKey(ConferenceModel, on_delete=models.CASCADE)
     event_id = models.AutoField(primary_key=True)
     date_time = models.DateTimeField('Starts at')
@@ -35,12 +35,12 @@ class Event(models.Model):
         unique_together = ['conference', 'event_id']
 
 
-class Lunch(Event):
+class LunchModel(EventModel):
     price = MoneyField(max_digits=10, decimal_places=2, default_currency='EUR')
     menu = models.CharField(max_length=250)
     customers = models.ManyToManyField(ConferenceUserModel)
 
 
-class Lecture(Event):
+class LectureModel(EventModel):
     name = models.CharField(max_length=250)
     researchers = models.ManyToManyField(ResearcherModel)

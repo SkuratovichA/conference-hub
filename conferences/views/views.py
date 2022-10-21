@@ -1,5 +1,5 @@
 from conferences.forms.conference import CreateConferenceForm, CreateEventForm
-from conferences.models.models import ConferenceModel, Event
+from conferences.models.models import ConferenceModel, EventModel
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.views import generic
@@ -24,12 +24,12 @@ class ConfInfoView(generic.DetailView):
 
 
 class EventInfoView(generic.DetailView):
-    model = Event
+    model = EventModel
     template_name = 'conferences/event_info.html'
 
 
 class CreateEventView(generic.CreateView):
-    model = Event
+    model = EventModel
     form_class = CreateEventForm  # todo
     template_name = 'conferences/create_event.html'
 

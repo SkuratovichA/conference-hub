@@ -10,14 +10,12 @@
     {% if object.events_list %}
         <ul>
             {% for event in object.events_list %}
-                <li>
-                    <a href="{% url 'conferences:event_detail' object.conf_id event.event_id %}">{{ event.location }} </a>
-                </li>
+                <li><a href="{% url 'conferences:event_detail-page' object.conf_id event.event_id %}">{{ event.location }} </a></li>
             {% endfor %}
         </ul>
     {% else %}
         There are no events added to this confernce yet.
     {% endif %}
     </hr>
-    <hr> <a class="btn btn-sm btn-info" href="{% url 'conferences:event_create' object.pk %}">Add a new event</a></hr>
+    <hr> <a class="btn btn-sm btn-info" href="{% url 'conferences:event_create-page' object.pk %}">Add a new event</a></hr>
 {% endblock %}
