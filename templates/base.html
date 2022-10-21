@@ -30,8 +30,8 @@
             <div class="collapse navbar-collapse" id="navbarToggle">
 
                 <!-- Navbar Left side -->
-                <form class="d-flex" method="post" action="{% url 'ch:search-page' %}">{% csrf_token %}
-                    <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search">
+                <form class="d-flex" method="get" action="{% url 'ch:search-page' %}">
+                    <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search" name="q" id="searched">
                     <button class="btn" type="submit">Search</button>
                 </form>
                 <div class="navbar-nav mr-auto">
@@ -68,10 +68,13 @@
     {% block content %}{% endblock %}
 </div>
 
+{#{% block content %}{% endblock %}#}
+
 {% include 'users/sidebar.html' %}
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+{#<script src="../static/create_query.js"></script>#}
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>

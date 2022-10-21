@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views import generic
 from conferences import models as conferences_models
 from users import models as users_models
+from django.db.models import Q
 import logging
 
 
@@ -20,22 +21,33 @@ class SearchView(generic.ListView):
         return context
 
     # TODO: select a model by a querry
-    def post(self, request, *args, **kwargs):
-        logger.debug(args)
-        logger.debug(kwargs)
-        logger.debug(request)
-        context = {'object_list': users_models.ConferenceUserModel.objects.all()}
-        return super().render_to_response(context)
+    # def post(self, request, *args, **kwargs):
+    #     searched = request.POST['searched']
+    #     context = {'object_list': users_models.ConferenceUserModel.objects.filter(name__contains=searched)}
+    #     return super().render_to_response(context)
 
     def get(self, request, *args, **kwargs):
-        _models = {
-            'researchers': users_models.ResearcherModel,
-            'organization': users_models.OrganizationModel
-        }
         type = request.GET.get('type', default='researchers')
-        name = request.GET.get('name', default='')
+        param = request.GET.get('q', default='')
 
-        model = _models['type']
         # TODO create complex filter to filter by more parameters ...
-        context = {'object_list': model.objects.all().filter(name=name)}
+        elements_res = []
+        elements_orgs = []
+
+        res_s = users_models.ResearcherModel.objects.filter(last_name__contains=param)
+        elements_res += users_models.ConferenceUserModel.objects.filter(Q(Q(username__contains=param) |
+                                                                        Q(name__contains=param)) &
+                                                                        Q(is_researcher=True))
+
+        if len(res_s) > 0:
+            for item in res_s: elements_res.append(item.user)
+
+        elements_orgs = users_models.ConferenceUserModel.objects.filter(Q(Q(username__contains=param) |
+                                                                  Q(name__contains=param)) &
+                                                                  Q(is_organization=True))
+
+        context = {"object_list_res": [*set(elements_res)], "len_res": len(elements_res),
+                   "object_list_orgs": [*set(elements_orgs)], "len_orgs": len(elements_orgs),
+                   "type": type, "len_confs": 0}
+
         return render(request, self.template_name, context)
