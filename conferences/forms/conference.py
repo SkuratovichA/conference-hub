@@ -1,8 +1,9 @@
 from django import forms
 from django.db import transaction
 from django.forms import ModelForm
+from users import models as user_models
 
-from conferences.models.models import ConferenceModel, EventModel
+from conferences import models as conference_models
 
 
 class CreateConferenceForm(ModelForm):
@@ -25,13 +26,17 @@ class CreateConferenceForm(ModelForm):
     )
 
     class Meta:
-        model = ConferenceModel
+        model = conference_models.ConferenceModel
         fields = ["name", "date_from", "date_to", "address", "price"]
+        widgets = {
+            'organization': forms.HiddenInput(),
+        }
 
     @transaction.atomic
-    def save(self):
+    def save(self, user_slag):
         # first, create a user
         conf = super().save(commit=False)
+        conf.organization = user_models.ConferenceUserModel.objects.get(username=user_slag, is_organization=True).organization
         conf.save()
         return conf
 
@@ -47,13 +52,8 @@ class CreateEventForm(ModelForm):
     )
 
     class Meta:
-        model = EventModel
+        model = conference_models.EventModel
         fields = '__all__'
-
-    # def __init__(self, *args, **kwargs):
-    # 	conf = kwargs.pop('conf','')
-    # 	super().__init__(*args, **kwargs)
-    # 	self.fields['conference']=forms.ModelChoiceField(queryset=ConferenceModel.objects.filter(pk=conf))
 
     @transaction.atomic
     def save(self):

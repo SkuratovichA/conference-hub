@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-    {% if upcoming_events %}
+    {% if upcoming_confs %}
         <ul>
             {% for conf in upcoming_events %}
                 <li>
@@ -13,6 +13,6 @@
     {% else %}
         <hr>There are no conferences planed for future ;(
     {% endif %}
-    <hr> <a class="btn btn-sm btn-info" href="{% url 'conferences:conf_create-page' %}">Creare a new conference</a></hr>
+    <hr> <a class="btn btn-sm btn-info" href="{% url 'conferences:conf_create-page' user.username %}">Create a new conference</a></hr>
     </hr>
 {% endblock content %}

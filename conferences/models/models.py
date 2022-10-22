@@ -1,4 +1,4 @@
-from users.models import ConferenceUserModel, ResearcherModel
+from users import models as user_models
 from djmoney.models.fields import MoneyField
 from address.models import AddressField
 from django.db import models
@@ -12,8 +12,8 @@ class ConferenceModel(models.Model):
     address = AddressField(on_delete=models.CASCADE, null=True)
     price = MoneyField(max_digits=10, decimal_places=2, default_currency='EUR', null=True)
 
-    # organization = models.ForeignKey(Organization)
-    visitors = models.ManyToManyField(ResearcherModel)
+    organization = models.ForeignKey(user_models.OrganizationModel, on_delete=models.CASCADE, null=True) # todo change to null false before db update
+    visitors = models.ManyToManyField(user_models.ResearcherModel)
 
     def __str__(self):
         return f'{self.name} {self.date_from} {self.date_to}'
@@ -24,7 +24,7 @@ class ConferenceModel(models.Model):
 
 
 class EventModel(models.Model):
-    conference = models.ForeignKey(ConferenceModel, on_delete=models.CASCADE)
+    conference = models.ForeignKey(ConferenceModel, on_delete=models.CASCADE, related_name='event_set')
     event_id = models.AutoField(primary_key=True)
     date_time = models.DateTimeField('Starts at')
     duration = models.DurationField()
@@ -38,9 +38,9 @@ class EventModel(models.Model):
 class LunchModel(EventModel):
     price = MoneyField(max_digits=10, decimal_places=2, default_currency='EUR')
     menu = models.CharField(max_length=250)
-    customers = models.ManyToManyField(ConferenceUserModel)
+    customers = models.ManyToManyField(user_models.ResearcherModel)
 
 
 class LectureModel(EventModel):
     name = models.CharField(max_length=250)
-    researchers = models.ManyToManyField(ResearcherModel)
+    researchers = models.ManyToManyField(user_models.ResearcherModel)

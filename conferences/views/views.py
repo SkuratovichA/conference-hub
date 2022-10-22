@@ -5,14 +5,27 @@ from django.utils import timezone
 from django.views import generic
 
 
+class DisplayConferenceView(generic.ListView):
+    model = ConferenceModel
+    template_name = 'conferences/display_conferences.html'
+    context_object_name = 'upcoming_confs'
+
+    def get_queryset(self):
+        """Return the future events"""
+        return ConferenceModel.objects.filter(
+            date_from__gte=timezone.now()
+        ).order_by('date_from')
+
+
 class CreateConferenceView(generic.CreateView):
     model = ConferenceModel
     form_class = CreateConferenceForm
     template_name = 'conferences/create_conference.html'
 
     def form_valid(self, form):
-        conf = form.save()
-        return redirect('conferences:conf_search')
+        slug = self.kwargs.get('slug')
+        conf = form.save(slug)
+        return redirect('conferences:conf_display-page', slug)
 
     def form_invalid(self, form):
         return super().form_invalid(form)
