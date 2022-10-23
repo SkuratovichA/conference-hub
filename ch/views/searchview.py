@@ -5,7 +5,6 @@ from users import models as users_models
 from django.db.models import Q
 import logging
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -20,34 +19,40 @@ class SearchView(generic.ListView):
         context = super().get_context_data(**kwargs)
         return context
 
-    # TODO: select a model by a querry
-    # def post(self, request, *args, **kwargs):
-    #     searched = request.POST['searched']
-    #     context = {'object_list': users_models.ConferenceUserModel.objects.filter(name__contains=searched)}
-    #     return super().render_to_response(context)
-
     def get(self, request, *args, **kwargs):
+        def get_users(it):
+            return list(map(lambda el: el.user, it))
+
         type = request.GET.get('type', default='researchers')
-        param = request.GET.get('q', default='')
+        param = request.GET.get('q', default='')  # filter parameter, e.g name pattern
 
-        # TODO create complex filter to filter by more parameters ...
-        elements_res = []
-        elements_orgs = []
+        # create Query prompts
+        conferenceuser_Q = Q(
+            Q(user__username__contains=param) |
+            Q(user__name__contains=param) |
+            Q(user__email__contains=param)
+        )
+        researcher_Q = Q(last_name__contains=param)
 
-        res_s = users_models.ResearcherModel.objects.filter(last_name__contains=param)
-        elements_res += users_models.ConferenceUserModel.objects.filter(Q(Q(username__contains=param) |
-                                                                        Q(name__contains=param)) &
-                                                                        Q(is_researcher=True))
+        # get objects
+        object_lists = {
+            'researchers':
+                get_users(users_models.ResearcherModel.objects.filter(
+                    Q(conferenceuser_Q | researcher_Q)
+                )),
+            'organizations':
+                get_users(users_models.OrganizationModel.objects.filter(
+                    conferenceuser_Q
+                )),
+            'conferences':
+                []
+        }
 
-        if len(res_s) > 0:
-            for item in res_s: elements_res.append(item.user)
-
-        elements_orgs = users_models.ConferenceUserModel.objects.filter(Q(Q(username__contains=param) |
-                                                                  Q(name__contains=param)) &
-                                                                  Q(is_organization=True))
-
-        context = {"object_list_res": [*set(elements_res)], "len_res": len(elements_res),
-                   "object_list_orgs": [*set(elements_orgs)], "len_orgs": len(elements_orgs),
-                   "type": type, "len_confs": 0}
+        context = {
+            'object_list': object_lists[type],
+            # TODO андрюха, это я оссавил только для того, чтобы можно быссро протессить html. Потом нужно будет это удалить!
+            **object_lists,
+            "type": type,
+        }
 
         return render(request, self.template_name, context)

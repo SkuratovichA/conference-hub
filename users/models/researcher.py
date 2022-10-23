@@ -23,3 +23,6 @@ class ResearcherModel(models.Model):
         """
         full_name = f"{self.user.name} {self.last_name}"
         return full_name
+
+    def __str__(self):
+        return f'{self.user} Researcher'
