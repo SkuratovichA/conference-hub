@@ -2,7 +2,14 @@
 {% load static %}
 {% load djmoney %}
 {% block content %}
-    <h1>{{ object.name }}</h1>
+    <h1>{{ object.name }}
+        <div>
+            {% if user.is_organization %}
+                <a class="btn btn-sm btn-info" href="{% url 'conferences:conf_edit-page' user.username object.conf_id %}">Edit conference</a>
+                <a class="btn btn-sm btn-info" href="{% url 'conferences:conf_delete-page' user.username object.conf_id%}">Delete conference</a>
+            {%  endif %}
+        </div>
+    </h1>
     <p>{{ object.date_from|date:"D, d M, Y" }} - {{ object.date_to|date:"D, d M, Y" }}</p>
     <p>Address: {{ object.address }}</p>
     <p>Price: {% money_localize object.price %}</p>
@@ -19,5 +26,7 @@
     </hr>
     {% if user.is_organization %}
         <hr> <a class="btn btn-sm btn-info" href="{% url 'conferences:event_create-page' object.pk user.username %}">Add a new event</a></hr>
+    {% else %}
+        <a class="btn btn-sm btn-info" href="{% url 'conferences:conf_add_user-page' object.pk user.username %}">Buy ticket</a>
     {%  endif %}
 {% endblock %}

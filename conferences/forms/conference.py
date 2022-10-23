@@ -59,8 +59,9 @@ class CreateEventForm(ModelForm):
         }
 
     @transaction.atomic
-    def save(self):
+    def save(self, conf_id):
         # first, create a user
         event = super().save(commit=False)
+        event.conference = conference_models.ConferenceModel.objects.get(conf_id=conf_id)
         event.save()
         return event
