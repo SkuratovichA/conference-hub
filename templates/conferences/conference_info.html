@@ -14,10 +14,10 @@
             {% endfor %}
         </ul>
     {% else %}
-        There are no events added to this confernce yet.
+        There are no events added to this conference yet.
     {% endif %}
     </hr>
     {% if user.is_organization %}
-        <hr> <a class="btn btn-sm btn-info" href="{% url 'conferences:event_create-page' object.pk %}">Add a new event</a></hr>
+        <hr> <a class="btn btn-sm btn-info" href="{% url 'conferences:event_create-page' object.pk user.username %}">Add a new event</a></hr>
     {%  endif %}
 {% endblock %}

@@ -53,7 +53,10 @@ class CreateEventForm(ModelForm):
 
     class Meta:
         model = conference_models.EventModel
-        fields = '__all__'
+        fields = ['date_time', 'duration', 'location', 'description']
+        widgets = {
+            'conference': forms.HiddenInput(),
+        }
 
     @transaction.atomic
     def save(self):

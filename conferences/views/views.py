@@ -1,25 +1,25 @@
-from conferences.forms.conference import CreateConferenceForm, CreateEventForm
-from conferences.models.models import ConferenceModel, EventModel
+from conferences import forms as conf_forms
+from conferences import models as conf_models
 from django.shortcuts import redirect
 from django.utils import timezone
 from django.views import generic
 
 
 class DisplayConferenceView(generic.ListView):
-    model = ConferenceModel
+    model = conf_models.ConferenceModel
     template_name = 'conferences/display_conferences.html'
     context_object_name = 'upcoming_confs'
 
     def get_queryset(self):
         """Return the future events"""
-        return ConferenceModel.objects.filter(
-            date_from__gte=timezone.now()
+        return conf_models.ConferenceModel.objects.filter(
+            date_from__gte=timezone.now(), organization__user__username=self.kwargs.get('slug')
         ).order_by('date_from')
 
 
 class CreateConferenceView(generic.CreateView):
-    model = ConferenceModel
-    form_class = CreateConferenceForm
+    model = conf_models.ConferenceModel
+    form_class = conf_forms.CreateConferenceForm
     template_name = 'conferences/create_conference.html'
 
     def form_valid(self, form):
@@ -32,23 +32,24 @@ class CreateConferenceView(generic.CreateView):
 
 
 class ConfInfoView(generic.DetailView):
-    model = ConferenceModel
+    model = conf_models.ConferenceModel
     template_name = 'conferences/conference_info.html'
 
 
 class EventInfoView(generic.DetailView):
-    model = EventModel
+    model = conf_models.EventModel
     template_name = 'conferences/event_info.html'
 
 
 class CreateEventView(generic.CreateView):
-    model = EventModel
-    form_class = CreateEventForm  # todo
+    model = conf_models.EventModel
+    form_class = conf_forms.CreateEventForm
     template_name = 'conferences/create_event.html'
 
     def form_valid(self, form):
-        event = form.save()
-        return redirect('conferences:conf_search')  # todo redirect back to conf detail
+        conf_id = self.kwargs.get('pk')
+        event = form.save(conf_id)
+        return redirect('conferences:conf_detail-page', conf_id)
 
     def form_invalid(self, form):
         return super().form_invalid(form)

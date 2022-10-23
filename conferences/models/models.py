@@ -12,7 +12,7 @@ class ConferenceModel(models.Model):
     address = AddressField(on_delete=models.CASCADE, null=True)
     price = MoneyField(max_digits=10, decimal_places=2, default_currency='EUR', null=True)
 
-    organization = models.ForeignKey(user_models.OrganizationModel, on_delete=models.CASCADE, null=True) # todo change to null false before db update
+    organization = models.ForeignKey(user_models.OrganizationModel, on_delete=models.CASCADE)
     visitors = models.ManyToManyField(user_models.ResearcherModel)
 
     def __str__(self):
