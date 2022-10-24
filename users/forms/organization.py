@@ -16,7 +16,7 @@ class OrganizationSignupForm(ConferenceUserSignupForm):
     # TODO 14: change html from 'name' to 'Company name',
     class Meta(ConferenceUserSignupForm):
         model = ConferenceUserModel
-        fields = ('email', 'username', 'name', 'password1', 'password2')
+        fields = ('email', 'username', 'name', 'country', 'city', 'password1', 'password2')
 
     @transaction.atomic
     def save(self, commit=True):

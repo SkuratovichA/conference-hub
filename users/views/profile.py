@@ -51,7 +51,7 @@ class ProfileUpdateView(TemplateView, LoginRequiredMixin):
             raise ValueError(f'argument `type` must be one of {allowed_types}')
 
         args = [request.POST] if request_type == 'POST' else []
-        profile_args = request.FILES if request_type == 'POST' else []
+        profile_args = [request.FILES] if request_type == 'POST' else []
 
         context = {
             'u_form': ConferenceUserUpdateForm(instance=request.user, *args),

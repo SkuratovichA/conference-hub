@@ -1,7 +1,7 @@
 from django.contrib.messages.views import SuccessMessageMixin
 from conference_hub.utils.message_wrapper import MessageMixin
 from django.views.generic.base import TemplateView
-from users.forms import ConferenceUserSigninForm
+from users.forms import ConferenceUserSigninForm, ConferenceUserSignupForm
 from django.contrib.auth import logout, views
 from django.views import generic
 from django.views import View
@@ -9,6 +9,7 @@ from django.views import View
 
 class ConferenceUserSignupView(TemplateView):
     template_name = 'users/signup.html'
+    # form = ConferenceUserSignupForm
 
 
 class ConferenceUserLogoutView(View, SuccessMessageMixin):
