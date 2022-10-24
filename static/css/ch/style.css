@@ -1,31 +1,32 @@
 .d-md-block {
-    display: block;
+  display: block;
 }
 
 .container-lg .menu {
-    margin-bottom: 16px;
-    list-style: none;
-    background-color: white;
-    border: 1px solid black;
-    border-radius: 6px;
+  margin-bottom: 16px;
+  list-style: none;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 6px;
 }
 
 .menu-item {
-    font-size: 20px;
-    color: black;
-    text-decoration: none;
-    text-align: center;
+  font-size: 20px;
+  color: black;
+  text-decoration: none;
+  text-align: center;
 }
 
 ul {
-    list-style: none;
+  list-style: none;
 }
 
 .menu ul {
-    padding-left: 0px;
-    text-align: center;
+  padding-left: 0px;
+  text-align: center;
+}
+.menu li {
+  border: 1px solid black;
 }
 
-.menu li {
-    border: 1px solid black;
-}
+/*# sourceMappingURL=style.css.map */

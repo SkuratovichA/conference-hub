@@ -1,9 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load compress %}
 
 
 {% block content %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/ch/style.css' %}">
+    {% compress css %}
+        <link rel="stylesheet" type="text/x-scss" href="{% static 'css/ch/style.scss' %}">
+    {% endcompress %}
 
     <div class="container-lg px-md-2 mt-lg-4 clearfix">
         <div class="col-12 col-md-2 float-left px-md-2">
