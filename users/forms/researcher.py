@@ -3,6 +3,10 @@ from users.models import ConferenceUserModel, ResearcherModel
 from users.forms import ConferenceUserSignupForm
 from django.db import transaction
 from django import forms
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 class ResearcherUpdateForm(forms.ModelForm):
@@ -28,6 +32,7 @@ class ResearcherSignupForm(ConferenceUserSignupForm):
         input_formats=[f'%d{s}%m{s}%Y' for s in '. / -'.split()],
         widget=forms.DateInput(
             attrs={
+                'placeholder': _('Date of birth'),
                 'type': 'date of birth',
                 'class': 'form-control',
             }
@@ -36,7 +41,17 @@ class ResearcherSignupForm(ConferenceUserSignupForm):
 
     class Meta:
         model = ConferenceUserModel
-        fields = ('email', 'username', 'name', 'last_name', 'date_of_birth', 'password1', 'password2')
+        fields = (
+            'email',
+            'username',
+            'name',
+            'last_name',
+            'date_of_birth',
+            'city',
+            'country',
+            'password1',
+            'password2'
+        )
 
     @transaction.atomic
     def save(self):
@@ -47,6 +62,6 @@ class ResearcherSignupForm(ConferenceUserSignupForm):
         researcher = ResearcherModel.objects.create(
             user=user,
             last_name=self.cleaned_data.get('last_name'),
-            date_of_birth=self.cleaned_data.get('date_of_birth')
+            date_of_birth=self.cleaned_data.get('date_of_birth'),
         )
         return user

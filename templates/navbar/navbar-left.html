@@ -1,0 +1,10 @@
+{% load static %}
+{% load compress %}
+
+<form class="d-flex" method="get" action="{% url 'ch:search-page' %}">
+    <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search" name="q" id="searched">
+    <button class="btn" type="submit">Search</button>
+</form>
+<div class="navbar-nav mr-auto">
+    <a class="nav-item nav-link" href="{% url 'ch:about-page' %}">About Us</a>
+</div>

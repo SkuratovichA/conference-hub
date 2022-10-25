@@ -18,17 +18,6 @@ class CreateConferenceView(generic.CreateView):
         return super().form_invalid(form)
 
 
-class SearchConferencesView(generic.ListView):
-    template_name = 'conferences/search_conferences.html'
-    context_object_name = 'upcoming_events'
-
-    def get_queryset(self):
-        """Return the future events"""
-        return Conference.objects.filter(
-            date_from__gte=timezone.now()
-        ).order_by('date_from')
-
-
 class ConfInfoView(generic.DetailView):
     model = Conference
     template_name = 'conferences/conference_info.html'

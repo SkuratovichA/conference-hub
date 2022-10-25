@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load compress %}
+
+
+{% block content %}
+    {% compress css %}
+        <link rel="stylesheet" type="text/x-scss" href="{% static 'css/ch/style.scss' %}">
+    {% endcompress %}
+
+    <div class="container-lg px-md-2 mt-lg-4 clearfix">
+        <div class="col-12 col-md-2 float-left px-md-2">
+            <nav class="menu border d-none d-md-block">
+                <ul>
+                    <li><a class="menu-item" onclick="change_url(1)">Researchers {{ researchers|length }}</a></li>
+                    <li><a class="menu-item" onclick="change_url(2)">Organizations {{ organizations|length }}</a></li>
+                    <li><a class="menu-item" onclick="change_url(3)">Conferences {{ conferences|length }}</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col-12 col-md-9 float-left px-2 pt-3 pt-md-0">
+            <ul>
+                {% for conferenceuser in object_list %}
+                    <li>
+                        <div class="content-section">
+                            <div class="media">
+                                <img class="rounded-circle account-img" src=" {{ conferenceuser.profile.image.url }} ">
+                                <div class="media-body">
+                                    <fieldset>
+                                        <p class="account-heading">{{ conferenceuser.name }} {{ conferenceuser.researcher.last_name }}</p>
+                                        <p class="text-secondary">Researcher</p>
+                                        <p class="text-secondary">{{ conferenceuser.username }}</p>
+                                        <p class="text-secondary">{{ conferenceuser.email }}</p>
+                                        {% if conferenceuser.address %}
+                                            <p class="text-secondary">Address: {{ conferenceuser.address }}</p>
+                                        {% endif %}
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    {% empty %}
+                    <li>No users</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+
+        function change_url(type) {
+            let arr = window.location.href.split("?");
+            let str = arr[0] + "?q=" + urlParams.get('q');
+
+            if (type === 1) {
+                window.location.href = str + "&type=researchers";
+            } else if (type === 2) {
+                window.location.href = str + "&type=organizations";
+            } else {
+                window.location.href = str + "&type=conferences";
+            }
+        }
+    </script>
+
+
+{% endblock content %}

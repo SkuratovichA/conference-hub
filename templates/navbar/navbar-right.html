@@ -1,0 +1,47 @@
+{% load static %}
+{% load compress %}
+
+<link type="text/x-scss" href="{% static 'css/dropdown.scss' %}" rel="stylesheet" media="screen">
+
+{#<script src="{% static 'static/js/dropdown.js' %}"></script>#}
+
+<div class="navbar-nav">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown"
+            aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+        {% if user.is_authenticated %}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+                   id="navbarDropdownMenuLink" aria-haspopup="true"
+                   aria-expanded="false">
+                    <img class="rounded-circle siteheader-img" src="{% static "/static/logo.png" %}">
+                </a>
+
+                <div class="dropdown-menu" style="right: 0; left: auto; border-radius: 10px;"
+                     aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="{% url 'users:profile-page' user.username %}">Profile</a>
+                    <a class="dropdown-item" href="{% url 'users:profile_update-page' user.username %}">Edit Profile</a>
+                    <a class="dropdown-divider">------divider-----</a>
+                    {% if user.is_researcher %}
+                        <a class="dropdown-item" href="#">My conferences</a>
+                        <a class="dropdown-item" href="#">My scheduler</a>
+                        <a class="dropdown-item" href="#">My organizations</a>
+                        <a class="dropdown-item" href="#">My invintations</a>
+                    {% elif user.is_orgarnization %}
+                        <a class="dropdown-item" href="#">Manage researchers</a>
+                    {% else %}
+                    {% endif %}
+                    <a class="dropdown-divider">------divider-----</a>
+                    <a class="dropdown-item" href="{% url 'users:logout-page' %}">Log Out</a>
+                </div>
+            </li>
+        {% else %}
+            <a class="nav-item nav-link" href="{% url 'users:login-page' %}">Sign In</a>
+            <a class="nav-item nav-link" href="{% url 'users:signup-page' %}">Sign Up</a>
+        {% endif %}
+    </div>
+
+</div>

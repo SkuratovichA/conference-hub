@@ -38,13 +38,17 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # libraries1
+    'compressor',
     'address',
     'djmoney',
     'crispy_forms',
     'crispy_bootstrap5',
+    # apps
     'ch',
     'users',
     'conferences',
+    # django stuff
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -130,10 +134,25 @@ CURRENCIES = ('USD', 'CZK', 'EUR')
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = 'static_collect/'
 
-STATICFILES_DIRS = [
-    BASE_DIR / "static"
-]
+MEDIA_URL = 'media/'
+MEDIA_ROOT = 'media/'
+
+STATICFILES_DIRS = (
+    BASE_DIR / "static",
+    BASE_DIR / "media",
+)
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
+
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'django_libsass.SassCompiler'),
+)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -148,9 +167,6 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 LOGIN_REDIRECT_URL = '/'  # go to homepage
 LOGIN_URL = '/login'
-
-MEDIA_ROOT = BASE_DIR / 'media'
-MEDIA_URL = '/media/'
 
 LOGGING = {
     'version': 1,
