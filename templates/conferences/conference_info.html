@@ -2,6 +2,7 @@
 {% load static %}
 {% load djmoney %}
 {% block content %}
+    <a class="btn btn-sm btn-info" href="{% url 'conferences:conf_display-page' user.username %}">Back to conferences</a>
     <h1>{{ object.name }}
         <div>
             {% if user.is_organization %}

@@ -3,9 +3,9 @@
 {% block content %}
 <div class="container pt-5">
     <form method="POST" novalidate>{% csrf_token %}
-        <h3> Are you sure you want to delete {{ object.name }} conference?</h3>
+        <h3> Are you sure you want to delete {{ object.name }} event?</h3>
         <button class="btn btn-outline-info" type="submit">Delete</button>
-        <a href="{% url 'conferences:conf_detail-page' object.conf_id%}" class="btn btn-outline-info" >Cancel</a>
+        <a href="{% url 'conferences:event_detail-page' object.conference.conf_id object.event_id%}" class="btn btn-outline-info" >Cancel</a>
     </form>
 </div>
 {% endblock %}

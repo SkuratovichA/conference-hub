@@ -51,9 +51,17 @@ class CreateEventForm(ModelForm):
         )
     )
 
+    description = forms.Field(
+        widget=forms.Textarea(
+            attrs={
+                'rows': 10,
+            }
+        )
+    )
+
     class Meta:
         model = conference_models.EventModel
-        fields = ['date_time', 'duration', 'location', 'description']
+        exclude = ('conference',)
         widgets = {
             'conference': forms.HiddenInput(),
         }
@@ -65,3 +73,9 @@ class CreateEventForm(ModelForm):
         event.conference = conference_models.ConferenceModel.objects.get(conf_id=conf_id)
         event.save()
         return event
+
+
+class EditConferenceForm(ModelForm):
+    class Meta:
+        model = conference_models.ConferenceModel
+        exclude = ('visitors', 'organization')
