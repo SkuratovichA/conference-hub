@@ -2,6 +2,7 @@
 {% load compress %}
 
 <form class="d-flex" method="get" action="{% url 'ch:search-page' %}">
+    <input type="hidden" name="type" value="researchers"/>
     <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search" name="q" id="searched">
     <button class="btn" type="submit">Search</button>
 </form>
