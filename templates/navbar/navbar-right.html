@@ -11,6 +11,12 @@
         <span class="navbar-toggler-icon"></span>
     </button>
 
+    {#    TODO 45: add notifications (e-mail, browser)#}
+    <div class="navbar-nav mr-auto">
+        <a class="nav-item nav-link" href="#">Notifications</a>
+    </div>
+
+    {#    dropdown toolbar for user & settings#}
     <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
         {% if user.is_authenticated %}
             <li class="nav-item dropdown">
@@ -24,17 +30,23 @@
                      aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="{% url 'users:profile-page' user.username %}">Profile</a>
                     <a class="dropdown-item" href="{% url 'users:profile_update-page' user.username %}">Edit Profile</a>
-                    <a class="dropdown-divider">------divider-----</a>
+                    <div class="dropdown-divider"></div>
                     {% if user.is_researcher %}
                         <a class="dropdown-item" href="#">My conferences</a>
                         <a class="dropdown-item" href="#">My scheduler</a>
                         <a class="dropdown-item" href="#">My organizations</a>
-                        <a class="dropdown-item" href="#">My invintations</a>
+                        <a class="dropdown-item" href="#">My invites</a>
                     {% elif user.is_orgarnization %}
-                        <a class="dropdown-item" href="#">Manage researchers</a>
+                        {# TODO 41: add list of members with crud functionality#}
+                        <a class="dropdown-item" href="#">Members</a>
+                        {# TODO 40: add list with organization's conferences with a crud functionality#}
+                        <a class="dropdown-item" href="#">Conferences</a>
+                        <div class="dropdown-divider"></div>
+                        {# TODO 42 conference creation for an organization#}
+                        <a class="dropdown-item" href="#">New Conference</a>
                     {% else %}
                     {% endif %}
-                    <a class="dropdown-divider">------divider-----</a>
+                    <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{% url 'users:logout-page' %}">Log Out</a>
                 </div>
             </li>
@@ -44,4 +56,9 @@
         {% endif %}
     </div>
 
+    {#    TODO 43: if bucket is empty, dont't show it #}
+    {#    TODO 44: add a possibility to pay for a conference #}
+    <div class="navbar-nav mr-auto">
+        <a class="nav-item nav-link" href="#">Bucket</a>
+    </div>
 </div>

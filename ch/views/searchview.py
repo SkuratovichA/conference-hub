@@ -7,6 +7,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 # FIXME: change from ListView to another view to get rid of object_list
 class SearchView(generic.ListView):
     # model = users_models.ConferenceUserModel
@@ -32,6 +33,7 @@ class SearchView(generic.ListView):
             Q(user__email__contains=param)
         )
         researcher_Q = Q(last_name__contains=param)
+        conference_Q = Q(name__contains=param)
 
         # get objects
         object_lists = {
@@ -43,10 +45,15 @@ class SearchView(generic.ListView):
                 get_users(users_models.OrganizationModel.objects.filter(
                     conferenceuser_Q
                 )),
+            'conferences':
+                conferences_models.ConferenceModel.objects.filter(
+                    conference_Q
+                )
         }
 
         context = {
-            'object_list': object_lists[type],
+            'object_list': object_lists[type],  # list with researchers/conferences/etc
+
             # TODO андрюха, это я оссавил только для того, чтобы можно быссро протессить html. Потом нужно будет это удалить!
             **object_lists,
             "type": type,

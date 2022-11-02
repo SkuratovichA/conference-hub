@@ -8,46 +8,23 @@
     {% compress css %}
         <link rel="stylesheet" type="text/x-scss" href="{% static 'css/ch/style.scss' %}">
     {% endcompress %}
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 
     <div class="container-lg px-md-2 mt-lg-4 clearfix">
-        <div class="col-12 col-md-2 float-left px-md-2">
-            <nav class="menu border d-none d-md-block">
-                <a class="menu-item whois {% if type == "researchers" %} selected {% endif %}"  href="?{% url_replace request 'type' 'researchers' %}">
-                    Researchers
-                    <span class="ml-1 Counter" data-type="researchers">{{ researchers|length }}</span>
-                </a>
-                <a class="menu-item whois {% if type == "organizations" %} selected {% endif %}" href="?{% url_replace request 'type' 'organizations' %}">
-                    Organizations
-                    <span class="ml-1 Counter" data-type="organizations">{{ organizations|length }}</span>
-                </a>
-            </nav>
-        </div>
+        {% include 'ch/search/search_info.html' with researchers=researchers organizations=organizations conferences=conferences %}
         <div class="col-12 col-md-9 float-left px-2 pt-3 pt-md-0">
+            {#        left part (a window with list elements)#}
             <ul>
-                {% for conferenceuser in object_list %}
-                    <li>
-                        <div class="content-section">
-                            <div class="media">
-                                <img class="rounded-circle account-img" src=" {{ conferenceuser.profile.image.url }} ">
-                                <div class="media-body">
-                                    <fieldset>
-                                        <p class="account-heading">{{ conferenceuser.name }} {{ conferenceuser.researcher.last_name }}</p>
-                                        <p class="text-secondary">Researcher</p>
-                                        <p class="text-secondary">{{ conferenceuser.username }}</p>
-                                        <p class="text-secondary">{{ conferenceuser.email }}</p>
-                                        {% if conferenceuser.address %}
-                                            <p class="text-secondary">Address: {{ conferenceuser.address }}</p>
-                                        {% endif %}
-                                    </fieldset>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    {% empty %}
-                    <li>No users</li>
-                {% endfor %}
+                {% if type == 'organizaitons' or type == 'researchers' %}
+                    {% include 'ch/search/conferenceusers_list.html' with object_list=object_list %}
+                {% elif type == 'conferences' %}
+                    {% include 'ch/search/conferences_list.html' with object_list=object_list %}
+                {% endif %}
             </ul>
+
+            {#        right part (a window wwith descriptions)#}
+
         </div>
     </div>
 {% endblock content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

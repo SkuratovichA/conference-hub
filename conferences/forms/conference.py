@@ -2,7 +2,7 @@ from django import forms
 from django.db import transaction
 from django.forms import ModelForm
 
-from conferences.models.models import Conference, Event
+from conferences.models.models import ConferenceModel, Event
 
 
 class CreateConferenceForm(ModelForm):
@@ -25,7 +25,7 @@ class CreateConferenceForm(ModelForm):
     )
 
     class Meta:
-        model = Conference
+        model = ConferenceModel
         fields = ["name", "date_from", "date_to", "address", "price"]
 
     @transaction.atomic
@@ -53,7 +53,7 @@ class CreateEventForm(ModelForm):
     # def __init__(self, *args, **kwargs):
     # 	conf = kwargs.pop('conf','')
     # 	super().__init__(*args, **kwargs)
-    # 	self.fields['conference']=forms.ModelChoiceField(queryset=Conference.objects.filter(pk=conf))
+    # 	self.fields['conference']=forms.ModelChoiceField(queryset=ConferenceModel.objects.filter(pk=conf))
 
     @transaction.atomic
     def save(self):
