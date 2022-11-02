@@ -7,7 +7,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
 # FIXME: change from ListView to another view to get rid of object_list
 class SearchView(generic.ListView):
     # model = users_models.ConferenceUserModel
@@ -44,8 +43,6 @@ class SearchView(generic.ListView):
                 get_users(users_models.OrganizationModel.objects.filter(
                     conferenceuser_Q
                 )),
-            'conferences':
-                []
         }
 
         context = {

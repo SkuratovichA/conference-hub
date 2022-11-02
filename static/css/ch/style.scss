@@ -1,5 +1,6 @@
 .d-md-block {
 	display: block;
+    width: 200px;
 }
 .container-lg {
 	.menu {
@@ -10,21 +11,59 @@
 		border-radius: 6px;
 	}
 }
-.menu-item {
-	font-size: 20px;
-	color: black;
-	text-decoration: none;
-	text-align: center;
+
+a:hover
+{
+    text-decoration: none;
+    color: #1e1e1e;
 }
+
+.menu-item {
+    position: relative;
+    display: block;
+    padding: 8px 16px;
+    color: #24292f;
+    border-bottom: 1px solid hsla(210,18%,87%,1);
+
+    .selected {
+        cursor: default;
+        background-color: rgba(0,0,0,0);
+    }
+}
+
+.menu-item.selected::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 2px;
+    content: "";
+    background-color: orange;
+}
+
+.menu-item:hover {
+    background-color: #F2EEEE;
+}
+
+.Counter {
+    display: inline-block;
+    float: right;
+    min-width: 20px;
+    padding: 0 6px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 18px;
+    color: #24292f	;
+    text-align: center;
+    background-color: rgba(175,184,193,0.2);
+    border: 1px solid rgba(0,0,0,0);
+    border-radius: 2em;
+}
+
+.ml-1 {
+    margin-left: 4px !important;
+}
+
 ul {
 	list-style: none;
-}
-.menu {
-	ul {
-		padding-left: 0px;
-		text-align: center;
-	}
-	li {
-		border: 1px solid black;
-	}
 }
