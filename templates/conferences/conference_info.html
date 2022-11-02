@@ -3,14 +3,16 @@
 {% load djmoney %}
 {% block content %}
     <h1>{{ object.name }}</h1>
-    <p>{{ object.date_from }} - {{ object.date_to }}</p>
+    <p>{{ object.date_from|date:"D, d M, Y" }} - {{ object.date_to|date:"D, d M, Y" }}</p>
     <p>Address: {{ object.address }}</p>
     <p>Price: {% money_localize object.price %}</p>
     <hr> Events:
     {% if object.events_list %}
         <ul>
             {% for event in object.events_list %}
-                <li><a href="{% url 'conferences:event_detail' object.conf_id event.event_id %}">{{ event.location }} </a></li>
+                <li>
+                    <a href="{% url 'conferences:event_detail' object.conf_id event.event_id %}">{{ event.location }} </a>
+                </li>
             {% endfor %}
         </ul>
     {% else %}

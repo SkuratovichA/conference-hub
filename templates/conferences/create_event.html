@@ -3,14 +3,14 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-<div class="row">
-	<div class="col-md-8 col-sm-10 col-12">
-		<h4>Add a new event to {{conf.name}} conference</h4>
-		<form method="POST" novalidate>{% csrf_token %}
-			<input type="hidden" name="next" value="{{ next }}">
-			{{ form|crispy }}
-			<button class="btn btn-outline-info" type="submit">Add</button>
-		</form>
-	</div>
-</div>
+    <div class="row">
+        <div class="col-md-8 col-sm-10 col-12">
+            <h4>Add a new event to {{ conf.name }} conference</h4>
+            <form method="POST" novalidate>{% csrf_token %}
+                <input type="hidden" name="next" value="{{ next }}">
+                {{ form|crispy }}
+                <button class="btn btn-outline-info" type="submit">Add</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}

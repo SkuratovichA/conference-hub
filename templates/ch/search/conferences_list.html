@@ -1,0 +1,22 @@
+{% for object in object_list %}
+    <li>
+        <div class="content-section">
+            <div class="media">
+                {#            TODO: add background image for a conference#}
+                {#            TODO: add brief description for a conference#}
+                {#                <img class="rounded-circle account-img" src=" {{ object.image.url }} ">#}
+
+                <div class="media-body">
+                    <fieldset>
+                        <p class="account-heading">{{ object.name }}</p>
+                        <p class="text-secondary">{{ object.date_from|date:"D, d M, Y" }} - {{ object.date_to|date:"D, d M, Y" }}</p>
+                        <p class="text-secondary">Address: {{ object.address }}</p>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </li>
+
+    {% empty %}
+    <li>No conferences found.</li>
+{% endfor %}

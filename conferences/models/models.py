@@ -4,7 +4,7 @@ from address.models import AddressField
 from django.db import models
 
 
-class Conference(models.Model):
+class ConferenceModel(models.Model):
     conf_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=250)
     date_from = models.DateField('Begins on')
@@ -24,7 +24,7 @@ class Conference(models.Model):
 
 
 class Event(models.Model):
-    conference = models.ForeignKey(Conference, on_delete=models.CASCADE)
+    conference = models.ForeignKey(ConferenceModel, on_delete=models.CASCADE)
     event_id = models.AutoField(primary_key=True)
     date_time = models.DateTimeField('Starts at')
     duration = models.DurationField()
