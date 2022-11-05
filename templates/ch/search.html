@@ -15,7 +15,7 @@
         <div class="col-12 col-md-9 float-left px-2 pt-3 pt-md-0">
             {#        left part (a window with list elements)#}
             <ul>
-                {% if type == 'organizaitons' or type == 'researchers' %}
+                {% if type == 'organizations' or type == 'researchers' %}
                     {% include 'ch/search/conferenceusers_list.html' with object_list=object_list %}
                 {% elif type == 'conferences' %}
                     {% include 'ch/search/conferences_list.html' with object_list=object_list %}

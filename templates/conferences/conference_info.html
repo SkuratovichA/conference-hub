@@ -2,10 +2,12 @@
 {% load static %}
 {% load djmoney %}
 {% block content %}
-    <a class="btn btn-sm btn-info" href="{% url 'conferences:conf_display-page' user.username %}">Back to conferences</a>
+    {% if user.is_organization %}
+        <a class="btn btn-sm btn-info" href="{% url 'conferences:conf_display-page' user.username %}">To my conferences</a>
+    {%  endif %}
     <h1>{{ object.name }}
         <div>
-            {% if user.is_organization %}
+            {% if user.id == object.organization.user_id %}
                 <a class="btn btn-sm btn-info" href="{% url 'conferences:conf_edit-page' user.username object.conf_id %}">Edit conference</a>
                 <a class="btn btn-sm btn-info" href="{% url 'conferences:conf_delete-page' user.username object.conf_id%}">Delete conference</a>
             {%  endif %}
@@ -25,9 +27,9 @@
         There are no events added to this conference yet.
     {% endif %}
     </hr>
-    {% if user.is_organization %}
+    {% if user.id == object.organization.user_id %}
         <hr> <a class="btn btn-sm btn-info" href="{% url 'conferences:event_create-page' object.pk user.username %}">Add a new event</a></hr>
-    {% else %}
-        <a class="btn btn-sm btn-info" href="{% url 'conferences:conf_add_user-page' object.pk user.username %}">Buy ticket</a>
+    {% elif user.is_researcher%}
+        <a class="btn btn-sm btn-info" href="#">Buy ticket</a>
     {%  endif %}
 {% endblock %}

@@ -4,7 +4,7 @@
 {% block content %}
 <h1>{{object.location}}
     <div>
-        {% if user.is_organization %}
+        {% if user.id == object.organization.user_id%}
             <a class="btn btn-sm btn-info" href="{% url 'conferences:event_edit-page' object.conference.conf_id user.username object.event_id %}">Edit event</a>
             <a class="btn btn-sm btn-info" href="{% url 'conferences:event_delete-page' object.conference.conf_id user.username object.event_id%}">Delete event</a>
         {%  endif %}
