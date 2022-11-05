@@ -2,6 +2,7 @@ from django import forms
 from django.db import transaction
 from django.forms import ModelForm
 from users import models as user_models
+from django.utils.text import slugify
 
 from conferences import models as conference_models
 
@@ -28,16 +29,19 @@ class CreateConferenceForm(ModelForm):
 
     class Meta:
         model = conference_models.ConferenceModel
-        fields = ["name", "date_from", "date_to", "address", "price"]
+        exclude = ('organization', 'visitors', 'slug')
         widgets = {
             'organization': forms.HiddenInput(),
+            'visitors': forms.HiddenInput(),
+            'slug': forms.HiddenInput(),
         }
 
     @transaction.atomic
     def save(self, user_slag):
         # first, create a user
         conf = super().save(commit=False)
-        conf.organization = user_models.ConferenceUserModel.objects.get(username=user_slag, is_organization=True).organization
+        conf.organization = user_models.OrganizationModel.objects.get(user__username=user_slag)
+        conf.slug = slugify(conf.name)
         conf.save()
         return conf
 
@@ -57,7 +61,8 @@ class CreateEventForm(ModelForm):
             attrs={
                 'rows': 10,
             }
-        )
+        ),
+        required=False
     )
 
     class Meta:
@@ -68,10 +73,10 @@ class CreateEventForm(ModelForm):
         }
 
     @transaction.atomic
-    def save(self, conf_id):
+    def save(self, conf_slug):
         # first, create a user
         event = super().save(commit=False)
-        event.conference = conference_models.ConferenceModel.objects.get(conf_id=conf_id)
+        event.conference = conference_models.ConferenceModel.objects.get(slug=conf_slug)
         event.save()
         return event
 

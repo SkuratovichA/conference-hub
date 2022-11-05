@@ -14,7 +14,7 @@ class DisplayConferenceView(generic.ListView):
     def get_queryset(self):
         """Return the future events"""
         return conf_models.ConferenceModel.objects.filter(
-            date_from__gte=timezone.now(), organization__user__username=self.kwargs.get('slug')
+            date_from__gte=timezone.now(), organization__user__username=self.kwargs.get('username')
         ).order_by('date_from')
 
 
@@ -24,9 +24,9 @@ class CreateConferenceView(generic.CreateView):
     template_name = 'conferences/create_conference.html'
 
     def form_valid(self, form):
-        slug = self.kwargs.get('slug')
-        conf = form.save(slug)
-        return redirect('conferences:conf_display-page', slug)
+        username = self.kwargs.get('username')
+        conf = form.save(username)
+        return redirect('conferences:conf_display-page', username)
 
     def form_invalid(self, form):
         return super().form_invalid(form)
@@ -38,12 +38,12 @@ class EditConferenceView(generic.UpdateView):
     template_name = 'conferences/edit_conference.html'
 
     def get_object(self, queryset=None):
-        conf_id = self.kwargs.get('pk')
-        return get_object_or_404(conf_models.ConferenceModel, conf_id=conf_id)
+        conf_slug = self.kwargs.get('slug')
+        return get_object_or_404(conf_models.ConferenceModel, slug=conf_slug)
 
     def form_valid(self, form):
         form.save()
-        return redirect('conferences:conf_detail-page', self.kwargs.get('pk'))
+        return redirect('conferences:conf_detail-page', self.kwargs.get('slug'))
 
 
 class ConfInfoView(generic.DetailView):
@@ -53,12 +53,11 @@ class ConfInfoView(generic.DetailView):
 
 class DeleteConferenceView(generic.DeleteView):
     model = conf_models.ConferenceModel
-    pk_url_kwarg = 'pk'
     template_name = 'conferences/delete_conference.html'
 
     def get_success_url(self):
-        slug = self.kwargs.get('slug')
-        return reverse('conferences:conf_display-page', kwargs={'slug':slug})
+        username = self.kwargs.get('username')
+        return reverse('conferences:conf_display-page', kwargs={'username': username})
 
 
 class EventInfoView(generic.DetailView):
@@ -72,9 +71,9 @@ class CreateEventView(generic.CreateView):
     template_name = 'conferences/create_event.html'
 
     def form_valid(self, form):
-        conf_id = self.kwargs.get('pk')
-        event = form.save(conf_id)
-        return redirect('conferences:conf_detail-page', conf_id)
+        conf_slug = self.kwargs.get('slug')
+        form.save(conf_slug)
+        return redirect('conferences:conf_detail-page', conf_slug)
 
     def form_invalid(self, form):
         return super().form_invalid(form)
@@ -89,8 +88,8 @@ class EditEventView(generic.UpdateView):
         return get_object_or_404(conf_models.EventModel, event_id=event_id)
 
     def form_valid(self, form):
-        form.save(self.kwargs.get('fk'))
-        return redirect('conferences:event_detail-page', self.kwargs.get('fk'), self.kwargs.get('pk'))
+        form.save(self.kwargs.get('slug'))
+        return redirect('conferences:event_detail-page', self.kwargs.get('slug'), self.kwargs.get('pk'))
 
 
 class DeleteEventView(generic.DeleteView):
@@ -99,5 +98,4 @@ class DeleteEventView(generic.DeleteView):
     template_name = 'conferences/delete_event.html'
 
     def get_success_url(self):
-        keys = {'fk': self.kwargs.get('pk'), 'pk': self.kwargs.get('pk')}
-        return reverse('conferences:event_detail-page', kwargs=keys)
+        return reverse('conferences:conf_detail-page', kwargs={'slug': self.kwargs.get('slug')})

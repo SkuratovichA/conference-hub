@@ -10,7 +10,7 @@
 			<input type="hidden" name="next" value="{{ next }}">
 			{{ form|crispy }}
 			<button class="btn btn-outline-info" type="submit">Save changes</button>
-            <a href="{% url 'conferences:event_detail-page' object.conference.conf_id object.event_id%}" class="btn btn-outline-info" >Cancel</a>
+            <a href="{% url 'conferences:event_detail-page' object.conference.slug object.event_id%}" class="btn btn-outline-info" >Cancel</a>
 
 		</form>
 	</div>

@@ -5,8 +5,8 @@ from django.db import models
 
 
 class ConferenceModel(models.Model):
-    conf_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=250)
+    slug = models.SlugField(unique=True)
     date_from = models.DateField('Begins on')
     date_to = models.DateField('Ends on')
     address = AddressField(on_delete=models.CASCADE, null=True)
