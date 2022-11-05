@@ -210,4 +210,4 @@ LOGGING = {
     }
 }
 
-GOOGLE_API_KEY = env('GOOGLE_API_KEY')
+GOOGLE_API_KEY = ""

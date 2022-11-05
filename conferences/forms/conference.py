@@ -8,19 +8,20 @@ from conferences import models as conference_models
 
 class CreateConferenceForm(ModelForm):
     date_from = forms.DateField(
-        input_formats=[f'%d.%m.%Y'],
+        # TODO on update it has the myscl format, so until solved let it be in the same format here
+        input_formats=[f'%Y-%m-%d'],
         widget=forms.DateInput(
             attrs={
-                'placeholder': 'dd.mm.yyyy',
+                'placeholder': 'yyyy-mm-dd',
             }
         )
     )
 
     date_to = forms.DateField(
-        input_formats=[f'%d.%m.%Y'],
+        input_formats=[f'%Y-%m-%d'],
         widget=forms.DateInput(
             attrs={
-                'placeholder': 'dd.mm.yyyy',
+                'placeholder': 'yyyy-mm-dd',
             }
         )
     )
