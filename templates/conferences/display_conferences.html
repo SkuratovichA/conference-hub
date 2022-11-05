@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% if upcoming_confs %}
+        <ul>
+            {% for conf in upcoming_confs %}
+                <li>
+                    <a href="{% url 'conferences:conf_detail-page' conf.slug %}">{{ conf.name }} {{ conf.date_from|date:"D, d M, Y" }}
+                        - {{ conf.date_to|date:"D, d M, Y" }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <hr>There are no conferences planed for future ;(
+    {% endif %}
+    <hr> <a class="btn btn-sm btn-info" href="{% url 'conferences:conf_create-page' user.username %}">Create a new conference</a>
+{% endblock content %}

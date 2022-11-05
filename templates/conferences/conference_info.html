@@ -2,7 +2,17 @@
 {% load static %}
 {% load djmoney %}
 {% block content %}
-    <h1>{{ object.name }}</h1>
+    {% if user.is_organization %}
+        <a class="btn btn-sm btn-info" href="{% url 'conferences:conf_display-page' user.username %}">To my conferences</a>
+    {%  endif %}
+    <h1>{{ object.name }}
+        <div>
+            {% if user.id == object.organization.user_id %}
+                <a class="btn btn-sm btn-info" href="{% url 'conferences:conf_edit-page' user.username object.slug %}">Edit conference</a>
+                <a class="btn btn-sm btn-info" href="{% url 'conferences:conf_delete-page' user.username object.slug%}">Delete conference</a>
+            {%  endif %}
+        </div>
+    </h1>
     <p>{{ object.date_from|date:"D, d M, Y" }} - {{ object.date_to|date:"D, d M, Y" }}</p>
     <p>Address: {{ object.address }}</p>
     <p>Price: {% money_localize object.price %}</p>
@@ -10,14 +20,25 @@
     {% if object.events_list %}
         <ul>
             {% for event in object.events_list %}
-                <li>
-                    <a href="{% url 'conferences:event_detail' object.conf_id event.event_id %}">{{ event.location }} </a>
-                </li>
+                <li><a href="{% url 'conferences:event_detail-page' object.slug event.event_id %}">{{ event.location }} </a></li>
             {% endfor %}
         </ul>
     {% else %}
-        There are no events added to this confernce yet.
+        There are no events added to this conference yet.
     {% endif %}
     </hr>
-    <hr> <a class="btn btn-sm btn-info" href="{% url 'conferences:event_create' object.pk %}">Add a new event</a></hr>
+    {% if user.id == object.organization.user_id %}
+         <div class="dropdown">
+            <button class="btn btn btn-sm btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Add event
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="{% url 'conferences:event_create-page' object.slug user.username %}?type=lunch">Lunch</a>
+                <a class="dropdown-item" href="{% url 'conferences:event_create-page' object.slug user.username %}?type=lecture">Lecture</a>
+                <a class="dropdown-item" href="#">Poster Session</a>
+            </div>
+        </div>
+    {% elif user.is_researcher%}
+        <a class="btn btn-sm btn-info" href="#">Buy ticket</a>
+    {%  endif %}
 {% endblock %}

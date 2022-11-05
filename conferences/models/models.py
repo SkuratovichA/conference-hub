@@ -1,19 +1,19 @@
-from users.models import ConferenceUserModel, ResearcherModel
+from users import models as user_models
 from djmoney.models.fields import MoneyField
 from address.models import AddressField
 from django.db import models
 
 
 class ConferenceModel(models.Model):
-    conf_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=250)
+    slug = models.SlugField(unique=True)
     date_from = models.DateField('Begins on')
     date_to = models.DateField('Ends on')
     address = AddressField(on_delete=models.CASCADE, null=True)
     price = MoneyField(max_digits=10, decimal_places=2, default_currency='EUR', null=True)
 
-    # organization = models.ForeignKey(Organization)
-    visitors = models.ManyToManyField(ResearcherModel)
+    organization = models.ForeignKey(user_models.OrganizationModel, on_delete=models.CASCADE)
+    visitors = models.ManyToManyField(user_models.ResearcherModel)
 
     def __str__(self):
         return f'{self.name} {self.date_from} {self.date_to}'
@@ -23,8 +23,8 @@ class ConferenceModel(models.Model):
         return self.event_set.all()
 
 
-class Event(models.Model):
-    conference = models.ForeignKey(ConferenceModel, on_delete=models.CASCADE)
+class EventModel(models.Model):
+    conference = models.ForeignKey(ConferenceModel, on_delete=models.CASCADE, related_name='event_set')
     event_id = models.AutoField(primary_key=True)
     date_time = models.DateTimeField('Starts at')
     duration = models.DurationField()
@@ -35,12 +35,12 @@ class Event(models.Model):
         unique_together = ['conference', 'event_id']
 
 
-class Lunch(Event):
+class LunchModel(EventModel):
     price = MoneyField(max_digits=10, decimal_places=2, default_currency='EUR')
     menu = models.CharField(max_length=250)
-    customers = models.ManyToManyField(ConferenceUserModel)
+    customers = models.ManyToManyField(user_models.ResearcherModel)
 
 
-class Lecture(Event):
+class LectureModel(EventModel):
     name = models.CharField(max_length=250)
-    researchers = models.ManyToManyField(ResearcherModel)
+    researchers = models.ManyToManyField(user_models.ResearcherModel)

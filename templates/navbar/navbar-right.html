@@ -36,14 +36,13 @@
                         <a class="dropdown-item" href="#">My scheduler</a>
                         <a class="dropdown-item" href="#">My organizations</a>
                         <a class="dropdown-item" href="#">My invites</a>
-                    {% elif user.is_orgarnization %}
+                    {% elif user.is_organization %}
                         {# TODO 41: add list of members with crud functionality#}
                         <a class="dropdown-item" href="#">Members</a>
                         {# TODO 40: add list with organization's conferences with a crud functionality#}
-                        <a class="dropdown-item" href="#">Conferences</a>
+                        <a class="dropdown-item" href="{% url 'conferences:conf_display-page' user.username %}">Conferences</a>
                         <div class="dropdown-divider"></div>
-                        {# TODO 42 conference creation for an organization#}
-                        <a class="dropdown-item" href="#">New Conference</a>
+                        <a class="dropdown-item" href="{% url 'conferences:conf_create-page' user.username %}">New Conference</a>
                     {% else %}
                     {% endif %}
                     <div class="dropdown-divider"></div>
