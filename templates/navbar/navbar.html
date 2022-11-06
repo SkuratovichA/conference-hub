@@ -1,23 +1,37 @@
 {% load static %}
 
-<nav class="navbar bg-navbar navbar-expand-md {# navbar-dark#} fixed-top">
+<nav class="navbar bg-navbar navbar-expand-md fixed-top">
+    <style>
+        .bg-navbar {
+            background: linear-gradient(to right, #685d75 20%, #230157 100%);
+        }
+
+        nav .navbar-nav a {
+            color: white;
+        }
+
+        nav .navbar-header a {
+            color: white;
+        }
+    </style>
+
     <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{% url 'ch:home-page' %}"><b>C</b>onference <b>H</b>ub</a>
+        </div>
 
-        <a class="navbar-brand" href="{% url 'ch:home-page' %}"><img alt="Logo" style="width: 40px;"
-                                                                     class="rounded-circle"
-                                                                     src="{% static "/static/logo.png" %}"></a>
+        {#        I don't know what this button is for#}
+        {#        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"#}
+        {#                aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">#}
+        {#            <span class="navbar-toggler-icon"></span>#}
+        {#        </button>#}
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"
-                aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" {#id="navbarToggle"#} id="navbarNavDarkDropdown">
+        <nav class="collapse navbar-collapse" id="navbarToggle" id="navbarNavDarkDropdown">
             <!-- Navbar Left side -->
             {% include "navbar/navbar-left.html" %}
             <!-- Navbar Right side -->
             {% include "navbar/navbar-right.html" %}
-        </div>
+        </nav>
 
     </div>
 </nav>

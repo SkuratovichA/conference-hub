@@ -1,10 +1,40 @@
 {% load static %}
 {% load compress %}
 
-<form class="d-flex" method="get" action="{% url 'ch:search-page' %}">
+<style>
+        .transparent-input {
+            background-color: rgba(0, 0, 0, 0);
+            color: white;
+            border-color: white;
+        }
+
+        .transparent-input:focus {
+            background-color: rgba(0, 0, 0, 0);
+            color: white;
+            border-color: white;
+        }
+
+        .transparent-input::placeholder {
+            background-color: rgba(0, 0, 0, 0);
+            color: white;
+            border-color: white;
+            opacity: 1;
+        }
+
+</style>
+
+<form class="navbar-form navbar-left" method="get" action="{% url 'ch:search-page' %}">
     <input type="hidden" name="type" value="researchers"/>
-    <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search" name="q" id="searched">
-    <button class="btn" type="submit">Search</button>
+    <div class="input-group">
+        <input type="text" class="form-control transparent-input" placeholder="Search" aria-label="Search" name="q"
+               id="searched">
+        <div class="input-group-btn">
+            <button class="btn btn-default transparent-input" type="submit">
+                <b>?</b>
+                {#                    <i class="glyphicon glyphicon-search" ></i>#}
+            </button>
+        </div>
+    </div>
 </form>
 
 <div class="navbar-nav mr-auto">

@@ -5,22 +5,45 @@
 
 {#<script src="{% static 'static/js/dropdown.js' %}"></script>#}
 
-<div class="navbar-nav">
+<div class="navbar-nav navbar-inverse">
+    <style>
+        .dropdown-item {
+            color: black !important;
+            background: transparent !important;
+        }
+        .dropdown-item a{
+            color: black !important;
+            background: transparent !important;
+        }
+        .dropdown-item:hover{
+            color: black !important;
+            background: rgba(0, 0, 0, 0.04) !important;
+            border-color: rgba(0, 0, 0, 0.04) !important;
+        }
+        .dropdown-item:focus{
+            color: white !important;
+            background: rgba(0, 0, 0, 0.47) !important;
+            border-color: rgba(0, 0, 0, 0.47) !important;
+        }
+    </style>
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown"
             aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
     {#    TODO 45: add notifications (e-mail, browser)#}
-    <div class="navbar-nav mr-auto">
-        <a class="nav-item nav-link" href="#">Notifications</a>
-    </div>
+    {% if user.is_authenticated %}
+        <div class="navbar-nav mr-auto">
+            <a class="nav-item nav-link" style="color: white" href="#">Notifications</a>
+        </div>
+    {% endif %}
 
     {#    dropdown toolbar for user & settings#}
     <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
         {% if user.is_authenticated %}
             <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+                <a class="nav-link " data-toggle="dropdown" role="button"
                    id="navbarDropdownMenuLink" aria-haspopup="true"
                    aria-expanded="false">
                     <img class="rounded-circle siteheader-img" src="{% static "/static/logo.png" %}">
@@ -57,7 +80,9 @@
 
     {#    TODO 43: if bucket is empty, dont't show it #}
     {#    TODO 44: add a possibility to pay for a conference #}
-    <div class="navbar-nav mr-auto">
-        <a class="nav-item nav-link" href="#">Bucket</a>
-    </div>
+    {% if user.is_authenticated %}
+        <div class="navbar-nav mr-auto">
+            <a class="nav-item nav-link" href="#">Bucket</a>
+        </div>
+    {% endif %}
 </div>

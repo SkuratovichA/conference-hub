@@ -38,3 +38,4 @@ class ConferenceUserManager(BaseUserManager):
                 raise ValueError(f'Superuser must have {d}==True. {kd} provided')
         return self._create_user(**kwargs)
 
+

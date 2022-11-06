@@ -74,18 +74,14 @@ a.article-title {
 	vertical-align: middle;
 }
 .account-img {
-	height: 125px;
-	width: 125px;
+	display: flex;
 	margin-right: 20px;
 	margin-bottom: 16px;
 }
 .siteheader-img {
 	height: 30px;
-	width: 30px;
-	&:hover {
-		height: 32px;
-		width: 32px;
-	}
+	position: relative;
+	display: inline-block;
 }
 .account-heading {
 	font-size: 2.5rem;
@@ -115,7 +111,7 @@ a.article-title {
 			pointer-events: none;
 		}
 	}
-	#btn {
+	.btn {
 		color: #fff;
 		left: 45%;
 		top: 55px;
@@ -195,6 +191,11 @@ a.article-title {
 	transition: all 0.5s ease;
 }
 
-a {
-	color: #fff;
+.content-section:hover {
+	border-color: #7c1f1f;
+
 }
+.media-body:hover {
+	border-color: #7c1f1f;
+}
+

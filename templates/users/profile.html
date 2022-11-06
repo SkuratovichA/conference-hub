@@ -3,32 +3,75 @@
 {% block content %}
 
     {# TODO 19 add styles #}
-    <div class="content-section">
-        <div class="media">
-            <img class="rounded-circle account-img" src=" {{ object.profile.image.url }} ">
-        </div>
+    <div class="content-section row justify-content-between">
+        <div class="col-4">
+            <div class="media">
+                <img class="rounded-circle account-img" src=" {{ object.profile.image.url }} ">
+            </div>
 
-        <fieldset>
-            {% if object.is_researcher %}
-                <p class="account-heading">{{ object.name }} {{ object.researcher.last_name }}</p>
-                <p class="text-secondary">Researcher</p>
-            {% elif user.is_organization %}
-                <p class="account-heading">{{ object.name }}</p>
-                <p class="text-secondary">Organization</p>
-            {% else %}
-                {#             admin?#}
-            {% endif %}
-            <p class="text-secondary">{{ object.username }}</p>
-            <p class="text-secondary">{{ object.email }}</p>
+            <fieldset>
+                {% if object.is_researcher %}
+                    <p class="account-heading">{{ object.name }} {{ object.researcher.last_name }}</p>
+                {% elif user.is_organization %}
+                    <p class="account-heading">{{ object.name }}</p>
+                {% else %}
+                    {#             admin?#}
+                {% endif %}
+                <p class="text-secondary">{{ object.username }}</p>
+                <p class="text-secondary"><b>Email:</b> {{ object.email }}</p>
+            </fieldset>
+
+            <button class="btn1_wide" href="{% url 'users:profile_update-page' user.username %}">
+                Edit profile
+            </button>
+
             {% if object.address %}
-                <p class="text-secondary">Address: {{ object.address }}</p>
+                <p class="text-secondary"><b>Address:</b> {{ object.address }}</p>
             {% endif %}
-        </fieldset>
-    </div>
 
-    {% if user.is_authenticated and object == user %}
-        <a class="btn btn-sm btn-info" href="{% url 'users:profile_update-page' user.username %}">Edit profile</a>
-        <a class="btn btn-sm btn-info" href="{% url 'users:password_change-page' user.username %}">Change password</a>
-    {% endif %}
+            {% if object.is_researcher and oboject.organizations.count > 0 %}
+                <div>
+                    <h2>Organizations</h2>
+                </div>
+            {% endif %}
+
+        </div> <!-- col-4 -->
+
+        <div class="col-6">
+            {% if object.is_organization %}
+                <div>
+                    <h2>Researchers</h2>
+                </div>
+                <div>
+                    <h2>Conferences</h2>
+                </div>
+            {% elif object.is_researcher %}
+                <div>
+                    <h2>Lectures</h2>
+                </div>
+                <div>
+                    <h2>Poster Sessions</h2>
+                </div>
+            {% else %}
+            {% endif %}
+        </div> <!-- col-6 -->
+
+        {#Dropdown button - edit, change password, delete#}
+        <div class="col-1">
+            {% if user.is_authenticated and object == user %}
+                <button class="btn bg-transparent" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        style="font-size: 30px;">
+                    &#8942
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="{% url 'users:profile_update-page' user.username %}">Edit
+                        profile</a>
+                    <a class="dropdown-item" href="{% url 'users:password_change-page' user.username %}">Change
+                        password</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
 
 {% endblock content %}

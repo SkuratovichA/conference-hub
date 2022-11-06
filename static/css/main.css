@@ -128,7 +128,7 @@ a.article-title:hover {
   opacity: 0;
   pointer-events: none;
 }
-.sidebar #btn {
+.sidebar .btn {
   color: #fff;
   left: 45%;
   top: 55px;
@@ -201,8 +201,12 @@ a.article-title:hover {
   transition: all 0.5s ease;
 }
 
-a {
-  color: #fff;
+.content-section:hover {
+  border-color: #7c1f1f;
+}
+
+.media-body:hover {
+  border-color: #7c1f1f;
 }
 
 /*# sourceMappingURL=main.css.map */
