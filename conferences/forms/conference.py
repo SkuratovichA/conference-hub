@@ -3,6 +3,7 @@ from django.db import transaction
 from django.forms import ModelForm
 from users import models as user_models
 from django.utils.text import slugify
+from djmoney.forms.fields import MoneyField
 
 from conferences import models as conference_models
 
@@ -56,6 +57,16 @@ class CreateEventForm(ModelForm):
         )
     )
 
+    class Meta:
+        model = conference_models.EventModel
+        exclude = ('conference', 'type')
+        widgets = {
+            'conference': forms.HiddenInput(),
+            'type': forms.HiddenInput(),
+        }
+
+
+class LectureForm(CreateEventForm):
     description = forms.Field(
         widget=forms.Textarea(
             attrs={
@@ -67,17 +78,49 @@ class CreateEventForm(ModelForm):
 
     class Meta:
         model = conference_models.EventModel
-        exclude = ('conference',)
+        fields = ('name', 'location', 'date_time', 'duration', 'description',)
+
+    @transaction.atomic
+    def save(self, conf_slug):
+        event = super().save(commit=False)
+        event.conference = conference_models.ConferenceModel.objects.get(slug=conf_slug)
+        event.type = conference_models.EventModel.EventType.LECTURE
+        event.save()
+        lecture = conference_models.LectureModel.objects.create(
+            event=event,
+        )
+        return event
+
+
+class LunchForm(CreateEventForm):
+    price = MoneyField(max_digits=10, decimal_places=2, default_currency='EUR')
+    menu = forms.Field(
+        widget=forms.Textarea(
+            attrs={
+                'rows': 10,
+            }
+        ),
+    )
+    name = forms.Field(initial='Lunch')
+
+    class Meta:
+        model = conference_models.EventModel
+        fields = ('name',  'location', 'date_time', 'duration', 'price', 'menu')
         widgets = {
-            'conference': forms.HiddenInput(),
+            'description': forms.HiddenInput(),
         }
 
     @transaction.atomic
     def save(self, conf_slug):
-        # first, create a user
         event = super().save(commit=False)
         event.conference = conference_models.ConferenceModel.objects.get(slug=conf_slug)
+        event.type = conference_models.EventModel.EventType.LUNCH
         event.save()
+        lunch = conference_models.LunchModel.objects.create(
+            event=event,
+            menu=self.cleaned_data.get('menu'),
+            price=self.cleaned_data.get('price'),
+        )
         return event
 
 

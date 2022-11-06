@@ -18,13 +18,23 @@ class EventInfoView(generic.DetailView):
 
 class CreateEventView(PermissionRequiredMixin, LoginRequiredMixin, generic.CreateView):
     model = EventModel
-    form_class = conf_forms.CreateEventForm
     template_name = 'conferences/create_event.html'
+
+    def get_form_class(self):
+        event_type = self.request.GET.get('type')
+        if event_type == "lecture":
+            return conf_forms.LectureForm
+        elif event_type == "lunch":
+            return conf_forms.LunchForm
+        # elif event_type == "poster":
+        #     return conf_forms.PosterForm
+        else:
+            return conf_forms.CreateEventForm
 
     def has_permission(self):
         conf_slug = self.kwargs.get('slug')
         conference = ConferenceModel.objects.get(slug=conf_slug)
-        logger.debug(f'`{conference}` must exist & be owned by a user trying to create enent')
+        logger.debug(f'`{conference}` must exist & be owned by a user trying to create event')
         can_edit = conference is not None
         can_edit = can_edit and self.request.user.is_organization
         can_edit = can_edit and conference.user == self.request.user
