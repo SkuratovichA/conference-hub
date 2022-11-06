@@ -32,12 +32,6 @@
         <span class="navbar-toggler-icon"></span>
     </button>
 
-    {#    TODO 45: add notifications (e-mail, browser)#}
-    {% if user.is_authenticated %}
-        <div class="navbar-nav mr-auto">
-            <a class="nav-item nav-link" style="color: white" href="#">Notifications</a>
-        </div>
-    {% endif %}
 
     {#    dropdown toolbar for user & settings#}
     <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
@@ -83,6 +77,13 @@
     {% if user.is_authenticated %}
         <div class="navbar-nav mr-auto">
             <a class="nav-item nav-link" href="#">Bucket</a>
+        </div>
+    {% endif %}
+
+    {#    TODO 45: add notifications (e-mail, browser)#}
+    {% if user.is_authenticated %}
+        <div class="navbar-nav mr-auto" onclick="manage_notification_bar()">
+            <a class="nav-item nav-link">Invites</a>
         </div>
     {% endif %}
 </div>

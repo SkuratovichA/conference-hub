@@ -1,43 +1,76 @@
+$color_1: #000000;
+$color_2: black;
+$background-color_1: white;
+
+/*# sourceMappingURL=buttons.css.map */
 .btn1 {
-  border: 2px solid #e7e7e7;
-  color: #000000;
-  text-align: center;
-  border-radius: 15px;
-  padding: 15px 32px;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-  -webkit-transition-duration: 0.4s; /* Safari */
-  transition-duration: 0.4s;
-  width: 50%;
-
-  &:hover {
-    box-shadow: 0 8px 10px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
-    color: black;
-  }
+	border: 2px solid #e7e7e7;
+	color: $color_1;
+	text-align: center;
+	border-radius: 15px;
+	padding: 15px 32px;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	cursor: pointer;
+	-webkit-transition-duration: 0.4s;
+	transition-duration: 0.4s;
+	width: 50%;
+	&:hover {
+		box-shadow: 0 8px 10px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+		color: $color_2;
+	}
 }
-
-.btn_horizontal {
-  float: left;
-  width: 100%;
-  text-align: center;
-  position: relative;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, 100%);
-  display: block;
-}
-
-.btn1_profile {
-  @extend .btn1;
-  display: inline;
-  background-color: white;
-}
-
 .btn1_wide {
-  @extend .btn1;
-  background-color: white;
-  width: 100%;
+	border: 2px solid #e7e7e7;
+	color: $color_1;
+	text-align: center;
+	border-radius: 15px;
+	padding: 15px 32px;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	cursor: pointer;
+	-webkit-transition-duration: 0.4s;
+	transition-duration: 0.4s;
+	width: 50%;
+	background-color: $background-color_1;
+	width: 100%;
+	&:hover {
+		box-shadow: 0 8px 10px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+		color: $color_2;
+	}
+}
+.btn1_profile {
+	border: 2px solid #e7e7e7;
+	color: $color_1;
+	text-align: center;
+	border-radius: 15px;
+	padding: 15px 32px;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	cursor: pointer;
+	-webkit-transition-duration: 0.4s;
+	transition-duration: 0.4s;
+	width: 50%;
+	display: inline;
+	background-color: $background-color_1;
+	&:hover {
+		box-shadow: 0 8px 10px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+		color: $color_2;
+	}
+}
+.btn_horizontal {
+	float: left;
+	width: 100%;
+	text-align: center;
+	position: relative;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, 100%);
+	display: block;
 }
