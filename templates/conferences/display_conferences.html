@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
     <div>
-        <ul style="list-style: none">
+        <ul style="list-style: none; position: relative;">
             {% for conf in upcoming_confs %}
                 <li>
                     <div onclick="location.href='{% url 'conferences:conf_detail-page' conf.slug %}';"
@@ -23,6 +23,5 @@
             <a class="btn1_wide" href="{% url 'conferences:conf_create-page' user.username %}">Create a new conference
             </a>
         </div>
-
     </div>
 {% endblock content %}

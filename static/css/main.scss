@@ -74,18 +74,14 @@ a.article-title {
 	vertical-align: middle;
 }
 .account-img {
-	height: 125px;
-	width: 125px;
+	display: flex;
 	margin-right: 20px;
 	margin-bottom: 16px;
 }
 .siteheader-img {
 	height: 30px;
-	width: 30px;
-	&:hover {
-		height: 32px;
-		width: 32px;
-	}
+	position: relative;
+	display: inline-block;
 }
 .account-heading {
 	font-size: 2.5rem;

@@ -3,72 +3,77 @@
 {% load djmoney %}
 {% block content %}
 
-    <div class="content-section">
+    <div style=" background-color: orange">
 
-        {% if user.is_organization %}
-            {#            TODO 51: add path how we got here#}
-            {#            TODO 52: change the button to the appropriate one#}
-            <div class="btn_horizontal">
-                <div class="btn1_profile" href="{% url 'conferences:conf_display-page' user.username %}">Back</div>
-            </div>
-        {% endif %}
+        {#        <div class="btn_horizontal" style="position: absolute; top: 0;">#}
+        {#            {% if user.is_organization %}#}
+        {#            TODO 51: add path how we got here#}
+        {#            TODO 52: change the button to the appropriate one#}
+        {#                <div class="btn1_wide" href="{% url 'conferences:conf_display-page' user.username %}">Back</div>#}
+        {#            {% endif %}#}
+        {#        </div>#}
 
-        {{ object.name }}
-        <div>
-            {% if user.id == object.organization.user_id %}
-                <div class="btn_horizontal">
-                    <a class="btn1_profile"
-                       href="{% url 'conferences:conf_edit-page' user.username object.slug %}">Edit conference</a>
-                    <a class="btn1_profile"
-                       href="{% url 'conferences:conf_delete-page' user.username object.slug %}">Delete conference</a>
-                </div>
-            {% endif %}
-        </div>
+        <div class="content-section row justify-content-between">
 
+            <div class="col-6">
+                <h1 class="account-heading">{{ object.name }}</h1>
 
-        <div>
-        <a>{{ object.date_from|date:"D, d M, Y" }} - {{ object.date_to|date:"D, d M, Y" }}</a>
-        </div>
+                <fieldset>
+                    <p class="text-secondary">{{ object.date_from|date:"D, d M, Y" }} -
+                        {{ object.date_to|date:"D, d M, Y" }}</p>
+                    <p class="text-secondary">Address: {{ object.address }}</p>
+                    <p class="text-secondary">Price: {% money_localize object.price %}</p>
+                </fieldset>
 
-        <div>
-        <a>Address: {{ object.address }}</a>
-        </div>
-
-        <div>
-        <a>Price: {% money_localize object.price %}</a>
-        </div>
-
-        <div>
-        <a>Events:</a>
-
-        <ul>
-            {% for event in object.events_list %}
-                <li>
-                    <a href="{% url 'conferences:event_detail-page' object.slug event.event_id %}">{{ event.location }} </a>
-                </li>
-                {% empty %}
-                <a>There are no events added to this conference yet.</a>
-            {% endfor %}
-        </ul>
-
-        </div>
-        {% if user.id == object.organization.user_id %}
-            <div class="dropdown">
-                <button class="btn btn btn-sm btn-info dropdown-toggle" type="button" id="dropdownMenuButton"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Add event
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item"
-                       href="{% url 'conferences:event_create-page' object.slug user.username %}?type=lunch">Lunch</a>
-                    <a class="dropdown-item"
-                       href="{% url 'conferences:event_create-page' object.slug user.username %}?type=lecture">Lecture</a>
-                    <a class="dropdown-item" href="#">Poster Session</a>
+                <div>
+                    <h2>Events</h2>
+                    <ul>
+                        {% for event in object.events_list %}
+                            <li>
+                                <a href="{% url 'conferences:event_detail-page' object.slug event.event_id %}">{{ event.location }} </a>
+                            </li>
+                            {% empty %}
+                            <a>There are no events added to this conference yet.</a>
+                        {% endfor %}
+                    </ul>
+                        <div class="dropdown">
+                            {% if user.id == object.organization.user_id %}
+                                <button class="btn1_wide" type="button" id="dropdownMenuButton"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    +
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item"
+                                       href="{% url 'conferences:event_create-page' object.slug user.username %}?type=lunch">Lunch</a>
+                                    <a class="dropdown-item"
+                                       href="{% url 'conferences:event_create-page' object.slug user.username %}?type=lecture">Lecture</a>
+                                    <a class="dropdown-item" href="#">Poster Session</a>
+                                </div>
+                            {% elif user.is_researcher %}
+                                <a class="btn btn-sm btn-info" href="#">Buy ticket</a>
+                            {% endif %}
+                        </div>
                 </div>
             </div>
-        {% elif user.is_researcher %}
-            <a class="btn btn-sm btn-info" href="#">Buy ticket</a>
-        {% endif %}
+
+            <div class="dropdown col-1">
+                {% if user.id == object.organization.user_id %}
+                    <button class="btn bg-transparent" type="button" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                            style="font-size: 30px;">
+                        &#8942
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item"
+                           href="{% url 'conferences:conf_edit-page' user.username object.slug %}">Edit conference</a>
+                        <a class="dropdown-item"
+                           href="{% url 'conferences:conf_delete-page' user.username object.slug %}">Delete
+                            conference</a>
+                    </div>
+                {% endif %}
+            </div>
+
+        </div>
     </div>
 
 {% endblock %}
