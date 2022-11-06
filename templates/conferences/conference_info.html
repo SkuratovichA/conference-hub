@@ -31,7 +31,7 @@
                     <ul>
                         {% for event in object.events_list %}
                             <li>
-                                <a href="{% url 'conferences:event_detail-page' object.slug event.event_id %}">{{ event.location }} </a>
+                                <a href="{% url 'conferences:event_detail-page' object.slug event.event_id %}">{{ event }} </a>
                             </li>
                             {% empty %}
                             <a>There are no events added to this conference yet.</a>

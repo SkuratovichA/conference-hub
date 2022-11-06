@@ -21,22 +21,22 @@
             {% endfor %}
         </ul>
         {% if past_confs %}
+            <ul style="list-style: none; position: relative;">
             <p>Past conferences</p>
-            <ul>
-                {% for conf in past_confs %}
-                    <li>
-                        <div onclick="location.href='{% url 'conferences:conf_detail-page' conf.slug %}';"
-                             style="cursor: pointer;" class="content-section media-body hoverable_href">
-                            <fieldset>
-                                <p class="account-heading">{{ conf.name }}</p>
-                                <p class="text-secondary">{{ conf.date_from|date:"D, d M, Y" }} -
-                                    {{ conf.date_to|date:"D, d M, Y" }}</p>
-                                <p class="text-secondary">Address: {{ conf.address }}</p>
-                            </fieldset>
-                        </div>
-                    </li>
-                {% endfor %}
-            </ul>
+            {% for conf in past_confs %}
+                <li>
+                    <div onclick="location.href='{% url 'conferences:conf_detail-page' conf.slug %}';"
+                         style="cursor: pointer;" class="content-section media-body hoverable_href">
+                        <fieldset>
+                            <p class="account-heading">{{ conf.name }}</p>
+                            <p class="text-secondary">{{ conf.date_from|date:"D, d M, Y" }} -
+                                {{ conf.date_to|date:"D, d M, Y" }}</p>
+                            <p class="text-secondary">Address: {{ conf.address }}</p>
+                        </fieldset>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
         {% endif %}
         <div class="btn_horizontal">
             <a class="btn1_wide" href="{% url 'conferences:conf_create-page' user.username %}">Create a new conference

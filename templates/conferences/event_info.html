@@ -2,7 +2,8 @@
 {% load static %}
 
 {% block content %}
-<h1>{{object.location}}
+<h1>{{object.name}}
+    <h3>{{object.location}}</h3>
     <div>
         {% if user.id == object.conference.organization.user_id%}
             <a class="btn btn-sm btn-info" href="{% url 'conferences:event_edit-page' object.conference.slug user.username object.event_id %}">Edit event</a>
