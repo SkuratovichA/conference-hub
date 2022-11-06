@@ -80,6 +80,32 @@ class EditEventView(ModifyEventMixin, PermissionRequiredMixin, generic.UpdateVie
         form.save(self.kwargs.get('slug'))
         return redirect('conferences:event_detail-page', self.kwargs.get('slug'), self.kwargs.get('pk'))
 
+    def get_context(self, request, request_type):
+        allowed_types = ['GET', 'POST']
+        if request_type not in allowed_types:
+            raise ValueError(f'argument `type` must be one of {allowed_types}')
+        event = self.get_object()
+        args = [request.POST] if request_type == 'POST' else []
+
+        context = {'e_form': conf_forms.EditEventForm(instance=event, *args)}
+        if event.type == "lunch":
+            context['l_form'] = conf_forms.EditLunchForm(instance=event.lunch, *args)
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context(request, 'GET')
+        context['object'] = self.get_object()
+        return render(request, 'conferences/edit_event.html', context)
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context(request,'POST')
+
+        are_valid = [f.is_valid() for f in context.values()]
+        if all(are_valid):
+            for i, f in context.items():
+                f.save()
+        return redirect('conferences:event_detail-page', self.kwargs.get('slug'), self.kwargs.get('pk'))
+
 
 class DeleteEventView(ModifyEventMixin, PermissionRequiredMixin, generic.DeleteView):
     model = EventModel

@@ -56,6 +56,9 @@ class CreateEventForm(ModelForm):
             }
         )
     )
+    description = forms.Field(
+        required=False
+    )
 
     class Meta:
         model = conference_models.EventModel
@@ -106,9 +109,6 @@ class LunchForm(CreateEventForm):
     class Meta:
         model = conference_models.EventModel
         fields = ('name',  'location', 'date_time', 'duration', 'price', 'menu')
-        widgets = {
-            'description': forms.HiddenInput(),
-        }
 
     @transaction.atomic
     def save(self, conf_slug):
@@ -122,6 +122,18 @@ class LunchForm(CreateEventForm):
             price=self.cleaned_data.get('price'),
         )
         return event
+
+
+class EditLunchForm(ModelForm):
+    class Meta:
+        model = conference_models.LunchModel
+        fields = ('price', 'menu')
+
+
+class EditEventForm(ModelForm):
+    class Meta:
+        model = conference_models.EventModel
+        exclude = ('conference', 'type')
 
 
 class EditConferenceForm(ModelForm):
