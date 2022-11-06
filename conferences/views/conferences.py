@@ -15,7 +15,18 @@ logger = logging.getLogger(__name__)
 class DisplayConferenceView(generic.ListView):
     model = conf_models.ConferenceModel
     template_name = 'conferences/display_conferences.html'
-    context_object_name = 'upcoming_confs'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['upcoming_confs'] = conf_models.ConferenceModel.objects.filter(
+            date_from__gte=timezone.now(),
+            organization__user__username=self.kwargs.get('username')
+        ).order_by('date_from')
+        context['past_confs'] = conf_models.ConferenceModel.objects.filter(
+            date_from__lt=timezone.now(),
+            organization__user__username=self.kwargs.get('username')
+        ).order_by('-date_from')
+        return context
 
     def get_queryset(self):
         """Return the future events"""
