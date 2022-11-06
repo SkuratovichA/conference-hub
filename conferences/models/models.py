@@ -1,6 +1,12 @@
 from users import models as user_models
 from djmoney.models.fields import MoneyField
 from django.db import models
+from enum import Enum
+
+class Status(Enum):
+    Wait = 1
+    Approved = 2
+    Refused = 3
 
 
 class ConferenceModel(models.Model):
@@ -73,9 +79,12 @@ class InviteModel(models.Model):
         related_name='researchers',
         on_delete=models.CASCADE,
     )
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         user_models.ResearcherModel,
         related_name='invitation',
         on_delete=models.CASCADE,
     )
-    approved = models.BooleanField(default=False)
+    approved = models.IntegerField(default=1)
+
+    class Meta:
+        unique_together = ['lecture', 'user']

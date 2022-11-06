@@ -4,6 +4,7 @@ from django.urls import reverse, reverse_lazy
 from users.models import ConferenceUserModel
 from conferences.models import ConferenceModel, EventModel
 from django.shortcuts import redirect, get_object_or_404
+from users.models.researcher import ResearcherModel
 from conference_hub.utils.message_wrapper import MessageMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 import logging
@@ -52,7 +53,24 @@ class CreateEventView(PermissionRequiredMixin, LoginRequiredMixin, generic.Creat
         context = super(CreateEventView, self).get_context_data()
         context['form'] = self.get_form_class()
         context['conf'] = ConferenceModel.objects.get(slug=self.kwargs.get('slug'))
+        results = []
+
+        for obj in ResearcherModel.objects.all():
+            pr_json = {'username': obj.user.username,
+                       'value': obj.user.name,
+                       'name': obj.user.name,
+                       'img': obj.user.profile.image.url}
+            results.append(pr_json)
+
+        context['data'] = results
         return context
+
+    def form_valid(self, form):
+        conf_slug = self.kwargs.get('slug')
+        users_invite = self.request.POST.getlist('test[]')
+
+        form.save(conf_slug, users_invite)
+        return redirect('conferences:conf_detail-page', conf_slug)
 
 
 class ModifyEventMixin:

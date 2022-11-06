@@ -4,6 +4,18 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+    <style>
+        #project {
+            width: 300px;
+        }
+
+        .res-img {
+            float: left;
+            width: 70px;
+            height: 70px;
+        }
+    </style>
+
     <div class="row">
     <snap id="date_from" hidden>{{ conf.date_from | date:"Y-m-d" }}</snap>
     <snap id="date_to" hidden>{{ conf.date_to | date:"Y-m-d"}}</snap>
@@ -12,10 +24,70 @@
             <form method="POST" novalidate name="event_form">{% csrf_token %}
                 <input type="hidden" name="next" value="{{ next }}">
                 {{ form|crispy }}
+
+                <input id="project" class="user_res" name="invite_user">
+                <input type="hidden" id="project-id">
+                <input type="hidden" id="pr">
+
                 <button class="btn btn-outline-info" type="submit">Add</button>
+
+                <ul id="users_add"></ul>
             </form>
+
+            <button class="btn btn-outline-info" onclick="validate()">Add User</button>
         </div>
     </div>
     <script src="{% static 'js/form_fields.js' %}"></script>
     <script src="{% static 'js/event_form.js' %}"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+    <script>
+        $( function() {
+            $( '#project' ).autocomplete({
+                source: {{ data|safe }},
+                focus: function( event, ui ) {
+                    $( '#project' ).val( ui.item.name );
+
+                    return false;
+                },
+                select: function( event, ui ) {
+                    $( '#project' ).val(ui.item.name);
+                    $( "#project-id" ).val( ui.item.value );
+                    $( '#pr' ).html(ui.item.username);
+
+                    return false;
+                }
+            })
+            .autocomplete( "instance" )._renderItem = function( ul, item ) {
+                return $( "<li>" )
+                .append( "<div> <div> <img class='rounded-circle res-img' src='" + item.img + "'/> </div> <fieldset> <p>"
+                    + item.name + "</p> <p id='name'>" + item.username + "</p> </fieldset> </div>" )
+                .appendTo( ul );
+            };
+        });
+
+        function validate() {
+            let value = document.getElementById("pr").innerText;
+            let ul = document.getElementById("users_add");
+            let children = ul.children;
+
+            for (let i = 0; i < children.length; i++) {
+                if (children[i].name !== "test[]" && children[i].innerText === value)
+                    return false;
+            }
+
+            let li_var = document.createElement("li");
+            let input_var = document.createElement("input");
+            input_var.type = "hidden";
+            input_var.name = "test[]";
+            input_var.value = value;
+
+            li_var.appendChild(document.createTextNode(value));
+            ul.appendChild(li_var);
+            ul.appendChild(input_var);
+        }
+
+    </script>
 {% endblock %}

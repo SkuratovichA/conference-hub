@@ -14,8 +14,6 @@ urlpatterns = [
     path('signup/researcher', views.ResearcherSignupView.as_view(), name='signup_researcher-page'),
     path('signup/organization', views.OrganizationSignupView.as_view(), name='signup_organization-page'),
 
-    path('invitation', views.add_invite, name='invitation-page'),
-
     path('<slug>/edit_profile', views.ProfileUpdateView.as_view(), name='profile_update-page'),
     path('<slug>/password_change', views.ProfileChangePasswordView.as_view(), name='password_change-page'),
     path('<slug>/account_delete', views.AccountDeleteView.as_view(), name='account_delete-page'),
