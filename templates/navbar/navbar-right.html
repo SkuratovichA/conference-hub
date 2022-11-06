@@ -12,9 +12,11 @@
     </button>
 
     {#    TODO 45: add notifications (e-mail, browser)#}
-    <div class="navbar-nav mr-auto">
-        <a class="nav-item nav-link" href="#">Notifications</a>
-    </div>
+    {% if user.is_authenticated %}
+        <div class="navbar-nav mr-auto">
+            <a class="nav-item nav-link" href="#">Notifications</a>
+        </div>
+    {% endif %}
 
     {#    dropdown toolbar for user & settings#}
     <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
@@ -57,7 +59,9 @@
 
     {#    TODO 43: if bucket is empty, dont't show it #}
     {#    TODO 44: add a possibility to pay for a conference #}
-    <div class="navbar-nav mr-auto">
-        <a class="nav-item nav-link" href="#">Bucket</a>
-    </div>
+    {% if user.is_authenticated %}
+        <div class="navbar-nav mr-auto">
+            <a class="nav-item nav-link" href="#">Bucket</a>
+        </div>
+    {% endif %}
 </div>

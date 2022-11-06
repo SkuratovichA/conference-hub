@@ -24,11 +24,15 @@
                 <p class="text-secondary">Address: {{ object.address }}</p>
             {% endif %}
         </fieldset>
-    </div>
 
-    {% if user.is_authenticated and object == user %}
-        <a class="btn btn-sm btn-info" href="{% url 'users:profile_update-page' user.username %}">Edit profile</a>
-        <a class="btn btn-sm btn-info" href="{% url 'users:password_change-page' user.username %}">Change password</a>
-    {% endif %}
+        {% if user.is_authenticated and object == user %}
+            <div class="btn_horizontal">
+                <a class="btn1_profile" style="width: 50%" href="{% url 'users:profile_update-page' user.username %}">Edit
+                    profile</a>
+                <a class="btn1_profile" style="width: 50%" href="{% url 'users:password_change-page' user.username %}">Change
+                    password</a>
+            </div>
+        {% endif %}
+    </div>
 
 {% endblock content %}
