@@ -1,9 +1,15 @@
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.utils import timezone
+from conferences.models import ConferenceModel
 from conferences import forms as conf_forms
 from conferences import models as conf_models
 from django.shortcuts import redirect, get_object_or_404
+from conference_hub.utils.message_wrapper import MessageMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class DisplayConferenceView(generic.ListView):
@@ -18,10 +24,16 @@ class DisplayConferenceView(generic.ListView):
         ).order_by('date_from')
 
 
-class CreateConferenceView(generic.CreateView):
+class CreateConferenceView(PermissionRequiredMixin, generic.CreateView):
     model = conf_models.ConferenceModel
     form_class = conf_forms.CreateConferenceForm
     template_name = 'conferences/create_conference.html'
+    # permission_required = ('users.user.organization',)
+    login_url = reverse_lazy('ch:login-page')
+    permission_denied_message = MessageMixin.messages.CONFERENCES.fail.create
+
+    def has_permission(self):
+        return self.request.user.is_organization
 
     def form_valid(self, form):
         username = self.kwargs.get('username')
@@ -32,10 +44,25 @@ class CreateConferenceView(generic.CreateView):
         return super().form_invalid(form)
 
 
-class EditConferenceView(generic.UpdateView):
+class ModifyConferenceMixin:
+    def has_permission(self):
+        conference_pk = self.request.get_full_path().split('/')[-1]
+        conference = ConferenceModel.objects.get(pk=conference_pk) is not None
+        logger.debug(f'`{conference}` is not None if user has permissions')
+        can_edit = self.request.user.is_organization
+        can_edit = can_edit and (conference is not None)
+        can_edit = can_edit and self.request.user == conference.organization.user
+
+        return can_edit
+
+
+class EditConferenceView(ModifyConferenceMixin, PermissionRequiredMixin, LoginRequiredMixin, generic.UpdateView):
     model = conf_models.ConferenceModel
     form_class = conf_forms.EditConferenceForm
     template_name = 'conferences/edit_conference.html'
+    # permission_required = ('users.organization', )
+    login_url = reverse_lazy('ch:login-page')
+    permissions_denied_message = MessageMixin.messages.CONFERENCES.fail.change
 
     def get_object(self, queryset=None):
         conf_slug = self.kwargs.get('slug')
@@ -46,15 +73,18 @@ class EditConferenceView(generic.UpdateView):
         return redirect('conferences:conf_detail-page', self.kwargs.get('slug'))
 
 
-class ConferenceInfoView(generic.DetailView):
-    model = conf_models.ConferenceModel
-    template_name = 'conferences/conference_info.html'
-
-
-class DeleteConferenceView(generic.DeleteView):
+# TODO only parent organization can edit/delete its conference
+class DeleteConferenceView(ModifyConferenceMixin, PermissionRequiredMixin, LoginRequiredMixin, generic.DeleteView):
     model = conf_models.ConferenceModel
     template_name = 'conferences/delete_conference.html'
+    login_url = reverse_lazy('ch:login-page')
+    permissions_denied_message = MessageMixin.messages.CONFERENCES.fail.delete
 
     def get_success_url(self):
         username = self.kwargs.get('username')
         return reverse('conferences:conf_display-page', kwargs={'username': username})
+
+
+class ConferenceInfoView(generic.DetailView):
+    model = conf_models.ConferenceModel
+    template_name = 'conferences/conference_info.html'

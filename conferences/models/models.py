@@ -6,7 +6,7 @@ from django.db import models
 
 class ConferenceModel(models.Model):
     name = models.CharField(max_length=250)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, null=False)
     date_from = models.DateField('Begins on')
     date_to = models.DateField('Ends on')
     address = AddressField(on_delete=models.CASCADE, null=True)
@@ -24,7 +24,7 @@ class ConferenceModel(models.Model):
 
 
 class EventModel(models.Model):
-    conference = models.ForeignKey(ConferenceModel, on_delete=models.CASCADE, related_name='event_set')
+    conference = models.ForeignKey(ConferenceModel, on_delete=models.CASCADE, related_name='event_set', null=False)
     event_id = models.AutoField(primary_key=True)
     date_time = models.DateTimeField('Starts at')
     duration = models.DurationField()

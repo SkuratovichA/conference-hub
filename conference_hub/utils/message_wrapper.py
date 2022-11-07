@@ -26,6 +26,28 @@ class MessageMixin:
                 update_profile = 'Cannot Update profile'
                 permissions = 'You must sign in first'
 
+        class CONFERENCES:
+            class success:
+               create = 'Conference created'
+               delete = 'Conference deleted'
+               change = 'Conference changed'
+
+            class fail:
+                create = 'Conference could not be created'
+                delete = 'Conference could not be deleted'
+                change = 'Conference could not be changed'
+
+        class EVENTS:
+            class success:
+                create = 'Event created'
+                delete = 'Event deleted'
+                change = 'Event changed'
+
+            class fail:
+                create = 'Event could not be created'
+                delete = 'Event could not be deleted'
+                change = 'Event could not be changed'
+
 
 # TODO 21: make subclasses as in MessageMixin
 class ConstraintsMixin:
