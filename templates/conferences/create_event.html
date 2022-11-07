@@ -14,6 +14,28 @@
             width: 70px;
             height: 70px;
         }
+
+        .choices__item {
+            display: inline-block;
+            vertical-align: middle;
+            border-radius: 10px;
+            padding: 4px 10px;
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            margin-right: 3.75px;
+            margin-bottom: 3.75px;
+            background-color: #aaaaaa;
+            border: 2px solid #000000;
+            color: #fff;
+            word-break: break-all;
+        }
+
+        .choices__button {
+            color: #bbbb00;
+            padding-left: 5px;
+            opacity: .3;
+        }
     </style>
 
     <div class="row">
@@ -23,19 +45,19 @@
             <h4>Add a new event to <strong>{{ conf.name }}</strong> conference</h4>
             <form method="POST" novalidate name="event_form">{% csrf_token %}
                 <input type="hidden" name="next" value="{{ next }}">
-                {{ form|crispy }}
+                    <input id="project" class="user_res" name="invite_user">
+                    <input type="hidden" id="project-id">
+                    <input type="hidden" id="pr">
+                    <button type="button" onclick="validate()">Add User</button>
 
-                <input id="project" class="user_res" name="invite_user">
-                <input type="hidden" id="project-id">
-                <input type="hidden" id="pr">
+                    <ul id="users_add"> </ul> <br>
 
-                <button class="btn btn-outline-info" type="submit">Add</button>
+                    <div class="col text-center">
+                        <button class="btn btn-outline-info col-md-6" type="submit">Add</button>
+                    </div>
+                </form>
+            </div>
 
-                <ul id="users_add"></ul>
-            </form>
-
-            <button class="btn btn-outline-info" onclick="validate()">Add User</button>
-        </div>
     </div>
     <script src="{% static 'js/form_fields.js' %}"></script>
     <script src="{% static 'js/event_form.js' %}"></script>
@@ -63,31 +85,59 @@
             .autocomplete( "instance" )._renderItem = function( ul, item ) {
                 return $( "<li>" )
                 .append( "<div> <div> <img class='rounded-circle res-img' src='" + item.img + "'/> </div> <fieldset> <p>"
-                    + item.name + "</p> <p id='name'>" + item.username + "</p> </fieldset> </div>" )
+                    + item.name + "</p> <p>" + item.username + "</p> </fieldset> </div>" )
                 .appendTo( ul );
             };
         });
 
         function validate() {
-            let value = document.getElementById("pr").innerText;
+            let login = document.getElementById("pr").innerText;
+            let full_name = document.getElementById("project-id").value;
             let ul = document.getElementById("users_add");
             let children = ul.children;
 
             for (let i = 0; i < children.length; i++) {
-                if (children[i].name !== "test[]" && children[i].innerText === value)
+                if (children[i].getAttribute("name") === login)
                     return false;
             }
 
-            let li_var = document.createElement("li");
-            let input_var = document.createElement("input");
-            input_var.type = "hidden";
-            input_var.name = "test[]";
-            input_var.value = value;
+            // TODO create one simple div
+            let div_var = document.createElement("div");
+            div_var.classList.add("choices__item");
+            div_var.setAttribute("name", login);
+            div_var.innerHTML = full_name + ", " + login + "<button type='button' class='fa fa-close choices__button' onclick='delete_item(this)'></button>";
 
-            li_var.appendChild(document.createTextNode(value));
-            ul.appendChild(li_var);
+            let input_var = document.createElement("input");
+            input_var.setAttribute("type", "hidden");
+            input_var.setAttribute("name", "test[]");
+            input_var.setAttribute("value", "login");
+
+            let br_var = document.createElement("br");
+            br_var.setAttribute("id", login);
+
+            ul.appendChild(div_var);
             ul.appendChild(input_var);
+            ul.appendChild(br_var);
         }
 
+        function delete_item(el) {
+            let ul = document.getElementById("users_add");
+            let div_name = el.parentNode.getAttribute("name");
+
+            let children = ul.children;
+            let brs = ul.getElementsByTagName("br");
+
+            ul.removeChild(el.parentNode);
+
+            for (let i = 0; i < children.length; i++) {
+                console.log(children[i].getAttribute("name"));
+                if (div_name === children[i].getAttribute("name")) {
+                    ul.removeChild(children[i]);
+                }
+                if (brs[i].getAttribute("id") === div_name) {
+                    brs[i].remove();
+                }
+            }
+        }
     </script>
 {% endblock %}

@@ -57,8 +57,8 @@ class CreateEventView(PermissionRequiredMixin, LoginRequiredMixin, generic.Creat
 
         for obj in ResearcherModel.objects.all():
             pr_json = {'username': obj.user.username,
-                       'value': obj.user.name,
-                       'name': obj.user.name,
+                       'value': obj.user.name + " " + obj.last_name,
+                       'name': obj.user.name + " " + obj.last_name,
                        'img': obj.user.profile.image.url}
             results.append(pr_json)
 
@@ -68,6 +68,7 @@ class CreateEventView(PermissionRequiredMixin, LoginRequiredMixin, generic.Creat
     def form_valid(self, form):
         conf_slug = self.kwargs.get('slug')
         users_invite = self.request.POST.getlist('test[]')
+        print(self.request.POST)
 
         form.save(conf_slug, users_invite)
         return redirect('conferences:conf_detail-page', conf_slug)
