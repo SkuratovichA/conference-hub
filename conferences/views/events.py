@@ -3,7 +3,7 @@ from conferences import forms as conf_forms
 from django.urls import reverse, reverse_lazy
 from users.models import ConferenceUserModel
 from conferences.models import ConferenceModel, EventModel
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404, render
 from users.models.researcher import ResearcherModel
 from conference_hub.utils.message_wrapper import MessageMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
@@ -43,7 +43,14 @@ class CreateEventView(PermissionRequiredMixin, LoginRequiredMixin, generic.Creat
 
     def form_valid(self, form):
         conf_slug = self.kwargs.get('slug')
-        form.save(conf_slug)
+
+        if request.GET.get("type") == 'lecture':
+            conf_slug = self.kwargs.get('slug')
+            users_invite = self.request.POST.getlist('test[]')
+            context["lecture_form"].save(conf_slug, users_invite)
+        else:
+            context["lunch_form"].save(conf_slug)
+
         return redirect('conferences:conf_detail-page', conf_slug)
 
     def form_invalid(self, form):
@@ -62,16 +69,12 @@ class CreateEventView(PermissionRequiredMixin, LoginRequiredMixin, generic.Creat
                        'img': obj.user.profile.image.url}
             results.append(pr_json)
 
-        context['data'] = results
+        context = {
+            'lecture_form': conf_forms.LectureForm(),
+            'lunch_form': conf_forms.LunchForm(),
+            'data': results
+        }
         return context
-
-    def form_valid(self, form):
-        conf_slug = self.kwargs.get('slug')
-        users_invite = self.request.POST.getlist('test[]')
-        print(self.request.POST)
-
-        form.save(conf_slug, users_invite)
-        return redirect('conferences:conf_detail-page', conf_slug)
 
 
 class ModifyEventMixin:
@@ -123,7 +126,7 @@ class EditEventView(ModifyEventMixin, PermissionRequiredMixin, generic.UpdateVie
         return render(request, 'conferences/edit_event.html', context)
 
     def post(self, request, *args, **kwargs):
-        context = self.get_context(request,'POST')
+        context = self.get_context(request, 'POST')
 
         are_valid = [f.is_valid() for f in context.values()]
         if all(are_valid):

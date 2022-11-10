@@ -196,6 +196,11 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True
         },
+        'conferences': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True
+        },
         # 'django': {
         #     'handlers': ['console'],
         #     'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
