@@ -96,46 +96,46 @@
             let ul = document.getElementById("users_add");
             let children = ul.children;
 
+            if (login === "")
+                return false;
+
             for (let i = 0; i < children.length; i++) {
                 if (children[i].getAttribute("name") === login)
                     return false;
             }
 
-            // TODO create one simple div
             let div_var = document.createElement("div");
             div_var.classList.add("choices__item");
             div_var.setAttribute("name", login);
-            div_var.innerHTML = full_name + ", " + login + "<button type='button' class='fa fa-close choices__button' onclick='delete_item(this)'></button>";
+            div_var.innerHTML = full_name + ", " + login +
+                                "<button type='button' class='fa fa-close choices__button' onclick='delete_item(this)'></button>";
 
             let input_var = document.createElement("input");
             input_var.setAttribute("type", "hidden");
             input_var.setAttribute("name", "test[]");
-            input_var.setAttribute("value", "login");
+            input_var.setAttribute("value", login);
 
             let br_var = document.createElement("br");
             br_var.setAttribute("id", login);
 
-            ul.appendChild(div_var);
-            ul.appendChild(input_var);
-            ul.appendChild(br_var);
+            let new_div_var = document.createElement("div");
+            new_div_var.setAttribute("name", login);
+            new_div_var.appendChild(div_var);
+            new_div_var.appendChild(input_var);
+            new_div_var.appendChild(br_var);
+
+            ul.appendChild(new_div_var);
         }
 
         function delete_item(el) {
             let ul = document.getElementById("users_add");
             let div_name = el.parentNode.getAttribute("name");
-
             let children = ul.children;
-            let brs = ul.getElementsByTagName("br");
-
-            ul.removeChild(el.parentNode);
 
             for (let i = 0; i < children.length; i++) {
-                console.log(children[i].getAttribute("name"));
+                //console.log(children[i].getAttribute("name"));
                 if (div_name === children[i].getAttribute("name")) {
                     ul.removeChild(children[i]);
-                }
-                if (brs[i].getAttribute("id") === div_name) {
-                    brs[i].remove();
                 }
             }
         }
