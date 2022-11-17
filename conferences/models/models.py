@@ -1,4 +1,4 @@
-from users import models as user_models
+import users.models as user_models
 from djmoney.models.fields import MoneyField
 from django.db import models
 from enum import Enum

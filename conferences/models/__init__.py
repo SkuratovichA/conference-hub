@@ -1,1 +1,1 @@
-from .models import *
+from .models import ConferenceModel, LectureModel, InviteModel, EventModel, LunchModel
