@@ -1,7 +1,58 @@
-<dialog class="modal" id="modal">
-    <h2>Automatic logout</h2>
-    <br>Due to inactivity on the site, you will be logged out.
-    <br>Do you want to continue your session?</p>
-    <button type="button" style="margin-right: 30px;" onclick="resetTimer()">Yes</button>
-    <button type="button" style="margin-left: 30px;" onclick="closePopup()">No</button>
-</dialog>
+<style>
+    .modal-container {
+        background: rgb(0 0 0 / 0.4);
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        opacity: 0;
+        pointer-events: none;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-container.show {
+        pointer-events: auto;
+        opacity: 1;
+    }
+
+    .my-modal {
+        background-color: #fff;
+        max-width: 100%;
+        width: 600px;
+        position: absolute;
+        top: 100px;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        padding: 30px 50px;
+        text-align: center;
+    }
+
+    .my-modal h2 {
+        font-size: 24px;
+        color: #000000;
+        font-weight: 100;
+        margin: 5px 0 5px;
+    }
+
+    .my-modal button {
+        width: 20%;
+        margin-top: 5px;
+        padding: 5px 0;
+        border-radius: 4px;
+        cursor: pointer;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    }
+</style>
+
+<div class="modal-container" id="modal_container">
+    <div class="my-modal">
+        <h2>Automatic logout</h2>
+        <br>Due to inactivity on the site, you will be logged out.
+        <br>Do you want to continue your session?</p>
+        <button type="button" style="margin-right: 30px;" onclick="resetTimer()">Yes</button>
+        <button type="button" style="margin-left: 30px;" onclick="closePopup()">No</button>
+    </div>
+</div>
