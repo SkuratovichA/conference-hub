@@ -60,14 +60,16 @@ class ConferenceUserSignupForm(UserCreationForm):
             'autocomplete': 'country',
             # 'type': 'country',
             'placeholder': _('Country')
-        })
+        }),
+        required=False
     )
     city = forms.CharField(
         widget=forms.TextInput(attrs={
             'autocomplete': 'city',
             # 'type': 'city',
-            'placeholder': _('city')
-        })
+            'placeholder': _('City')
+        }),
+        required=False
     )
 
     class Meta(UserCreationForm.Meta):

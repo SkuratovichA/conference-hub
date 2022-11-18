@@ -36,7 +36,8 @@ class ResearcherSignupForm(ConferenceUserSignupForm):
                 'type': 'date of birth',
                 'class': 'form-control',
             }
-        )
+        ),
+        required=False
     )
 
     class Meta:
