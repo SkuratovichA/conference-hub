@@ -18,7 +18,7 @@
         <a class="menu-item whois {% if type == "conferences" %} selected {% endif %}"
            href="?{% url_replace request 'type' 'conferences' %}">
             Conferences
-            <span class="ml-1 Counter" data-type="organizations">{{ conferences|length }}</span>
+            <span class="ml-1 Counter" data-type="conferences">{{ conferences|length }}</span>
         </a>
     </nav>
 </div>
