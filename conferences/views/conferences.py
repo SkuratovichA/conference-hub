@@ -87,7 +87,6 @@ class EditConferenceView(ModifyConferenceMixin, PermissionRequiredMixin, LoginRe
 # TODO only parent organization can edit/delete its conference
 class DeleteConferenceView(ModifyConferenceMixin, PermissionRequiredMixin, LoginRequiredMixin, generic.DeleteView):
     model = conf_models.ConferenceModel
-    template_name = 'conferences/delete_conference.html'
     login_url = reverse_lazy('ch:login-page')
     permissions_denied_message = MessageMixin.messages.CONFERENCES.fail.delete
 
