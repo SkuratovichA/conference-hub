@@ -14,7 +14,7 @@ def date_check(date_from, date_to):
         if date_from > date_to:
             raise forms.ValidationError("Conference should start before it ends")
         today = timezone.now().date()
-        if (date_from < today) or (date_to < today):
+        if date_from < today or date_to < today:
             raise forms.ValidationError("Can't create conference in the past")
 
 
