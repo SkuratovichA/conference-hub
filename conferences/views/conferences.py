@@ -57,8 +57,9 @@ class CreateConferenceView(PermissionRequiredMixin, generic.CreateView):
 
 class ModifyConferenceMixin:
     def has_permission(self):
-        conference_pk = self.request.get_full_path().split('/')[-1]
-        conference = ConferenceModel.objects.get(pk=conference_pk) is not None
+        conference_slug = self.request.get_full_path().split('/')[-1]
+        conference = ConferenceModel.objects.get(slug=conference_slug)
+        assert conference is not None
         logger.debug(f'`{conference}` is not None if user has permissions')
         can_edit = self.request.user.is_organization
         can_edit = can_edit and (conference is not None)

@@ -37,7 +37,7 @@ class CreateEventView(PermissionRequiredMixin, LoginRequiredMixin, generic.Creat
         logger.debug(f'`{conference}` must exist & be owned by a user trying to create event')
         can_edit = conference is not None
         can_edit = can_edit and self.request.user.is_organization
-        can_edit = can_edit and conference.user == self.request.user
+        can_edit = can_edit and conference.organization.user == self.request.user
         return can_edit
 
     def form_valid(self, form):
