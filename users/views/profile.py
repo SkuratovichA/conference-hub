@@ -5,7 +5,7 @@ from django.contrib.auth.views import PasswordChangeView
 from django.views.generic import TemplateView, DetailView
 from django.shortcuts import get_object_or_404
 from users.forms import ProfileUpdateForm
-from users.models import ProfileModel, ConferenceUserModel
+from users.models import ProfileModel, ConferenceUserModel, OrganizationEmployee
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.shortcuts import render
@@ -28,6 +28,12 @@ class ProfileView(DetailView):
         context = super().get_context_data(**kwargs)
         context['user'] = self.request.user
         context['object'] = get_object_or_404(ConferenceUserModel, username=self.kwargs.get(self.slug_field))
+        if context['object'].is_researcher:
+            orgs = OrganizationEmployee.objects.filter(
+                researcher=context['object'].researcher, approved=True, rejected=False
+            )
+            logger.debug(orgs)
+            context['organizations'] = orgs
         logger.debug(f'context: {context}')
         return context
 

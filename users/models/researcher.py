@@ -1,20 +1,18 @@
-from users.models import OrganizationModel, ConferenceUserModel
 from django.db import models
+import users.models as users_models
 
 
 class ResearcherModel(models.Model):
+    class Meta:
+        permissions = (('researcher', 'Can do stuff researchers usually do'), )
+
     user = models.OneToOneField(
-        ConferenceUserModel,
+        users_models.ConferenceUserModel,
         related_name='researcher',
         on_delete=models.CASCADE,
         primary_key=True
     )
     last_name = models.CharField(max_length=64)
-    organization_user = models.ForeignKey(
-        OrganizationModel,
-        null=True,
-        on_delete=models.SET_NULL
-    )
     date_of_birth = models.DateField()
 
     def get_full_name(self):

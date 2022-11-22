@@ -29,10 +29,19 @@
                 <p class="text-secondary"><b>Address:</b> {{ object.address }}</p>
             {% endif %}
 
-            {% if object.is_researcher and oboject.organizations.count > 0 %}
+            {% if object.is_researcher and organizations.count > 0 %}
                 <div>
                     <h2>Organizations</h2>
                 </div>
+                <ul>
+                    {% for org in organizations %}
+                        <li>
+                            <a href="{{ request.site.name }}/users/{{ org.organization.user.username }}">
+                                {{ org.organization.user.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
             {% endif %}
 
         </div> <!-- col-4 -->

@@ -51,8 +51,8 @@
                     {% if user.is_researcher %}
                         <a class="dropdown-item" href="#">My conferences</a>
                         <a class="dropdown-item" href="#">My scheduler</a>
-                        <a class="dropdown-item" href="#">My organizations</a>
-                        <a class="dropdown-item" href="#">My invites</a>
+{#                        <a class="dropdown-item" href="#">My organizations</a>#}
+{#                        <a class="dropdown-item" href="#">My invites</a>#}
                     {% elif user.is_organization %}
                         {# TODO 41: add list of members with crud functionality#}
                         <a class="dropdown-item" href="#">Members</a>
@@ -82,8 +82,11 @@
 
     {#    TODO 45: add notifications (e-mail, browser)#}
     {% if user.is_authenticated %}
-        <div class="navbar-nav mr-auto" onclick="manage_notification_bar()">
-            <a class="nav-item nav-link">Invites</a>
+        <div class="navbar-nav mr-auto">
+            <a class="nav-item nav-link" href="{% url 'users:invites-page' %}">Invites</a>
         </div>
+{#        <div class="navbar-nav mr-auto" onclick="manage_notification_bar()">#}
+{#            <a class="nav-item nav-link">Invites</a>#}
+{#        </div>#}
     {% endif %}
 </div>
