@@ -55,6 +55,7 @@ class ConferenceUserModel(AbstractBaseUser, PermissionsMixin):
     is_organization = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
     date_joined = models.DateTimeField("date joined", default=timezone.now)
+    status = models.BooleanField(default=False)
 
     country = models.CharField(null=True, blank=False, max_length=64)
     city = models.CharField(null=True, blank=False, max_length=64)
