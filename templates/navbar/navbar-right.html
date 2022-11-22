@@ -40,7 +40,7 @@
                 <a class="nav-link " data-toggle="dropdown" role="button"
                    id="navbarDropdownMenuLink" aria-haspopup="true"
                    aria-expanded="false">
-                   <img class="rounded-circle siteheader-img" src="{% static "/static/logo.png" %}">
+                   <img class="rounded-circle siteheader-img" src="{{ user.profile.image.url  }}">
                 </a>
 
                 <div class="dropdown-menu" style="right: 0; left: auto; border-radius: 10px;"
