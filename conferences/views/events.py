@@ -18,16 +18,26 @@ class EventInfoView(generic.DetailView):
 
 class CreateEventView(PermissionRequiredMixin, LoginRequiredMixin, generic.CreateView):
     model = EventModel
-    form_class = conf_forms.CreateEventForm
     template_name = 'conferences/create_event.html'
+
+    def get_form_class(self):
+        event_type = self.request.GET.get('type')
+        if event_type == "lecture":
+            return conf_forms.LectureForm
+        elif event_type == "lunch":
+            return conf_forms.LunchForm
+        # elif event_type == "poster":
+        #     return conf_forms.PosterForm
+        else:
+            return conf_forms.CreateEventForm
 
     def has_permission(self):
         conf_slug = self.kwargs.get('slug')
         conference = ConferenceModel.objects.get(slug=conf_slug)
-        logger.debug(f'`{conference}` must exist & be owned by a user trying to create enent')
+        logger.debug(f'`{conference}` must exist & be owned by a user trying to create event')
         can_edit = conference is not None
         can_edit = can_edit and self.request.user.is_organization
-        can_edit = can_edit and conference.user == self.request.user
+        can_edit = can_edit and conference.organization.user == self.request.user
         return can_edit
 
     def form_valid(self, form):
@@ -68,6 +78,32 @@ class EditEventView(ModifyEventMixin, PermissionRequiredMixin, generic.UpdateVie
 
     def form_valid(self, form):
         form.save(self.kwargs.get('slug'))
+        return redirect('conferences:event_detail-page', self.kwargs.get('slug'), self.kwargs.get('pk'))
+
+    def get_context(self, request, request_type):
+        allowed_types = ['GET', 'POST']
+        if request_type not in allowed_types:
+            raise ValueError(f'argument `type` must be one of {allowed_types}')
+        event = self.get_object()
+        args = [request.POST] if request_type == 'POST' else []
+
+        context = {'e_form': conf_forms.EditEventForm(instance=event, *args)}
+        if event.type == "lunch":
+            context['l_form'] = conf_forms.EditLunchForm(instance=event.lunch, *args)
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context(request, 'GET')
+        context['object'] = self.get_object()
+        return render(request, 'conferences/edit_event.html', context)
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context(request,'POST')
+
+        are_valid = [f.is_valid() for f in context.values()]
+        if all(are_valid):
+            for i, f in context.items():
+                f.save()
         return redirect('conferences:event_detail-page', self.kwargs.get('slug'), self.kwargs.get('pk'))
 
 
