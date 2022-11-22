@@ -42,21 +42,52 @@
         {% block content %}{% endblock %}
     </div>
 
-{#    {% if user.is_authenticated %}#}
-{#        <div id="mySidebar" class="sidebar">#}
-{#            <h1 class="center-text">Notifications</h1>#}
-{#            {% for notification in user.notifications %}     #}
-{#            <div class="notification">#}
-{#                <a href="#">first_invintation</a>#}
-{#            </div>#}
-{#            {% empty %}#}
-{#            {% <h1 class="center-text">No notifications</> %}#}
-{#            {% endfor %}#}
-{##}
-{#        </div>#}
-{#    {% endif %}#}
-
+    {% if user.is_authenticated %}
+        <div id="mySidebar" class="sidebar">
+            <h1 class="center-text">Notifications</h1>
+            {% for invite in user.researcher.get_invites %}
+                <div class="notification">
+                    <p class="text_my"><b>Conference:</b> {{ invite.lecture.event.conference.name }}</p>
+                    <p class="text_my"><b>From organization:</b> {{ invite.lecture.event.conference.organization.user.name }}</p>
+                    <p class="text_my"><b>Lecture:</b> {{ invite.lecture.event.name }}</p>
+                    <p class="text_my"><b>When:</b> {{ invite.lecture.event.date_time }}</p>
+                    <span class="invite_span">
+                        <button type="button" class="btn btn-success my_btn"
+                                onclick="send_resp('accept_invite',
+                                                    '{{ invite.lecture.event.name }}',
+                                                    '{{ user.username }}')">
+                                Accept
+                        </button>
+                        <button type="button" class="btn btn-danger my_btn"
+                                onclick="send_resp('decline_invite',
+                                                    '{{ invite.lecture.event.name }}',
+                                                    '{{ user.username }}')">
+                                Decline
+                        </button>
+                    </span>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 </div>
+
+<script>
+    function send_resp(act, lect_name, username) {
+        $.ajax({
+            url: '',
+            type: 'get',
+            data: {
+                action: act,
+                lecture_name: lect_name,
+                username: username,
+            }
+        });
+        console.log($(this));
+        //$(this).parent.parent.remove();
+    }
+</script>
+
+<script src="{% static 'js/sidebar.js' %}"></script>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

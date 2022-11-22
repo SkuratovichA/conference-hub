@@ -46,13 +46,14 @@
             <form method="POST" novalidate name="event_form">{% csrf_token %}
                 <input type="hidden" name="next" value="{{ next }}">
                     <p> Warning! You will not be able to add any researches or change them after you save this event!</p>
-                    <input id="project" class="user_res" name="invite_user">
-                    <input type="hidden" id="project-id">
-                    <input type="hidden" id="pr">
-                    <button type="button" onclick="validate()">Add User</button>
+                    <div id="users_for_invite">
+                        <input id="project" class="user_res" name="invite_user">
+                        <input type="hidden" id="project-id">
+                        <input type="hidden" id="pr">
+                        <button type="button" onclick="validate()">Add User</button>
 
-                    <ul id="users_add"> </ul> <br>
-
+                        <ul id="users_add"> </ul> <br>
+                    </div>
                     <div class="col text-center">
                         <button class="btn btn-outline-info col-md-6" type="submit">Add</button>
                     </div>
@@ -134,11 +135,19 @@
             let children = ul.children;
 
             for (let i = 0; i < children.length; i++) {
-                //console.log(children[i].getAttribute("name"));
                 if (div_name === children[i].getAttribute("name")) {
                     ul.removeChild(children[i]);
                 }
             }
+        }
+
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+        });
+
+        let value = params.type;
+        if (value !== "lecture") {
+            document.getElementById("users_for_invite").remove();
         }
     </script>
 {% endblock %}

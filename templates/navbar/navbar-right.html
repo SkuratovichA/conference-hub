@@ -40,6 +40,17 @@
     {#    dropdown toolbar for user & settings#}
     <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
         {% if user.is_authenticated %}
+            {% if user.is_active %}
+                <div class="status">
+                    <span class="dot" style="  background-color: greenyellow;"></span>
+                    ACTIVE
+                </div>
+            {% else %}
+                <div class="status">
+                    <span class="dot" style="background-color: red;"></span>
+                    INACTIVE
+                </div>
+            {% endif %}
             <li class="nav-item dropdown">
                 <a class="nav-link " data-toggle="dropdown" role="button"
                    id="navbarDropdownMenuLink" aria-haspopup="true"
@@ -89,11 +100,9 @@
 
     {#    TODO 45: add notifications (e-mail, browser)#}
     {% if user.is_authenticated %}
-{#        <div class="navbar-nav mr-auto">#}
-{#            <a class="nav-item nav-link" href="{% url 'users:invites-page' %}">Invites</a>#}
-{#        </div>#}
-{#        <div class="navbar-nav mr-auto" onclick="manage_notification_bar()">#}
-{#            <a class="nav-item nav-link">Invites</a>#}
-{#        </div>#}
+        <div class="navbar-nav mr-auto" onclick="manage_notification_bar()">
+            <a class="nav-item nav-link">Invites</a>
+            {{ user.get_number_invites }}
+        </div>
     {% endif %}
 </div>

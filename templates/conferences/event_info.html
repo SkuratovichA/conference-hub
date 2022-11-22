@@ -2,15 +2,21 @@
 {% load static %}
 
 {% block content %}
-<h1>{{object.name}}
-    <h3>{{object.location}}</h3>
-    <div>
-        {% if user.id == object.conference.organization.user_id%}
-            <a class="btn btn-sm btn-info" href="{% url 'conferences:event_edit-page' object.conference.slug user.username object.event_id %}">Edit event</a>
-            <a class="btn btn-sm btn-info" href="{% url 'conferences:event_delete-page' object.conference.slug user.username object.event_id%}">Delete event</a>
-        {%  endif %}
-    </div>
-</h1>
-
+<h1>{{object.name}}</h1>
+<h3>{{object.location}}</h3>
+<div>
+    {% if user.id == object.conference.organization.user_id%}
+        <a class="btn btn-sm btn-info" href="{% url 'conferences:event_edit-page' object.conference.slug user.username object.event_id %}">Edit event</a>
+        <a class="btn btn-sm btn-info" href="{% url 'conferences:event_delete-page' object.conference.slug user.username object.event_id%}">Delete event</a>
+    {%  endif %}
+</div>
 <p>{{ object.date_time }} - {{ object.duration }}</p>
+<h4>Researchers:</h4>
+<ol>
+    {% for res in object.lecture.researchers.all %}
+        <li>
+            <h6>{{ res }}</h6>
+        </li>
+    {% endfor %}
+</ol>
 {% endblock %}
