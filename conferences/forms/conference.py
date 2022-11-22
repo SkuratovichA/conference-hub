@@ -113,7 +113,7 @@ class LectureForm(CreateEventForm):
         fields = ('name', 'location', 'date_time', 'duration', 'description',)
 
     @transaction.atomic
-    def save(self, conf_slug, users_invite):
+    def save(self, conf_slug, users_invite=None):
         event = super().save(commit=False)
         event.conference = conference_models.ConferenceModel.objects.get(slug=conf_slug)
         event.type = conference_models.EventModel.EventType.LECTURE
@@ -123,41 +123,8 @@ class LectureForm(CreateEventForm):
         )
 
         for user_login in users_invite:
-            user = user_models.ConferenceUserModel.objects.get(username=user_login).researcher
+            user = user_models.ConferenceUserModel.objects.get(username=user_login)
             invitation = conference_models.InviteModel.objects.create(lecture=lecture, user=user)
-
-        return event
-
-
-class LunchForm(CreateEventForm):
-    price = MoneyField(max_digits=10, decimal_places=2, default_currency='EUR')
-    menu = forms.Field(
-        widget=forms.Textarea(
-            attrs={
-                'rows': 10,
-            }
-        ),
-    )
-    name = forms.Field(initial='Lunch')
-
-    class Meta:
-        model = conference_models.EventModel
-        fields = ('name',  'location', 'date_time', 'duration', 'price', 'menu')
-        widgets = {
-            'description': forms.HiddenInput(),
-        }
-
-    @transaction.atomic
-    def save(self, conf_slug):
-        event = super().save(commit=False)
-        event.conference = conference_models.ConferenceModel.objects.get(slug=conf_slug)
-        event.type = conference_models.EventModel.EventType.LUNCH
-        event.save()
-        lunch = conference_models.LunchModel.objects.create(
-            event=event,
-            menu=self.cleaned_data.get('menu'),
-            price=self.cleaned_data.get('price'),
-        )
 
         return event
 

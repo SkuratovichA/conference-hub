@@ -43,18 +43,9 @@ class CreateEventView(PermissionRequiredMixin, LoginRequiredMixin, generic.Creat
 
     def form_valid(self, form):
         conf_slug = self.kwargs.get('slug')
-
-        if request.GET.get("type") == 'lecture':
-            conf_slug = self.kwargs.get('slug')
-            users_invite = self.request.POST.getlist('test[]')
-            context["lecture_form"].save(conf_slug, users_invite)
-        else:
-            context["lunch_form"].save(conf_slug)
-
+        users_invite = self.request.POST.getlist('test[]')
+        form.save(conf_slug, users_invite)
         return redirect('conferences:conf_detail-page', conf_slug)
-
-    def form_invalid(self, form):
-        return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
         context = super(CreateEventView, self).get_context_data()
@@ -70,8 +61,7 @@ class CreateEventView(PermissionRequiredMixin, LoginRequiredMixin, generic.Creat
             results.append(pr_json)
 
         context = {
-            'lecture_form': conf_forms.LectureForm(),
-            'lunch_form': conf_forms.LunchForm(),
+            'form': self.get_form_class(),
             'data': results
         }
         return context
@@ -79,10 +69,10 @@ class CreateEventView(PermissionRequiredMixin, LoginRequiredMixin, generic.Creat
 
 class ModifyEventMixin:
     def has_permission(self):
-        assert False, "it must fail for the first time. " \
-                      "If it fails. Everything is ok and delete this line. " \
-                      "If not, change the order of superclasses (ModifyEventMixin & PermisssionsRequiredMixin). " \
-                      "If not again, call sasha for help"
+        # assert False, "it must fail for the first time. " \
+        #               "If it fails. Everything is ok and delete this line. " \
+        #               "If not, change the order of superclasses (ModifyEventMixin & PermisssionsRequiredMixin). " \
+        #               "If not again, call sasha for help"
         conf_slug = self.kwargs.get('slug')
         conference = ConferenceModel.objects.get(slug=conf_slug)
         logger.debug(f'`{conference}` must exist & be owned by a user trying to create event')
@@ -91,7 +81,7 @@ class ModifyEventMixin:
         can_edit = conference is not None
         can_edit = can_edit and event.conference == conference
         can_edit = can_edit and self.request.user.is_organization  # may be redundant, because the line below
-        can_edit = can_edit and conference.user == self.request.user
+        can_edit = can_edit and conference.organization.user == self.request.user
         return can_edit
 
 

@@ -3,6 +3,7 @@ from djmoney.models.fields import MoneyField
 from django.db import models
 from enum import Enum
 
+
 class Status(Enum):
     Wait = 1
     Approved = 2
@@ -18,7 +19,7 @@ class ConferenceModel(models.Model):
     price = MoneyField(max_digits=10, decimal_places=2, default_currency='EUR', null=True)
 
     organization = models.ForeignKey(user_models.OrganizationModel, on_delete=models.CASCADE)
-    visitors = models.ManyToManyField(user_models.ResearcherModel)
+    visitors = models.ManyToManyField(user_models.ConferenceUserModel)
 
     def __str__(self):
         return f'{self.name}, {self.date_from} - {self.date_to}'
@@ -53,6 +54,12 @@ class EventModel(models.Model):
     def __str__(self):
         return f'{self.name} {self.date_time} {self.location}'
 
+    def get_researchers(self):
+        if self.type == 'lecture':
+            return self.lecture.researchers.all()
+        else:
+            return None
+
 
 class LunchModel(models.Model):
     event = models.OneToOneField(
@@ -62,7 +69,7 @@ class LunchModel(models.Model):
         primary_key=True)
     price = MoneyField(max_digits=10, decimal_places=2, default_currency='EUR')
     menu = models.CharField(max_length=250)
-    customers = models.ManyToManyField(user_models.ResearcherModel)
+    customers = models.ManyToManyField(user_models.ConferenceUserModel)
 
 
 class LectureModel(models.Model):
@@ -80,11 +87,14 @@ class InviteModel(models.Model):
         on_delete=models.CASCADE,
     )
     user = models.ForeignKey(
-        user_models.ResearcherModel,
+        user_models.ConferenceUserModel,
         related_name='invitation',
         on_delete=models.CASCADE,
     )
     approved = models.IntegerField(default=1)
+
+    def __str__(self):
+        return f'{self.user.name} {self.user.researcher.last_name}'
 
     class Meta:
         unique_together = ['lecture', 'user']

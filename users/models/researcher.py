@@ -24,7 +24,7 @@ class ResearcherModel(models.Model):
         return full_name
 
     def get_invites(self):
-        return conf_models.InviteModel.objects.filter(user=self.user.name)
+        return conf_models.InviteModel.objects.filter(user=self.user)
 
     def __str__(self):
         return f'{self.user} Researcher'
