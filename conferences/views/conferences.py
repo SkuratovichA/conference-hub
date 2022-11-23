@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.utils import timezone
@@ -18,21 +19,17 @@ class DisplayConferenceView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['upcoming_confs'] = conf_models.ConferenceModel.objects.filter(
-            date_from__gte=timezone.now(),
-            organization__user__username=self.kwargs.get('username')
-        ).order_by('date_from')
-        context['past_confs'] = conf_models.ConferenceModel.objects.filter(
-            date_from__lt=timezone.now(),
-            organization__user__username=self.kwargs.get('username')
-        ).order_by('-date_from')
+        conferences = self.conf_list()
+        context['upcoming_confs'] = conferences.filter(date_from__gte=timezone.now()).order_by('date_from')
+        context['past_confs'] = conferences.filter(date_from__lt=timezone.now()).order_by('-date_from')
         return context
 
-    def get_queryset(self):
-        """Return the future events"""
-        return conf_models.ConferenceModel.objects.filter(
-            date_from__gte=timezone.now(), organization__user__username=self.kwargs.get('username')
-        ).order_by('date_from')
+    def conf_list(self):
+        user = self.request.user
+        if user.is_researcher:
+            return ConferenceModel.objects.filter(visitors__user__username=user.username)
+        if user.is_organization:
+            return ConferenceModel.objects.filter(organization__user__username=user.username)
 
 
 class CreateConferenceView(PermissionRequiredMixin, generic.CreateView):
@@ -40,7 +37,7 @@ class CreateConferenceView(PermissionRequiredMixin, generic.CreateView):
     form_class = conf_forms.CreateConferenceForm
     template_name = 'conferences/create_conference.html'
     # permission_required = ('users.user.organization',)
-    login_url = reverse_lazy('ch:login-page')
+    login_url = reverse_lazy('users:login-page')
     permission_denied_message = MessageMixin.messages.CONFERENCES.fail.create
 
     def has_permission(self):
@@ -73,7 +70,7 @@ class EditConferenceView(ModifyConferenceMixin, PermissionRequiredMixin, LoginRe
     form_class = conf_forms.EditConferenceForm
     template_name = 'conferences/edit_conference.html'
     # permission_required = ('users.organization', )
-    login_url = reverse_lazy('ch:login-page')
+    login_url = reverse_lazy('users:login-page')
     permissions_denied_message = MessageMixin.messages.CONFERENCES.fail.change
 
     def get_object(self, queryset=None):
@@ -88,11 +85,11 @@ class EditConferenceView(ModifyConferenceMixin, PermissionRequiredMixin, LoginRe
 # TODO only parent organization can edit/delete its conference
 class DeleteConferenceView(ModifyConferenceMixin, PermissionRequiredMixin, LoginRequiredMixin, generic.DeleteView):
     model = conf_models.ConferenceModel
-    login_url = reverse_lazy('ch:login-page')
+    login_url = reverse_lazy('users:login-page')
     permissions_denied_message = MessageMixin.messages.CONFERENCES.fail.delete
 
     def get_success_url(self):
-        username = self.kwargs.get('username')
+        username = self.request.user.username
         return reverse('conferences:conf_display-page', kwargs={'username': username})
 
 
@@ -100,8 +97,40 @@ class ConferenceInfoView(generic.DetailView):
     model = conf_models.ConferenceModel
     template_name = 'conferences/conference_info.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(ConferenceInfoView, self).get_context_data()
+        slug = self.kwargs.get('slug')
+        print(slug)
+        conference = get_object_or_404(ConferenceModel, slug=slug)
+        user = self.request.user
+        for visitor in conference.visitors.all():
+            print(visitor)
+            print(user)
+            if user == visitor.user:
+                context['user_participate'] = "true"
+        return context
 
 class ConferencesListView(generic.ListView):
     template_name = 'conferences/conferences.html'
     model = ConferenceModel
+
+
+@login_required(login_url=reverse_lazy('users:login-page'))
+def add_user(request, slug):
+    conference = get_object_or_404(ConferenceModel, slug=slug)
+    user = request.user
+    if user.is_researcher:
+        conference.visitors.add(user.researcher)
+        conference.save()
+    return redirect('conferences:conf_display-page', user.username)
+
+
+@login_required(login_url=reverse_lazy('users:login-page'))
+def remove_user(request, slug):
+    conference = get_object_or_404(ConferenceModel, slug=slug)
+    user = request.user
+    if user.is_researcher:
+        conference.visitors.remove(user.researcher)
+        conference.save()
+    return redirect('conferences:conf_display-page', user.username)
 
