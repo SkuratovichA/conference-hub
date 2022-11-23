@@ -1,6 +1,7 @@
 $color_1: #000000;
 $color_2: black;
 $background-color_1: white;
+$inactive_background: rgba(133, 133, 133, 0.56);
 
 /*# sourceMappingURL=buttons.css.map */
 .btn1 {
@@ -35,14 +36,20 @@ $background-color_1: white;
 	cursor: pointer;
 	-webkit-transition-duration: 0.1s;
 	transition-duration: 0.1s;
-	width: 50%;
-	background-color: $background-color_1;
+	background: $background-color_1;
 	width: 100%;
 	&:hover {
-		box-shadow: 0 8px 10px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+		box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
 		color: $color_2;
 	}
 }
+.inactive {
+	background: $inactive_background !important;
+	&:hover {
+		box-shadow: none !important;
+	}
+}
+
 .btn1_profile {
 	border: 2px solid #e7e7e7;
 	color: $color_1;

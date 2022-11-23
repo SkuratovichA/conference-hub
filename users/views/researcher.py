@@ -1,12 +1,17 @@
+from django.http import JsonResponse, HttpResponseBadRequest
 from conference_hub.utils.message_wrapper import MessageMixin
 from django.views.generic.edit import CreateView
-from users.models import ConferenceUserModel, OrganizationEmployeeModel
+from users.models import ConferenceUserModel, OrganizationEmployeeModel, OrganizationModel
 from users.forms import ResearcherSignupForm
 from django.shortcuts import redirect
 from django.contrib.auth import login
 from django.contrib import messages
 from django.views import generic
 from django.http import Http404
+from datetime import datetime
+from django.db.models import Q
+import json
+
 import logging
 
 logger = logging.getLogger(__name__)
@@ -21,7 +26,6 @@ class ResearcherSignupView(CreateView):
         kwargs['user_type'] = 'researcher'
         return super().get_context_data(**kwargs)
 
-    # TODO 20: remove these functions and add MessagesMixin
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
@@ -49,7 +53,7 @@ class OrganizationsView(generic.ListView):
 
     def get_queryset(self):
         orgs = OrganizationEmployeeModel.objects.filter(
-            researcher__user=self.researcher, approved=True, rejected=False
+            researcher__user=self.researcher, approved=True, rejected=False, finished=False
         )
         return orgs
 
@@ -57,4 +61,22 @@ class OrganizationsView(generic.ListView):
         context = super().get_context_data(object_list=object_list, **kwargs)
         context['url_user'] = self.researcher
         return context
-
+    
+    def post(self, request, *args, **kwargs):
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+        if is_ajax:
+            data = json.load(request)
+            user = request.user
+            # create database query (can use functools.reduce also)
+            jobs_to_delete = OrganizationEmployeeModel.objects.filter(
+                Q(organization__user__username__in=data, researcher__user=user)
+            ).distinct()
+            logger.debug(f'jobs to delete: {len(jobs_to_delete)}')
+            for org in jobs_to_delete:
+                logger.debug(f'{org} finished')
+                org.date_fired = datetime.now()
+                org.finished = True
+                org.save()
+            return JsonResponse({})
+        else:
+            return HttpResponseBadRequest('Invalid Request')

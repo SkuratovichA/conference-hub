@@ -7,14 +7,15 @@ class OrganizationEmployeeModel(models.Model):
     organization = models.ForeignKey(OrganizationModel, on_delete=models.CASCADE)
     researcher = models.ForeignKey(ResearcherModel, on_delete=models.CASCADE)
     brief = models.CharField(null=True, max_length=64, default='Welcome to our organization!')
-    date_hired = models.DateField(null=True, default=datetime.now)
     date_fired = models.DateField(null=True)
+    date_hired = models.DateField(null=True, default=datetime.now)
 
     date_sent = models.DateField(null=False, default=datetime.now)
     role = models.CharField(null=False, max_length=32)
 
     approved = models.BooleanField(null=False, default=False)
     rejected = models.BooleanField(null=False, default=False)
+    finished = models.BooleanField(null=False, default=False)
 
     def __str__(self):
         s = f'{self.organization}: {self.researcher}\n' \
