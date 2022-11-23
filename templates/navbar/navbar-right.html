@@ -105,7 +105,7 @@
 
             {#    TODO 45: add notifications (e-mail, browser)#}
             <div class="navbar-nav mr-auto" onclick="manage_notification_bar()">
-                <a class="nav-item nav-link">Invites</a>
+                <a class="nav-item nav-link">Invites <sup id="cnt_invites">{{ user.researcher.get_number_invites }}</sup></a>
             </div>
 
         {% else %}

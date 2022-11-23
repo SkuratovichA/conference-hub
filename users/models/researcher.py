@@ -25,15 +25,10 @@ class ResearcherModel(models.Model):
         return full_name
 
     def get_invites(self):
-        # print(conf_models.InviteModel.objects.filter(Q(user=self.user) & Q(approved=False)))
         return conf_models.InviteModel.objects.filter(Q(user=self.user) & Q(approved=False))
 
     def get_number_invites(self):
-        # print(len(conf_models.InviteModel.objects.filter(user=self.user)))
-        return len(conf_models.InviteModel.objects.filter(user=self.user))
-
-    def get_smth(self):
-        return 2
+        return len(conf_models.InviteModel.objects.filter(Q(user=self.user) & Q(approved=False)))
 
     def __str__(self):
         return f'{self.user} Researcher'

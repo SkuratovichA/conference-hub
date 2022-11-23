@@ -25,7 +25,10 @@ function invites_action(act, lect_name, username) {
 
      window.onclick = e => {
          if (e.target.innerText === "Decline" || e.target.innerText === "Accept") {
-            e.target.parentNode.parentElement.remove();
+             e.target.parentNode.parentElement.remove();
+             // let cnt_invites = document.getElementById("cnt_invites").innerText;
+             // let int_invites = parseInt(cnt_invites, 10) - 1;
+             // document.getElementById("cnt_invites").innerText = int_invites.toString();
          }
      }
 }
