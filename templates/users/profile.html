@@ -74,8 +74,31 @@
                         profile</a>
                     <a class="dropdown-item" href="{% url 'users:password_change-page' user.username %}">Change
                         password</a>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="dropdown-item evil-and-danger" data-toggle="modal" data-target="#modalUserDelete">
+                      Delete account
+                    </button>
                 </div>
             {% endif %}
+        </div>
+        <!-- Modal -->
+        <div class="modal" id="modalUserDelete" tabindex="-1" role="dialog" aria-labelledby="modalUserDeleteTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3 class="modal-title" id="modalUserDeleteLongTitle">Delete account</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form method="POST" action="{% url 'users:account_delete-page' user.username %}" novalidate>{% csrf_token %}
+                    <h5> Are you sure? This action will <strong>permanently</strong> delete your account.</h5>
+                    <button class="btn btn-danger" type="submit">Delete</button>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
     </div>
 

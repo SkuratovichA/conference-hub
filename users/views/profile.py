@@ -2,7 +2,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from conference_hub.utils.message_wrapper import MessageMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import PasswordChangeView
-from django.views.generic import TemplateView, DetailView
+from django.views.generic import TemplateView, DetailView, DeleteView
 from django.shortcuts import get_object_or_404
 from users.forms import ProfileUpdateForm
 from users.models import ProfileModel, ConferenceUserModel, OrganizationEmployeeModel
@@ -99,3 +99,10 @@ class ProfileChangePasswordView(SuccessMessageMixin, PasswordChangeView):
     # TODO 20: add MessagesMixin & remove SuccessMessageMixin
     def get_success_url(self, *args, **kwargs):
         return reverse_lazy('users:profile-page', args=[self.kwargs['slug']])
+
+
+class AccountDeleteView(DeleteView):
+    model = ConferenceUserModel
+    success_url = '/'
+    slug_field = 'username'
+    template_name = 'base.html'
