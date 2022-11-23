@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.utils import timezone
@@ -96,8 +97,40 @@ class ConferenceInfoView(generic.DetailView):
     model = conf_models.ConferenceModel
     template_name = 'conferences/conference_info.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(ConferenceInfoView, self).get_context_data()
+        slug = self.kwargs.get('slug')
+        print(slug)
+        conference = get_object_or_404(ConferenceModel, slug=slug)
+        user = self.request.user
+        for visitor in conference.visitors.all():
+            print(visitor)
+            print(user)
+            if user == visitor.user:
+                context['user_participate'] = "true"
+        return context
 
 class ConferencesListView(generic.ListView):
     template_name = 'conferences/conferences.html'
     model = ConferenceModel
+
+
+@login_required(login_url=reverse_lazy('users:login-page'))
+def add_user(request, slug):
+    conference = get_object_or_404(ConferenceModel, slug=slug)
+    user = request.user
+    if user.is_researcher:
+        conference.visitors.add(user.researcher)
+        conference.save()
+    return redirect('conferences:conf_display-page', user.username)
+
+
+@login_required(login_url=reverse_lazy('users:login-page'))
+def remove_user(request, slug):
+    conference = get_object_or_404(ConferenceModel, slug=slug)
+    user = request.user
+    if user.is_researcher:
+        conference.visitors.remove(user.researcher)
+        conference.save()
+    return redirect('conferences:conf_display-page', user.username)
 
