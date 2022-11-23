@@ -38,9 +38,16 @@
             {% endfor %}
         </ul>
         {% endif %}
+    {% if user.is_organization %}
         <div class="btn_horizontal">
             <a class="btn1_wide" href="{% url 'conferences:conf_create-page' user.username %}">Create a new conference
             </a>
         </div>
+    {% elif user.is_researcher %}
+        <div class="btn_horizontal">
+            <a class="btn1_wide" href="{% url 'ch:search-page' %}?type=conferences">Browse other conferences
+            </a>
+        </div>
+    {% endif %}
     </div>
 {% endblock content %}

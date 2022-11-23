@@ -18,21 +18,17 @@ class DisplayConferenceView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['upcoming_confs'] = conf_models.ConferenceModel.objects.filter(
-            date_from__gte=timezone.now(),
-            organization__user__username=self.kwargs.get('username')
-        ).order_by('date_from')
-        context['past_confs'] = conf_models.ConferenceModel.objects.filter(
-            date_from__lt=timezone.now(),
-            organization__user__username=self.kwargs.get('username')
-        ).order_by('-date_from')
+        conferences = self.conf_list()
+        context['upcoming_confs'] = conferences.filter(date_from__gte=timezone.now()).order_by('date_from')
+        context['past_confs'] = conferences.filter(date_from__lt=timezone.now()).order_by('-date_from')
         return context
 
-    def get_queryset(self):
-        """Return the future events"""
-        return conf_models.ConferenceModel.objects.filter(
-            date_from__gte=timezone.now(), organization__user__username=self.kwargs.get('username')
-        ).order_by('date_from')
+    def conf_list(self):
+        user = self.request.user
+        if user.is_researcher:
+            return ConferenceModel.objects.filter(visitors__user__username=user.username)
+        if user.is_organization:
+            return ConferenceModel.objects.filter(organization__user__username=user.username)
 
 
 class CreateConferenceView(PermissionRequiredMixin, generic.CreateView):
