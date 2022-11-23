@@ -71,10 +71,18 @@ class CreateConferenceForm(ModelForm):
 
 class CreateEventForm(ModelForm):
     date_time = forms.DateTimeField(
-        input_formats=[f'%d.%m.%Y %H:%M'],
+        input_formats=[f'%Y-%m-%d %H:%M'],
         widget=forms.DateInput(
             attrs={
-                'placeholder': 'dd.mm.yyyy hh:mm',
+                'placeholder': 'yyyy-mm-dd hh:mm',
+            }
+        )
+    )
+    duration = forms.TimeField(
+        input_formats=[f'%H:%M'],
+        widget=forms.TimeInput(
+            attrs={
+                'placeholder': 'hh:mm',
             }
         )
     )

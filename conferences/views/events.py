@@ -48,6 +48,12 @@ class CreateEventView(PermissionRequiredMixin, LoginRequiredMixin, generic.Creat
     def form_invalid(self, form):
         return super().form_invalid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super(CreateEventView, self).get_context_data()
+        context['form'] = self.get_form_class()
+        context['conf'] = ConferenceModel.objects.get(slug=self.kwargs.get('slug'))
+        return context
+
 
 class ModifyEventMixin:
     def has_permission(self):
