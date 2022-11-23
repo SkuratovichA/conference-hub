@@ -78,11 +78,12 @@
                     {% if user.is_researcher %}
                         <a class="dropdown-item" href="#">My conferences</a>
                         <a class="dropdown-item" href="#">My scheduler</a>
-                        <a class="dropdown-item" href="#">My organizations</a>
-                        <a class="dropdown-item" href="#">My invites</a>
+                        <a class="dropdown-item" href="{% url 'users:organizations-page' user.username %}">My organizations</a>
+                        <a class="dropdown-item" href="{% url 'users:invites-page' %}">Invites</a>
                     {% elif user.is_organization %}
                         {# TODO 41: add list of members with crud functionality#}
-                        <a class="dropdown-item" href="#">Members</a>
+                        <a class="dropdown-item" href="{% url 'users:employees-page' user.username %}">Members</a>
+                        <a class="dropdown-item" href="{% url 'users:invites-page' %}">Invites</a>
                         {# TODO 40: add list with organization's conferences with a crud functionality#}
                         <a class="dropdown-item" href="{% url 'conferences:conf_display-page' user.username %}">Conferences</a>
                         <div class="dropdown-divider"></div>

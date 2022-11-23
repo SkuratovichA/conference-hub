@@ -12,7 +12,10 @@ class IndexView(generic.TemplateView):
         lect_name = request.GET.get('lecture_name')
         username = request.GET.get('username')
 
-        invite = conf_models.InviteModel.objects.get(
+        print(username)
+        print(lect_name)
+        if username is not None and lect_name is not None:
+            invite = conf_models.InviteModel.objects.get(
                             Q(user__username=username) & Q(lecture__event__name=lect_name))
 
         if action == "accept_invite":
