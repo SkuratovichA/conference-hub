@@ -4,12 +4,6 @@ from django.db import models
 from enum import Enum
 
 
-class Status(Enum):
-    Wait = 1
-    Approved = 2
-    Refused = 3
-
-
 class ConferenceModel(models.Model):
     name = models.CharField(max_length=250)
     slug = models.SlugField(unique=True, null=False)
@@ -91,7 +85,7 @@ class InviteModel(models.Model):
         related_name='invitation',
         on_delete=models.CASCADE,
     )
-    approved = models.IntegerField(default=1)
+    approved = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.user.name} {self.user.researcher.last_name}'

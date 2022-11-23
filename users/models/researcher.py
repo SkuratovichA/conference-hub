@@ -1,6 +1,7 @@
 import users.models as users_models
 from django.db import models
 import conferences.models as conf_models
+from django.db.models import Q
 
 
 class ResearcherModel(models.Model):
@@ -24,11 +25,11 @@ class ResearcherModel(models.Model):
         return full_name
 
     def get_invites(self):
-        print(conf_models.InviteModel.objects.filter(user=self.user))
-        return conf_models.InviteModel.objects.filter(user=self.user)
+        # print(conf_models.InviteModel.objects.filter(Q(user=self.user) & Q(approved=False)))
+        return conf_models.InviteModel.objects.filter(Q(user=self.user) & Q(approved=False))
 
     def get_number_invites(self):
-        print(len(conf_models.InviteModel.objects.filter(user=self.user)))
+        # print(len(conf_models.InviteModel.objects.filter(user=self.user)))
         return len(conf_models.InviteModel.objects.filter(user=self.user))
 
     def get_smth(self):

@@ -22,4 +22,10 @@ function invites_action(act, lect_name, username) {
             username: username,
         }
     });
+
+     window.onclick = e => {
+         if (e.target.innerText === "Decline" || e.target.innerText === "Accept") {
+            e.target.parentNode.parentElement.remove();
+         }
+     }
 }
