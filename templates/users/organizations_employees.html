@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load compress %}
+{% load blog_tags %}
+
+{% block content %}
+    {% compress css %}
+        <link rel="stylesheet" type="text/x-scss" href="{% static 'css/ch/style.scss' %}">
+    {% endcompress %}
+
+    <div class="container-lg px-md-2 mt-lg-4 clearfix">
+        {% for object in object_list %}
+            <ul>
+                <div class="content-section">
+                    <div class="media">
+                        {% if url_user.is_organization %}
+                            <img class="rounded-circle account-img list-img"
+                                 src="{{ object.researcher.user.profile.image.url }}">
+                            <div class="media-body">
+                                <fieldset>
+                                    <a class="account-heading"
+                                       href="{{ object.researcher.user.get_absolute_url }}">{{ object.researcher.user.name }} {{ object.researcher.last_name }}</a>
+                                    <p class="text-secondary">Role: {{ object.get_role }}</p>
+                                    <p class="text-secondary">Username: {{ object.researcher.user.username }}</p>
+                                    <p class="text-secondary">Email: {{ object.researcher.user.email }}</p>
+                                    <p class="text-secondary">{{ object.get_date_hired|date:"M d, Y" }}</p>
+                                </fieldset>
+                            </div>
+                        {% elif url_user.is_researcher %}
+                            <img class="rounded-circle account-img list-img"
+                                 src="{{ object.organization.user.profile.image.url }}">
+                            <div class="media-body">
+                                <fieldset>
+                                    <a class="account-heading"
+                                       href="{{ object.organization.user.get_absolute_url }}">{{ object.organization.user.name }}</a>
+                                    <p class="text-secondary">Role: {{ object.get_role }}</p>
+                                    <p class="text-secondary">Username: {{ object.organization.user.username }}</p>
+                                    <p class="text-secondary">Email: {{ object.organization.user.email }}</p>
+                                    <p class="text-secondary">{{ object.get_date_hired|date:"M d, Y" }}</p>
+                                </fieldset>
+                            </div>
+                        {% else %}
+                        {% endif %}
+                    </div>
+
+                    <button style='display: none' id="removeButton" onclick="remove_item('{{ object.user.username }}')"></button>
+                </div>
+
+            </ul>
+
+            {% empty %}
+            <h1 class="content-section center-text">
+                This {% if url_user.is_organization %}organization has no employees{% elif url_user.is_researcher %}
+                researcher has no organizations{% else %}{% endif %}
+            </h1>
+        {% endfor %}
+
+        <div class="content-section">
+            <a id='goToInvites' class="btn1_wide" href="{% url 'users:invites-page' %}">
+                {% if url_user.is_organization %}Invite new members{% elif url_user.is_researcher %}My
+                    invites{% else %}{% endif %}
+            </a>
+
+            <button type="button" class="btn1_wide" onclick="manage_work()" id="manageWorkButton">Manage
+                {% if url_user.is_organization %}members{% elif url_user.is_researcher %}
+                    organizations{% else %}{% endif %}
+            </button>
+
+            <button id="cancelButton" onclick="cancelChanges()" style="display: none"></button>
+        </div>
+
+    </div>
+    </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript">
+
+    // states = viewing, managing
+    let state = 'viewing'
+    let viewing_text_content = document.getElementById('manageWorkButton').textContent
+    let removedItems = []
+
+    function remove_item(item_username) {
+        removedItems.push(item_username)
+    }
+
+    function cancelChanges() {
+        let removeButton = document.getElementById('removeButton')
+        let manageWorkButton = document.getElementById('manageWorkButton')
+        let cancelButton = document.getElementById('cancelButton')
+        let goToInvitesButton = document.getElementById('goToInvites')
+
+        state = 'viewing'
+        removedItems = []
+
+        alert(cancelButton)
+
+        cancelButton.classList.remove('btn1_wide')
+        cancelButton.style.cssText = 'display: none'
+        cancelButton.textContent = ''
+
+        goToInvitesButton.style.cssText = 'Invites'
+
+        removeButton.classList.remove('btn1_wide')
+        removeButton.style.cssText = 'display: none'
+        removeButton.textContent = ''
+
+        manageWorkButton.textContent = viewing_text_content
+        manageWorkButton.style.cssText = ''
+        alert('changes cancelled.')
+    }
+
+    function manage_work() {
+        let removeButton = document.getElementById('removeButton')
+        let manageWorkButton = document.getElementById('manageWorkButton')
+        let cancelButton = document.getElementById('cancelButton')
+        let goToInvitesButton = document.getElementById('goToInvites')
+
+        switch (state) {
+            case "viewing":
+                removedItems = []
+                state = 'managing'
+                manageWorkButton.textContent = 'Save changes'
+
+                manageWorkButton.style.cssText = "background: rgba(158, 231, 154, 0.58)"
+
+                removeButton.classList.add("btn1_wide")
+                removeButton.style.cssText = ''
+                removeButton.textContent = 'Remove'
+
+                goToInvitesButton.style.cssText = 'display: none'
+
+                cancelButton.classList.add("btn1_wide")
+                cancelButton.style.cssText = "background: rgba(243,169,169,0.54); color: black"
+                cancelButton.textContent = 'Cancel'
+                break;
+
+            case "managing":
+                cancelChanges()
+                alert('managing. Ajax call')
+                break;
+
+            default:
+                break;
+        }
+    }
+
+</script>
+{% endblock content %}

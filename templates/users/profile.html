@@ -12,7 +12,7 @@
             <fieldset>
                 {% if object.is_researcher %}
                     <p class="account-heading">{{ object.name }} {{ object.researcher.last_name }}</p>
-                {% elif user.is_organization %}
+                {% elif object.is_organization %}
                     <p class="account-heading">{{ object.name }}</p>
                 {% else %}
                     {#             admin?#}
@@ -27,7 +27,7 @@
 
             {% if object.is_researcher and organizations.count > 0 %}
                 <div>
-                    <h2>Organizations</h2>
+                    <h2><a href="{{ object.get_absolute_url }}/organizations">Organizations</a></h2>
                 </div>
                 <ul>
                     {% for org in organizations %}

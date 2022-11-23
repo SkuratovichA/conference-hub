@@ -15,6 +15,10 @@ urlpatterns = [
     path('signup/organization', views.OrganizationSignupView.as_view(), name='signup_organization-page'),
 
     path('<slug>/edit_profile', views.ProfileUpdateView.as_view(), name='profile_update-page'),
-    path('<slug>/password_change/', views.ProfileChangePasswordView.as_view(), name='password_change-page'),
+    path('<slug>/password_change', views.ProfileChangePasswordView.as_view(), name='password_change-page'),
+
+    path('<slug>/organizations', views.OrganizationsView.as_view(), name='organizations-page'),
+    path('<slug>/employees', views.EmployeesView.as_view(), name='employees-page'),
+
     path('<slug>', views.ProfileView.as_view(), name='profile-page'),
 ]

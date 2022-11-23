@@ -212,4 +212,9 @@ a.article-title:hover {
   opacity: 0.3;
 }
 
+.empty-list {
+  background: rgba(232, 178, 178, 0.49);
+  color: white;
+}
+
 /*# sourceMappingURL=main.css.map */

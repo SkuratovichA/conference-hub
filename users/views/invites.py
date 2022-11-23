@@ -35,7 +35,7 @@ class InviteView(generic.ListView):
         # get objects
         object_lists = {
             'organizations':
-                users_models.OrganizationEmployee.objects.filter(
+                users_models.OrganizationEmployeeModel.objects.filter(
                     researcher__user__username=self_username, approved=False, rejected=False
                 ),
             'conferences':  # TODO : add conferences invites
@@ -49,7 +49,7 @@ class InviteView(generic.ListView):
 
     def get_organization_context(self, request):
         org = request.user
-        already_sent_requests = list(map(lambda x: x.researcher, users_models.OrganizationEmployee.objects.filter(
+        already_sent_requests = list(map(lambda x: x.researcher, users_models.OrganizationEmployeeModel.objects.filter(
             organization__user=org, rejected=False
         )))
         results = [{
@@ -83,7 +83,7 @@ class InviteView(generic.ListView):
                     logger.debug(researcher)
                     logger.debug(request.user)
                     organization = users_models.OrganizationModel.objects.get(user=request.user)
-                    invite = users_models.OrganizationEmployee(
+                    invite = users_models.OrganizationEmployeeModel(
                         researcher=researcher,
                         organization=organization,
                         rejected=False,
@@ -109,7 +109,7 @@ class InviteView(generic.ListView):
         if is_ajax:
             data = json.load(request)
             invite_id = data['invite_id']
-            invite = users_models.OrganizationEmployee.objects.get(id=invite_id)
+            invite = users_models.OrganizationEmployeeModel.objects.get(id=invite_id)
             setattr(invite, action, True)
             invite.save()
             logger.debug(f'invite {action} and saved')

@@ -12,7 +12,6 @@
     <div class="container-lg px-md-2 mt-lg-4 clearfix">
         {% include 'ch/search/search_info.html' with researchers=researchers organizations=organizations conferences=conferences %}
         <div class="col-12 col-md-9 float-left px-2 pt-3 pt-md-0">
-            {#        left part (a window with list elements)#}
             <ul>
                 {% if type == 'organizations' or type == 'researchers' %}
                     {% include 'ch/search/conferenceusers_list.html' with object_list=object_list %}
@@ -20,7 +19,6 @@
                     {% include 'ch/search/conferences_list.html' with object_list=object_list %}
                 {% endif %}
             </ul>
-
         </div>
     </div>
 {% endblock content %}
