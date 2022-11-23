@@ -53,13 +53,13 @@
                     <p class="text_my"><b>When:</b> {{ invite.lecture.event.date_time }}</p>
                     <span class="invite_span">
                         <button type="button" class="btn btn-success my_btn"
-                                onclick="send_resp('accept_invite',
+                                onclick="invites_action('accept_invite',
                                                     '{{ invite.lecture.event.name }}',
                                                     '{{ user.username }}')">
                                 Accept
                         </button>
                         <button type="button" class="btn btn-danger my_btn"
-                                onclick="send_resp('decline_invite',
+                                onclick="invites_action('decline_invite',
                                                     '{{ invite.lecture.event.name }}',
                                                     '{{ user.username }}')">
                                 Decline
@@ -71,22 +71,7 @@
     {% endif %}
 </div>
 
-<script>
-    function send_resp(act, lect_name, username) {
-        $.ajax({
-            url: '',
-            type: 'get',
-            data: {
-                action: act,
-                lecture_name: lect_name,
-                username: username,
-            }
-        });
-        console.log($(this));
-        //$(this).parent.parent.remove();
-    }
-</script>
-
+<script src="{% static 'js/ajax_functions.js' %}"></script>
 <script src="{% static 'js/sidebar.js' %}"></script>
 
 <!-- Optional JavaScript -->

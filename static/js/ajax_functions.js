@@ -11,3 +11,15 @@ function admin_users(act, username) {
         }
     });
 }
+
+function invites_action(act, lect_name, username) {
+    $.ajax({
+        url: '',
+        type: 'get',
+        data: {
+            action: act,
+            lecture_name: lect_name,
+            username: username,
+        }
+    });
+}
