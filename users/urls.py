@@ -5,6 +5,7 @@ from users import views
 app_name = 'users'
 
 urlpatterns = [
+    path('', views.ConferenceUserListView.as_view(), name='users-models'),
     path('invites', views.InviteView.as_view(), name='invites-page'),
     path('login', views.ConferenceUserSigninView.as_view(), name='login-page'),
     path('logout', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout-page'),
