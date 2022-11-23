@@ -33,13 +33,12 @@ SECRET_KEY = 'django-insecure-h(sd6#t^bpow)d%f9s%swn555m=t1j(h#9b-=2z8cmwaz1t+@7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.localhost', '127.0.0.1', '::1']
 
 # Application definition
 INSTALLED_APPS = [
     # libraries1
     'compressor',
-    'address',
     'djmoney',
     'crispy_forms',
     'crispy_bootstrap5',

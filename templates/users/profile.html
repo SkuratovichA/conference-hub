@@ -21,10 +21,6 @@
                 <p class="text-secondary"><b>Email:</b> {{ object.email }}</p>
             </fieldset>
 
-            <button class="btn1_wide" href="{% url 'users:profile_update-page' user.username %}">
-                Edit profile
-            </button>
-
             {% if object.address %}
                 <p class="text-secondary"><b>Address:</b> {{ object.address }}</p>
             {% endif %}

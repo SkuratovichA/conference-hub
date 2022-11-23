@@ -4,18 +4,24 @@
 {% for object in object_list %}
     <li>
         <div class="content-section">
-            <img class="rounded-circle account-img list-img"
-                 src=" {{ object.profile.image.url }} ">
-            <div class="media-body">
-                <fieldset>
-                    <p class="account-heading">{{ object.name }} {{ object.researcher.last_name }}</p>
-                    <p class="text-secondary">Researcher</p>
-                    <p class="text-secondary">{{ object.username }}</p>
-                    <p class="text-secondary">{{ object.email }}</p>
-                    {% if object.address %}
-                        <p class="text-secondary">Address: {{ object.address }}</p>
-                    {% endif %}
-                </fieldset>
+            <div class="media">
+                <img class="rounded-circle account-img"
+                     src=" {{ object.profile.image.url }} ">
+                <div class="media-body">
+                    <fieldset>
+                        <p class="account-heading">{{ object.name }} {{ object.researcher.last_name }}</p>
+                        {% if object.is_researcher %}
+                            <p class="text-secondary">Researcher</p>
+                        {% elif object.is_organization %}
+                            <p class="text-secondary">Organization</p>
+                        {% endif %}
+                        <p class="text-secondary">{{ object.username }}</p>
+                        <p class="text-secondary">{{ object.email }}</p>
+                        {% if object.address %}
+                            <p class="text-secondary">Address: {{ object.address }}</p>
+                        {% endif %}
+                    </fieldset>
+                </div>
             </div>
         </div>
     </li>

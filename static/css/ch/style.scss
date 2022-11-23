@@ -67,3 +67,21 @@ a:hover
 ul {
 	list-style: none;
 }
+
+.parent {
+    margin-left: 20px;
+}
+
+.child {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.child.timer {
+    padding-left: 0 !important;
+}
+
+.bi {
+    justify-content: flex-end;
+    scale: 1.3;
+}

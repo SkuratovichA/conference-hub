@@ -3,11 +3,9 @@ Babel==2.10.3
 coverage==6.5.0
 crispy-bootstrap5==0.7
 Django==4.1.2
-django-address==0.2.8
-django-address-model==1.0.4
 django-appconf==1.0.5
 django-compressor==4.1
-django-crispy-forms @ git+https://github.com/django-crispy-forms/django-crispy-forms@165e2b6d428ae70787635c35a2074492de6fc1c7
+django-crispy-forms==1.14.0
 django-environ==0.9.0
 django-libsass==0.9
 django-money==3.0.0
@@ -24,3 +22,8 @@ rjsmin==1.2.0
 six==1.16.0
 sqlparse==0.4.3
 typing_extensions==4.4.0
+python-dotenv==0.21.0
+psycopg2-binary==2.9.5
+dj-database-url==1.0.0
+gunicorn==20.1.0
+whitenoise==6.2.0

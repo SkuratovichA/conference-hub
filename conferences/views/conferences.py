@@ -15,7 +15,18 @@ logger = logging.getLogger(__name__)
 class DisplayConferenceView(generic.ListView):
     model = conf_models.ConferenceModel
     template_name = 'conferences/display_conferences.html'
-    context_object_name = 'upcoming_confs'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['upcoming_confs'] = conf_models.ConferenceModel.objects.filter(
+            date_from__gte=timezone.now(),
+            organization__user__username=self.kwargs.get('username')
+        ).order_by('date_from')
+        context['past_confs'] = conf_models.ConferenceModel.objects.filter(
+            date_from__lt=timezone.now(),
+            organization__user__username=self.kwargs.get('username')
+        ).order_by('-date_from')
+        return context
 
     def get_queryset(self):
         """Return the future events"""
@@ -46,8 +57,9 @@ class CreateConferenceView(PermissionRequiredMixin, generic.CreateView):
 
 class ModifyConferenceMixin:
     def has_permission(self):
-        conference_pk = self.request.get_full_path().split('/')[-1]
-        conference = ConferenceModel.objects.get(pk=conference_pk) is not None
+        conference_slug = self.request.get_full_path().split('/')[-1]
+        conference = ConferenceModel.objects.get(slug=conference_slug)
+        assert conference is not None
         logger.debug(f'`{conference}` is not None if user has permissions')
         can_edit = self.request.user.is_organization
         can_edit = can_edit and (conference is not None)
@@ -76,7 +88,6 @@ class EditConferenceView(ModifyConferenceMixin, PermissionRequiredMixin, LoginRe
 # TODO only parent organization can edit/delete its conference
 class DeleteConferenceView(ModifyConferenceMixin, PermissionRequiredMixin, LoginRequiredMixin, generic.DeleteView):
     model = conf_models.ConferenceModel
-    template_name = 'conferences/delete_conference.html'
     login_url = reverse_lazy('ch:login-page')
     permissions_denied_message = MessageMixin.messages.CONFERENCES.fail.delete
 
