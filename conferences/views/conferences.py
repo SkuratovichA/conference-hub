@@ -40,7 +40,7 @@ class CreateConferenceView(PermissionRequiredMixin, generic.CreateView):
     form_class = conf_forms.CreateConferenceForm
     template_name = 'conferences/create_conference.html'
     # permission_required = ('users.user.organization',)
-    login_url = reverse_lazy('ch:login-page')
+    login_url = reverse_lazy('users:login-page')
     permission_denied_message = MessageMixin.messages.CONFERENCES.fail.create
 
     def has_permission(self):
@@ -73,7 +73,7 @@ class EditConferenceView(ModifyConferenceMixin, PermissionRequiredMixin, LoginRe
     form_class = conf_forms.EditConferenceForm
     template_name = 'conferences/edit_conference.html'
     # permission_required = ('users.organization', )
-    login_url = reverse_lazy('ch:login-page')
+    login_url = reverse_lazy('users:login-page')
     permissions_denied_message = MessageMixin.messages.CONFERENCES.fail.change
 
     def get_object(self, queryset=None):
@@ -88,11 +88,11 @@ class EditConferenceView(ModifyConferenceMixin, PermissionRequiredMixin, LoginRe
 # TODO only parent organization can edit/delete its conference
 class DeleteConferenceView(ModifyConferenceMixin, PermissionRequiredMixin, LoginRequiredMixin, generic.DeleteView):
     model = conf_models.ConferenceModel
-    login_url = reverse_lazy('ch:login-page')
+    login_url = reverse_lazy('users:login-page')
     permissions_denied_message = MessageMixin.messages.CONFERENCES.fail.delete
 
     def get_success_url(self):
-        username = self.kwargs.get('username')
+        username = self.request.user.username
         return reverse('conferences:conf_display-page', kwargs={'username': username})
 
 
