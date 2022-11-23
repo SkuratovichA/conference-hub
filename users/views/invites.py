@@ -21,16 +21,12 @@ class InviteView(generic.ListView):
         context = super().get_context_data(**kwargs)
         return context
 
+    # TODO: add permissions
     def get_researcher_context(self, request):
-        def get_users(it):
-            return list(map(lambda el: el.user, it))
-
         type = request.GET.get('type', default='organizations')
         param = request.GET.get('q', default='')  # filter parameter, e.g name pattern
 
         self_username = request.user.username
-
-        logging.debug(f"{self_username}")
 
         # get objects
         object_lists = {
@@ -48,10 +44,13 @@ class InviteView(generic.ListView):
         }
 
     def get_organization_context(self, request):
-        org = request.user
         already_sent_requests = list(map(lambda x: x.researcher, users_models.OrganizationEmployeeModel.objects.filter(
-            organization__user=org, rejected=False
+            organization__user=request.user,
+            rejected=False,
+            approved=False,
+            finished=False
         )))
+        logger.debug(f'already_sent_requests: {already_sent_requests}')
         results = [{
                 'username': obj.user.username,
                 'value': obj.user.name + ' ' + obj.last_name,
@@ -88,6 +87,7 @@ class InviteView(generic.ListView):
                         organization=organization,
                         rejected=False,
                         approved=False,
+                        finished=False
                     )
                     invite.save()
                 messages.success(message='invites sent!', request=request)
@@ -99,7 +99,7 @@ class InviteView(generic.ListView):
         return self.modify_invite(request, action='approved')
 
     def delete(self, request, *args, **kwargs):
-        return self.modify_invite(request, action='reject')
+        return self.modify_invite(request, action='rejected')
 
     def modify_invite(self, request, action):
         is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
@@ -110,10 +110,11 @@ class InviteView(generic.ListView):
             data = json.load(request)
             invite_id = data['invite_id']
             invite = users_models.OrganizationEmployeeModel.objects.get(id=invite_id)
+            logger.debug(f'before (approved, rejected): {invite.approved} {invite.rejected}')
             setattr(invite, action, True)
             invite.save()
+            logger.debug(f'after (approved, rejected): {invite.approved} {invite.rejected}')
             logger.debug(f'invite {action} and saved')
             return JsonResponse({})
         else:
             return HttpResponseBadRequest('Invalid Request')
-

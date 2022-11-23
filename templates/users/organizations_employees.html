@@ -12,6 +12,7 @@
         {% for object in object_list %}
             <ul>
                 <div class="content-section" id="
+
                         {% if url_user.is_organization %}{{ object.organization.user.username }}{% elif url_user.is_researcher %}{{ object.organization.user.username }}{% endif %}">
                     <div class="media">
                         {% if url_user.is_organization %}
@@ -45,8 +46,10 @@
                     </div>
 
                     <button style='display: none' id="removeButton"
-                            name="{% if url_user.is_organization %}{{ object.organization.user.username }}{% elif url_user.is_researcher %}{{ object.organization.user.username }}{% endif %}_button"
-                            onclick="remove_item('{% if url_user.is_organization %}{{ object.organization.user.username }}{% elif url_user.is_researcher %}{{ object.organization.user.username }}{% endif %}')">
+                            name="
+                                    {% if url_user.is_organization %}{{ object.organization.user.username }}{% elif url_user.is_researcher %}{{ object.organization.user.username }}{% endif %}_button"
+                            onclick="remove_item('
+                                    {% if url_user.is_organization %}{{ object.organization.user.username }}{% elif url_user.is_researcher %}{{ object.organization.user.username }}{% endif %}')">
                     </button>
                 </div>
 
@@ -65,12 +68,15 @@
                     invites{% else %}{% endif %}
             </a>
 
-            <button type="button" class="btn1_wide" onclick="manage_work()" id="manageWorkButton">Manage
-                {% if url_user.is_organization %}members{% elif url_user.is_researcher %}
-                    organizations{% else %}{% endif %}
-            </button>
+            {% if object_list.count > 0 %}
+                <button type="button" class="btn1_wide" onclick="manage_work()" id="manageWorkButton">Manage
+                    {% if url_user.is_organization %}members{% elif url_user.is_researcher %}
+                        organizations{% else %}{% endif %}
+                </button>
 
-            <button id="cancelButton" onclick="cancelChanges()" style="display: none"></button>
+                <button id="cancelButton" onclick="cancelChanges()" style="display: none"></button>
+            {% endif %}
+
         </div>
 
     </div>
@@ -114,7 +120,7 @@
             manageWorkButton.textContent = viewing_text_content
             manageWorkButton.style.cssText = ''
 
-            removedItems.forEach(function(id) {
+            removedItems.forEach(function (id) {
                 let bttn = document.getElementById(id + "_button")
                 bttn.setAttribute('onclick', `remove_item(${id})`)
                 bttn.classList.remove('inactive')
@@ -159,6 +165,7 @@
                         dataType: 'json',
                         success: (data) => {
                             cancelChanges()
+                            window.location.reload()
                         },
                         error: (error) => {
                             alert(error)

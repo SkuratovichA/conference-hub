@@ -30,7 +30,10 @@ class ProfileView(DetailView):
         context['object'] = get_object_or_404(ConferenceUserModel, username=self.kwargs.get(self.slug_field))
         if context['object'].is_researcher:
             orgs = OrganizationEmployeeModel.objects.filter(
-                researcher=context['object'].researcher, approved=True, rejected=False
+                researcher=context['object'].researcher,
+                approved=True,
+                rejected=False,
+                finished=False
             )
             logger.debug(orgs)
             context['organizations'] = orgs

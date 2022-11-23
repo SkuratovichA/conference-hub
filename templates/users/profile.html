@@ -27,7 +27,7 @@
 
             {% if object.is_researcher and organizations.count > 0 %}
                 <div>
-                    <h2><a href="{{ object.get_absolute_url }}/organizations">Organizations</a></h2>
+                    <a href="{{ object.get_absolute_url }}/organizations"><h2>Organizations</h2></a>
                 </div>
                 <ul>
                     {% for org in organizations %}
