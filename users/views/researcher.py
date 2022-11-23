@@ -1,12 +1,18 @@
+from django.http import JsonResponse, HttpResponseBadRequest
 from conference_hub.utils.message_wrapper import MessageMixin
 from django.views.generic.edit import CreateView
-from users.models import ConferenceUserModel
+from users.models import ConferenceUserModel, OrganizationEmployeeModel, OrganizationModel
 from users.forms import ResearcherSignupForm
 from django.shortcuts import redirect
 from django.contrib.auth import login
 from django.contrib import messages
-import logging
+from django.views import generic
+from django.http import Http404
+from datetime import datetime
+from django.db.models import Q
+import json
 
+import logging
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +26,6 @@ class ResearcherSignupView(CreateView):
         kwargs['user_type'] = 'researcher'
         return super().get_context_data(**kwargs)
 
-    # TODO 20: remove these functions and add MessagesMixin
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
@@ -30,3 +35,48 @@ class ResearcherSignupView(CreateView):
     def form_invalid(self, form):
         messages.error(self.request, MessageMixin.messages.USERS.fail.signup)
         return super().form_invalid(form)
+
+
+class OrganizationsView(generic.ListView):
+    template_name = 'users/organizations_employees.html'
+
+    def get(self, request, *args, **kwargs):
+        url = self.request.get_full_path()
+        logger.debug(f'url: {url}')
+        self.username = url.split('/')[-2]
+        logger.debug(f'org username: {self.username}')
+        self.researcher = ConferenceUserModel.objects.get(username=self.username)
+        if not self.researcher.is_researcher:
+            raise Http404("Provided user is not a researcher")
+        logger.debug(f'organization: {self.researcher}')
+        return super().get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        orgs = OrganizationEmployeeModel.objects.filter(
+            researcher__user=self.researcher, approved=True, rejected=False, finished=False
+        )
+        return orgs
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        context['url_user'] = self.researcher
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+        if is_ajax:
+            data = json.load(request)
+            user = request.user
+            # create database query (can use functools.reduce also)
+            jobs_to_delete = OrganizationEmployeeModel.objects.filter(
+                Q(organization__user__username__in=data, researcher__user=user)
+            ).distinct()
+            logger.debug(f'jobs to delete: {len(jobs_to_delete)}')
+            for org in jobs_to_delete:
+                logger.debug(f'{org} finished')
+                org.date_fired = datetime.now()
+                org.finished = True
+                org.save()
+            return JsonResponse({})
+        else:
+            return HttpResponseBadRequest('Invalid Request')

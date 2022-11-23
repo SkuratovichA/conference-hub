@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 # FIXME: change from ListView to another view to get rid of object_list
 class SearchView(generic.ListView):
     # model = users_models.ConferenceUserModel
-    template_name = 'ch/search.html'
+    template_name = 'ch/search/search.html'
     paginate_by = 50
     object_list = users_models.ConferenceUserModel.objects.all()
 
@@ -20,6 +20,7 @@ class SearchView(generic.ListView):
         return context
 
     def get(self, request, *args, **kwargs):
+
         def get_users(it):
             return list(map(lambda el: el.user, it))
 
@@ -54,7 +55,6 @@ class SearchView(generic.ListView):
         context = {
             'object_list': object_lists[type],  # list with researchers/conferences/etc
 
-            # TODO андрюха, это я оссавил только для того, чтобы можно быссро протессить html. Потом нужно будет это удалить!
             **object_lists,
             "type": type,
         }

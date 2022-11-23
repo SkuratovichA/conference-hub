@@ -10,8 +10,7 @@
                     <fieldset>
                         <a href="{% url 'conferences:conf_detail-page' object.slug %}">
                             <p class="account-heading">{{ object.name }}</p>
-                            <p class="text-secondary">{{ object.date_from|date:"D, d M, Y" }} -
-                                {{ object.date_to|date:"D, d M, Y" }}</p>
+                            <p class="text-secondary">{{ object.date_from|date:"D, d M, Y" }} - {{ object.date_to|date:"D, d M, Y" }}</p>
                             <p class="text-secondary">Address: {{ object.address }}</p>
                         </a>
                     </fieldset>
@@ -19,6 +18,7 @@
             </div>
         </div>
     </li>
-    {% empty %}
+
+{% empty %}
     <li class="content-section empty-list center-text">Nothing found</li>
 {% endfor %}

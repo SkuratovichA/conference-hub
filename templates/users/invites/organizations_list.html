@@ -1,0 +1,79 @@
+{% load static %}
+{% load compress %}
+
+{% for invite in organizations %}
+    <li id="{{ invite.id }}">
+        <div class="content-section">
+            <div class="media">
+                <img class="rounded-circle account-img list-img"
+                     src=" {{ invite.organization.user.profile.image.url }} ">
+                <div class="media-body">
+                    <fieldset>
+                        <p class="account-heading">From: {{ invite.organization.user.name }}</p>
+                        <p class="text-secondary">Date: {{ invite.date_sent }}</p>
+                        {% if invite.brief %}
+                            <p class="text-secondary">Message: {{ invite.brief }}</p>
+                        {% endif %}
+                    </fieldset>
+
+                </div>
+            </div>
+            <!-- id={ invite } -->
+            <button onclick="process_invite({{ invite.id }}, 'PUT', '{{ request.path }}')" type="button"
+                    class="btn1_wide" style="background: rgba(75,176,83,0.37); color: #FFFFFF">Accept
+            </button>
+            <button onclick="process_invite({{ invite.id }}, 'DELETE', '{{ request.path }}')" type="button"
+                    class="btn1_wide" style="background: rgba(215,156,156,0.27); color: #FFFFFF">Reject
+            </button>
+        </div>
+    </li>
+
+{% empty %}
+    <li class="content-section center-text empty-list">Nothing found</li>
+{% endfor %}
+
+<script type="text/javascript">
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function process_invite(invite_id, type, path) {
+        alert(type + ' invite' + invite_id)
+        console.log('type: ' + type)
+        console.log('path: ' + path)
+
+        $.ajax({
+            type: type,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            data: JSON.stringify({'invite_id': invite_id}),
+            url: path,
+            dataType: 'json',
+            success: (data) => {
+                var element = document.getElementById(invite_id)
+                var child = element.lastElementChild
+                while (child) {
+                    element.removeChild(child)
+                    child = element.lastElementChild
+                }
+            },
+            error: (error) => {
+                alert(error)
+            }
+        })
+    }
+</script>

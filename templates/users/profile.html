@@ -12,7 +12,7 @@
             <fieldset>
                 {% if object.is_researcher %}
                     <p class="account-heading">{{ object.name }} {{ object.researcher.last_name }}</p>
-                {% elif user.is_organization %}
+                {% elif object.is_organization %}
                     <p class="account-heading">{{ object.name }}</p>
                 {% else %}
                     {#             admin?#}
@@ -25,10 +25,19 @@
                 <p class="text-secondary"><b>Address:</b> {{ object.address }}</p>
             {% endif %}
 
-            {% if object.is_researcher and oboject.organizations.count > 0 %}
+            {% if object.is_researcher and organizations.count > 0 %}
                 <div>
-                    <h2>Organizations</h2>
+                    <a href="{{ object.get_absolute_url }}/organizations"><h2>Organizations</h2></a>
                 </div>
+                <ul>
+                    {% for org in organizations %}
+                        <li>
+                            <a href="{{ request.site.name }}/users/{{ org.organization.user.username }}">
+                                {{ org.organization.user.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
             {% endif %}
 
         </div> <!-- col-4 -->

@@ -99,3 +99,9 @@ class DeleteConferenceView(ModifyConferenceMixin, PermissionRequiredMixin, Login
 class ConferenceInfoView(generic.DetailView):
     model = conf_models.ConferenceModel
     template_name = 'conferences/conference_info.html'
+
+
+class ConferencesListView(generic.ListView):
+    template_name = 'conferences/conferences.html'
+    model = ConferenceModel
+

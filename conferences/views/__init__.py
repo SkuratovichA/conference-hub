@@ -3,7 +3,8 @@ from .conferences import (
     CreateConferenceView,
     EditConferenceView,
     DeleteConferenceView,
-    ConferenceInfoView
+    ConferenceInfoView,
+    ConferencesListView,
 )
 from .events import (
     EventInfoView,

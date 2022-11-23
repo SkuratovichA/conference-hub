@@ -1,10 +1,20 @@
+from django.http import JsonResponse, HttpResponseBadRequest
 from conference_hub.utils.message_wrapper import MessageMixin
 from django.views.generic.edit import CreateView
 from users.forms import OrganizationSignupForm
-from users.models import ConferenceUserModel
+from users.models import ConferenceUserModel, ResearcherModel, OrganizationEmployeeModel, OrganizationModel
 from django.contrib.auth import login
 from django.shortcuts import redirect
+from django.shortcuts import render
 from django.contrib import messages
+from django.views import generic
+from django.db.models import Q
+from django.http import Http404
+from datetime import datetime
+import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class OrganizationSignupView(CreateView):
@@ -16,7 +26,6 @@ class OrganizationSignupView(CreateView):
         kwargs['user_type'] = 'organization'
         return super().get_context_data(**kwargs)
 
-    # TODO 20: remove these functions and add MessagesMixin
     def form_valid(self, form):
         user = form.save()
         login(self.request, user)
@@ -27,3 +36,49 @@ class OrganizationSignupView(CreateView):
         messages.error(self.request, MessageMixin.messages.USERS.fail.signup)
         return super().form_invalid(form)
 
+
+# TODO: add permissions mixin
+class EmployeesView(generic.ListView):
+    template_name = 'users/organizations_employees.html'
+    username = None
+    organization = None
+
+    def get(self, request, *args, **kwargs):
+        url = self.request.get_full_path()
+        logger.debug(f'url: {url}')
+        self.username = url.split('/')[-2]
+        logger.debug(f'org username: {self.username}')
+        self.organization = ConferenceUserModel.objects.get(username=self.username)
+        if not self.organization.is_organization:
+            raise Http404("Provided user is not an organization")
+        logger.debug(f'organization: {self.organization}')
+        return super().get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        employees = OrganizationEmployeeModel.objects.filter(
+            organization__user=self.organization, approved=True, rejected=False, finished=False
+        )
+        return employees
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        context['url_user'] = self.organization
+        return context
+
+    def post(self, request, *args, **kwargs):
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+        if is_ajax:
+            data = json.load(request)
+            user = request.user
+            jobs_to_delete = OrganizationEmployeeModel.objects.filter(
+                Q(organization__user=user, researcher__user__username__in=data)
+            ).distinct()
+            logger.debug(f'jobs to delete: {len(jobs_to_delete)}')
+            for org in jobs_to_delete:
+                logger.debug(f'{org} finished')
+                org.date_fired = datetime.now()
+                org.finished = True
+                org.save()
+            return JsonResponse({})
+        else:
+            return HttpResponseBadRequest('Invalid Request')

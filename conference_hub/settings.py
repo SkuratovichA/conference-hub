@@ -36,7 +36,6 @@ DEBUG = True
 ALLOWED_HOSTS = ['.localhost', '127.0.0.1', '::1']
 
 # Application definition
-
 INSTALLED_APPS = [
     # libraries1
     'compressor',
@@ -55,6 +54,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
+ASGI_APPLICATION = 'conference_hub.asgi.application'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
