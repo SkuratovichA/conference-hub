@@ -124,7 +124,7 @@ class LectureForm(CreateEventForm):
 
         for user_login in users_invite:
             user = user_models.ConferenceUserModel.objects.get(username=user_login)
-            invitation = conference_models.InviteModel.objects.create(lecture=lecture, user=user)
+            invitation = conference_models.InviteModel.objects.get_or_create(lecture=lecture, user=user)
 
         return event
 
