@@ -83,7 +83,7 @@
     {#    TODO 44: add a possibility to pay for a conference #}
     {% if user.is_researcher %}
         <div class="navbar-nav mr-auto">
-            <a class="nav-item nav-link" href="#">Bucket</a>
+            <a class="nav-item nav-link" href="{% url 'ch:bucket-page' user.username %}">Bucket</a>
         </div>
     {% endif %}
 

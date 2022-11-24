@@ -86,7 +86,10 @@ class SearchView(generic.ListView):
 
     def post(self, request, *args,  **kwargs):
         data = json.load(request)
-        self.create_pur(data['username'], data['confname'])
+        if data['action'] == "add":
+            self.create_pur(data['username'], data['confname'])
+        else:
+            self.delete_pur(data['username'], data['confname'])
         return JsonResponse({})
 
     @staticmethod
@@ -95,3 +98,9 @@ class SearchView(generic.ListView):
         user = users_models.ResearcherModel.objects.get(user__username=username)
         conf = conferences_models.ConferenceModel.objects.get(name=confname)
         obj.objects.create(researcher=user, conference=conf)
+
+    @staticmethod
+    def delete_pur(username, confname):
+        obj = ch_models.PurchasesModel.objects.get(
+            Q(researcher__user__username=username) & Q(conference__name=confname))
+        obj.delete()

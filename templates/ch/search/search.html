@@ -34,14 +34,21 @@
                 }
                 else if (not_ok_arr.includes(conf)) {
                     let p_var = document.createElement("h4");
+                    let button_var = document.createElement("button");
                     p_var.innerText = 'Already in the bucket';
                     document.getElementById(conf).appendChild(p_var);
+                    button_var.setAttribute('type', 'button');
+                    button_var.setAttribute('class', 'btn btn-primary');
+                    button_var.setAttribute('onclick', 'remove_from_the_bucket("{{ user.username }}", "'+conf+'")')
+                    button_var.innerText = 'Remove from bucket';
+                    document.getElementById(conf).appendChild(button_var);
                 }
                 else {
                     let button_var = document.createElement("button");
                     button_var.setAttribute('type', 'button');
                     button_var.setAttribute('class', 'btn btn-primary');
-                    button_var.setAttribute('onclick', "add_to_the_bucket('{{ user.username }}', conf)")
+                    button_var.setAttribute('onclick', 'add_to_the_bucket("{{ user.username }}", "'+conf+'")')
+                    //button_var.addEventListener("click", add_to_the_bucket("{{ user.username }}", conf));
                     button_var.innerText = 'Add to bucket';
                     document.getElementById(conf).appendChild(button_var);
                 }
@@ -71,7 +78,22 @@
                     'X-Requested-With': 'XMLHttpRequest',
                     'X-CSRFToken': getCookie('csrftoken')
                 },
-                data: JSON.stringify({'username': username, 'confname': confname}),
+                data: JSON.stringify({'username': username, 'confname': confname, 'action': 'add'}),
+                dataType: 'json',
+                success: (data) => {
+                    window.location.reload();
+                }
+            })
+        }
+
+        function remove_from_the_bucket(username, confname) {
+            $.ajax({
+                type: 'post',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                data: JSON.stringify({'username': username, 'confname': confname, 'action': 'remove'}),
                 dataType: 'json',
                 success: (data) => {
                     window.location.reload();

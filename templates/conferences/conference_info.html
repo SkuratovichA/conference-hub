@@ -54,16 +54,16 @@
                             <a class="dropdown-item" href="#">Poster Session</a>
                         </div>
                 </div>
-            {% elif user.is_researcher and user_participate %}
-                <p><mark>You already have ticket for this conference. If you wish, you can
-                    <a data-toggle="modal" class='btn-sm btn-link' data-target="#remove_user">
-                        <strong> cancel your participation</strong>
-                    </a>.
-                </mark></p>
-            {% else %}
-                <form method="POST" action="{% url 'conferences:add_user-page' object.slug%}" novalidate>{% csrf_token %}
-                <button class="btn btn-sm btn-info" type="submit">Buy ticket</button>
-                </form>
+{#            {% elif user.is_researcher and user_participate %}#}
+{#                <p><mark>You already have ticket for this conference. If you wish, you can#}
+{#                    <a data-toggle="modal" class='btn-sm btn-link' data-target="#remove_user">#}
+{#                        <strong> cancel your participation</strong>#}
+{#                    </a>.#}
+{#                </mark></p>#}
+{#            {% else %}#}
+{#                <form method="POST" action="{% url 'conferences:add_user-page' object.slug%}" novalidate>{% csrf_token %}#}
+{#                <button class="btn btn-sm btn-info" type="submit">Buy ticket</button>#}
+{#                </form>#}
             {% endif %}
 
 
