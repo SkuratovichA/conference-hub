@@ -83,21 +83,24 @@
             </div>
         </div>
 
-    <!-- DELETE conference Modal -->
-        <div class="modal" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h3 class="modal-title" id="exampleModalLongTitle">Delete conference</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <form method="POST" action="{% url 'conferences:conf_delete-page' object.slug %}" novalidate>{% csrf_token %}
-                    <h5> Are you sure you want to delete <strong>{{ object.name }}</strong> conference?</h5>
-                    <button class="btn btn-primary" type="submit">Delete</button>
-                </form>
+        {% if user.is_active and user.is_organization and user.organization == object.organization %}
+            <!-- Modal -->
+            <div class="modal" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h3 class="modal-title" id="exampleModalLongTitle">Delete conference</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form method="POST" action="{% url 'conferences:conf_delete-page' object.slug %}" novalidate>{% csrf_token %}
+                        <h5> Are you sure you want to delete <strong>{{ object.name }}</strong> conference?</h5>
+                        <button class="btn btn-primary" type="submit">Delete</button>
+                    </form>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

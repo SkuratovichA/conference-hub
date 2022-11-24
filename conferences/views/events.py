@@ -132,3 +132,14 @@ class DeleteEventView(ModifyEventMixin, PermissionRequiredMixin, generic.DeleteV
 
     def get_success_url(self):
         return reverse('conferences:conf_detail-page', kwargs={'slug': self.kwargs.get('slug')})
+
+
+class UserEventsView(generic.ListView):
+    model = EventModel
+    template_name = 'conferences/my_lectures.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        event_list = EventModel.objects.filter(lecture__researchers__user=self.request.user)
+        context['user_events'] = event_list.filter(lecture__researchers__approved=True).order_by('date_time')
+        return context

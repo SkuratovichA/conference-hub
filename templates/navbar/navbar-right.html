@@ -78,6 +78,7 @@
                     {% if user.is_researcher %}
                         <a class="dropdown-item" href="{% url 'conferences:conf_display-page' user.username %}">My conferences</a>
                         <a class="dropdown-item" href="#">My scheduler</a>
+                        <a class="dropdown-item" href="{% url 'conferences:user_lectures-page' user.username %}">My lectures</a>
                         <a class="dropdown-item" href="{% url 'users:organizations-page' user.username %}">My organizations</a>
                         <a class="dropdown-item" href="{% url 'users:invites-page' %}">Invites</a>
                     {% elif user.is_organization %}
