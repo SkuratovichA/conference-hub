@@ -3,7 +3,10 @@ from django.views import generic
 from conferences import models as conferences_models
 from users import models as users_models
 from django.db.models import Q
+import ch.models.bucket as ch_models
 import logging
+from django.http import JsonResponse, HttpResponseBadRequest
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -52,11 +55,43 @@ class SearchView(generic.ListView):
                 )
         }
 
+        purs_confs_name_ok = []
+        purs_confs_name_not_ok = []
+        confs_name = []
+
+        if request.user.is_researcher == True:
+            models_id = conferences_models.ConferenceModel.objects.filter(conference_Q)
+            confs_name = [el.name for el in models_id]
+
+            purchases_ok = ch_models.PurchasesModel.objects.filter(Q(researcher__user=request.user)
+                                                    & Q(status=True)
+                                                    & Q(conference__name__in=confs_name))
+            purs_confs_name_ok = [el.conference.name for el in purchases_ok]
+
+            purchases_not_ok = ch_models.PurchasesModel.objects.filter(Q(researcher__user=request.user)
+                                                    & Q(status=False)
+                                                    & Q(conference__name__in=confs_name))
+            purs_confs_name_not_ok = [el.conference.name for el in purchases_not_ok]
+
         context = {
             'object_list': object_lists[type],  # list with researchers/conferences/etc
-
             **object_lists,
             "type": type,
+            'confs_name': confs_name,
+            'purs_confs_name_ok': purs_confs_name_ok,
+            'purs_confs_name_not_ok': purs_confs_name_not_ok
         }
 
         return render(request, self.template_name, context)
+
+    def post(self, request, *args,  **kwargs):
+        data = json.load(request)
+        self.create_pur(data['username'], data['confname'])
+        return JsonResponse({})
+
+    @staticmethod
+    def create_pur(username, confname):
+        obj = ch_models.PurchasesModel
+        user = users_models.ResearcherModel.objects.get(user__username=username)
+        conf = conferences_models.ConferenceModel.objects.get(name=confname)
+        obj.objects.create(researcher=user, conference=conf)
