@@ -59,7 +59,7 @@ class SearchView(generic.ListView):
         purs_confs_name_not_ok = []
         confs_name = []
 
-        if request.user.is_researcher == True:
+        if request.user.is_active and request.user.is_researcher:
             models_id = conferences_models.ConferenceModel.objects.filter(conference_Q)
             confs_name = [el.name for el in models_id]
 

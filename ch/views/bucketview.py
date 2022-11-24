@@ -51,6 +51,9 @@ class PurchasesView(generic.ListView):
             price_conf = conference.price.amount
             user_model = user_models.ResearcherModel.objects.get(user=user).user
 
+            conference.visitors.add(user_model.researcher)
+            conference.save()
+
             user_model.balance.amount -= decimal.Decimal(price_conf)
             organization_model.balance.amount += decimal.Decimal(price_conf)
 
