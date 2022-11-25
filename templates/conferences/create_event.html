@@ -1,16 +1,21 @@
 {% extends 'base.html' %}
 
+{% load static %}
 {% load crispy_forms_tags %}
 
 {% block content %}
     <div class="row">
+    <snap id="date_from" hidden>{{ conf.date_from | date:"Y-m-d" }}</snap>
+    <snap id="date_to" hidden>{{ conf.date_to | date:"Y-m-d"}}</snap>
         <div class="col-md-8 col-sm-10 col-12">
-            <h4>Add a new event to {{ conf.name }} conference</h4>
-            <form method="POST" novalidate>{% csrf_token %}
+            <h4>Add a new event to <strong>{{ conf.name }}</strong> conference</h4>
+            <form method="POST" novalidate name="event_form">{% csrf_token %}
                 <input type="hidden" name="next" value="{{ next }}">
                 {{ form|crispy }}
                 <button class="btn btn-outline-info" type="submit">Add</button>
             </form>
         </div>
     </div>
+    <script src="{% static 'js/form_fields.js' %}"></script>
+    <script src="{% static 'js/event_form.js' %}"></script>
 {% endblock %}
