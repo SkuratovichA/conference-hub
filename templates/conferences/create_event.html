@@ -45,6 +45,7 @@
             <h4>Add a new event to <strong>{{ conf.name }}</strong> conference</h4>
             <form method="POST" novalidate name="event_form">{% csrf_token %}
                 <input type="hidden" name="next" value="{{ next }}">
+                {{ form|crispy }}
                     <p> Warning! You will not be able to add any researches or change them after you save this event!</p>
                     <div id="users_for_invite">
                         <input id="project" class="user_res" name="invite_user">
@@ -55,7 +56,7 @@
                         <ul id="users_add"> </ul> <br>
                     </div>
                     <div class="col text-center">
-                        <button class="btn btn-outline-info col-md-6" type="submit">Add</button>
+                        <button class="btn btn-info col-md-6" type="submit">Save event</button>
                     </div>
                 </form>
             </div>

@@ -85,7 +85,7 @@
 
         {% if user.is_active and user.is_organization and user.organization == object.organization %}
             <!-- Modal -->
-            <div class="modal" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -103,6 +103,7 @@
                 </div>
               </div>
             </div>
+        {% endif %}
           </div>
         </div>
     </div>

@@ -60,10 +60,7 @@ class CreateEventView(PermissionRequiredMixin, LoginRequiredMixin, generic.Creat
                        'img': obj.user.profile.image.url}
             results.append(pr_json)
 
-        context = {
-            'form': self.get_form_class(),
-            'data': results
-        }
+        context['data'] = results
         return context
 
 

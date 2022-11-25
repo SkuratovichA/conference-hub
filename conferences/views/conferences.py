@@ -8,7 +8,6 @@ from conferences import models as conf_models
 from django.shortcuts import redirect, get_object_or_404
 from conference_hub.utils.message_wrapper import MessageMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
-import logging
 
 
 import logging
