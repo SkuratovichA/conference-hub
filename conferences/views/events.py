@@ -27,8 +27,6 @@ class CreateEventView(PermissionRequiredMixin, LoginRequiredMixin, generic.Creat
             return conf_forms.LectureForm
         elif event_type == "lunch":
             return conf_forms.LunchForm
-        # elif event_type == "poster":
-        #     return conf_forms.PosterForm
         else:
             return conf_forms.CreateEventForm
 
