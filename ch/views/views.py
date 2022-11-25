@@ -27,6 +27,3 @@ class IndexView(generic.TemplateView):
 
         return render(request, '../templates/ch/index.html')
 
-
-class AboutView(generic.TemplateView):
-    template_name = 'ch/index.html'
