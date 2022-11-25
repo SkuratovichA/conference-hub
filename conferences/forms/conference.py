@@ -145,7 +145,7 @@ class LunchForm(CreateEventForm):
         fields = ('name',  'location', 'date_time', 'duration', 'price', 'menu')
 
     @transaction.atomic
-    def save(self, conf_slug):
+    def save(self, conf_slug, user_invites = None):
         event = super().save(commit=False)
         event.conference = conference_models.ConferenceModel.objects.get(slug=conf_slug)
         event.type = conference_models.EventModel.EventType.LUNCH
