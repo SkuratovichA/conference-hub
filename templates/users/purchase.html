@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load static %}
+{% load compress %}
+{% block title %}Purchase Page{% endblock title %}
+
+{% block content %}
+    {% compress css %}
+        <link rel="stylesheet" type="text/x-scss" href="{% static 'css/ch/style.scss' %}">
+    {% endcompress %}
+
+    {% for pur in purchases %}
+        <li>
+            <div class="content-section">
+                <div class="media">
+                    <div class="media-body">
+                        <fieldset>
+                            <span>
+                                <a href="{% url 'conferences:conf_detail-page' pur.conference.slug %}">
+                                    <p class="account-heading">{{ pur.conference.name }}</p>
+                                    <p class="text-secondary">{{ pur.conference.date_from|date:"D, d M, Y" }} -
+                                        {{ pur.conference.date_to|date:"D, d M, Y" }}</p>
+                                    <p class="text-secondary">Address: {{ pur.conference.address }}</p>
+                                </a>
+                                <input type="checkbox" id="{{ pur.conference.id }}" onclick="change_price(event)" checked />
+                                <input type="hidden" id='{{ pur.conference.id }}__price' name="custId" value="{{ pur.conference.price.amount }}">
+                                <button type="button" class="btn btn-primary" onclick="delete_from_the_bucket('{{ pur.conference.id }}')">Remove from bucket</button>
+                            </span>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </li>
+    {% empty %}
+        <li class="content-section empty-list center-text">Nothing found</li>
+    {% endfor %}
+
+    <button type="button" class="btn btn-success" onclick="buy_tickets_to_conferences()">Buy</button>
+    <br>
+    <span style="display: inline-flex;">
+        <p>€</p> &nbsp;
+        <p id="finish_price">{{ sum.amount }}</p>
+    </span>
+
+
+    <script>
+        function change_price(e) {
+            let id_el = e.target.getAttribute('id');
+            let price_el = parseFloat(document.getElementById(id_el + "__price").getAttribute('value'));
+            let finish_price = parseFloat(document.getElementById("finish_price").innerText)
+            let state_box = document.getElementById(id_el).checked
+
+            if (state_box === true) {
+                document.getElementById("finish_price").innerText = (finish_price + price_el).toFixed(2);
+            }
+            else if (state_box === false) {
+                document.getElementById("finish_price").innerText = (finish_price - price_el).toFixed(2);
+            }
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== "") {
+                const cookies = document.cookie.split(";");
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function delete_from_the_bucket(confid) {
+            $.ajax({
+                type: 'post',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                data: JSON.stringify({'confid': confid, 'action': 'delete'}),
+                dataType: 'json',
+                success: (data) => {
+                    window.location.reload();
+                }
+            })
+        }
+
+        function buy_tickets_to_conferences() {
+            let user_balance = parseFloat({{ user.balance.amount }})
+            let finish_price = parseFloat(document.getElementById("finish_price").innerText)
+
+            if (finish_price > user_balance) {
+                alert("You do not have enough money")
+                return;
+            }
+
+            let buy_confs = []
+            for (conf_id of {{ purs_conf_id }}) {
+                let state_box = document.getElementById(conf_id).checked
+                if (state_box === true) {
+                    buy_confs.push(conf_id)
+                }
+            }
+
+            $.ajax({
+                type: 'post',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                data: JSON.stringify({'confs': buy_confs, 'action': 'buy'}),
+                dataType: 'json',
+                success: (data) => {
+                    window.location.reload();
+                }
+            })
+        }
+    </script>
+{% endblock content %}
+

@@ -5,8 +5,6 @@ from .conferences import (
     DeleteConferenceView,
     ConferenceInfoView,
     ConferencesListView,
-    add_user,
-    remove_user
 )
 from .events import (
     EventInfoView,

@@ -21,5 +21,86 @@
             </ul>
         </div>
     </div>
+    <script>
+        (function () {
+            let ok_arr = {{ purs_confs_name_ok|safe }};
+            let not_ok_arr = {{ purs_confs_name_not_ok|safe }};
+
+            for (conf of {{ confs_name|safe }}) {
+                if (ok_arr.includes(conf)) {
+                    let p_var = document.createElement("h4");
+                    p_var.innerText = 'You are a participant';
+                    document.getElementById(conf).appendChild(p_var);
+                }
+                else if (not_ok_arr.includes(conf)) {
+                    let p_var = document.createElement("h4");
+                    let button_var = document.createElement("button");
+                    p_var.innerText = 'Already in the bucket';
+                    document.getElementById(conf).appendChild(p_var);
+                    button_var.setAttribute('type', 'button');
+                    button_var.setAttribute('class', 'btn btn-primary');
+                    button_var.setAttribute('onclick', 'remove_from_the_bucket("{{ user.username }}", "'+conf+'")')
+                    button_var.innerText = 'Remove from bucket';
+                    document.getElementById(conf).appendChild(button_var);
+                }
+                else {
+                    let button_var = document.createElement("button");
+                    button_var.setAttribute('type', 'button');
+                    button_var.setAttribute('class', 'btn btn-primary');
+                    button_var.setAttribute('onclick', 'add_to_the_bucket("{{ user.username }}", "'+conf+'")')
+                    //button_var.addEventListener("click", add_to_the_bucket("{{ user.username }}", conf));
+                    button_var.innerText = 'Add to bucket';
+                    document.getElementById(conf).appendChild(button_var);
+                }
+            }
+        })();
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== "") {
+                const cookies = document.cookie.split(";");
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function add_to_the_bucket(username, confname) {
+            $.ajax({
+                type: 'post',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                data: JSON.stringify({'username': username, 'confname': confname, 'action': 'add'}),
+                dataType: 'json',
+                success: (data) => {
+                    window.location.reload();
+                }
+            })
+        }
+
+        function remove_from_the_bucket(username, confname) {
+            $.ajax({
+                type: 'post',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                data: JSON.stringify({'username': username, 'confname': confname, 'action': 'remove'}),
+                dataType: 'json',
+                success: (data) => {
+                    window.location.reload();
+                }
+            })
+        }
+    </script>
 {% endblock content %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+

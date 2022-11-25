@@ -110,27 +110,8 @@ class ConferenceInfoView(generic.DetailView):
                 context['user_participate'] = "true"
         return context
 
+
 class ConferencesListView(generic.ListView):
     template_name = 'conferences/conferences.html'
     model = ConferenceModel
-
-
-@login_required(login_url=reverse_lazy('users:login-page'))
-def add_user(request, slug):
-    conference = get_object_or_404(ConferenceModel, slug=slug)
-    user = request.user
-    if user.is_researcher:
-        conference.visitors.add(user.researcher)
-        conference.save()
-    return redirect('conferences:conf_display-page', user.username)
-
-
-@login_required(login_url=reverse_lazy('users:login-page'))
-def remove_user(request, slug):
-    conference = get_object_or_404(ConferenceModel, slug=slug)
-    user = request.user
-    if user.is_researcher:
-        conference.visitors.remove(user.researcher)
-        conference.save()
-    return redirect('conferences:conf_display-page', user.username)
 

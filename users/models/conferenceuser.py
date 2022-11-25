@@ -6,6 +6,7 @@ from django.core.mail import send_mail
 from django.utils import timezone
 from django.urls import reverse
 from django.db import models
+from djmoney.models.fields import MoneyField
 import logging
 
 
@@ -57,6 +58,7 @@ class ConferenceUserModel(AbstractBaseUser, PermissionsMixin):
 
     country = models.CharField(null=True, blank=False, max_length=64)
     city = models.CharField(null=True, blank=False, max_length=64)
+    balance = MoneyField(max_digits=10, decimal_places=2, default_currency='EUR', default=1000      )
 
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'username'  # use username as a username field, but actually there are two username fields

@@ -15,10 +15,13 @@
                             <p class="text-secondary">Address: {{ object.address }}</p>
                         </a>
                     </fieldset>
+                    {% if user.is_researcher %}
+                        <div id="{{ object.name }}"></div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </li>
-    {% empty %}
+{% empty %}
     <li class="content-section empty-list center-text">Nothing found</li>
 {% endfor %}

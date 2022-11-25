@@ -37,33 +37,28 @@
                         {% endfor %}
                     </ul>
                 </div>
+                {% if user.id == object.organization.user_id %}
+                    <div class="dropdown">
 
+                            <button class="btn1_wide" type="button" id="dropdownMenuButton"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                +
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item"
+                                   href="{% url 'conferences:event_create-page' object.slug user.username %}?type=lunch">Lunch</a>
+                                <a class="dropdown-item"
+                                   href="{% url 'conferences:event_create-page' object.slug user.username %}?type=lecture">Lecture</a>
+                                <a class="dropdown-item" href="#">Poster Session</a>
+                            </div>
+                    </div>
+                {% endif %}
             </div>
-            {% if user.id == object.organization.user_id %}
-                <div class="dropdown">
 
-                        <button class="btn1_wide" type="button" id="dropdownMenuButton"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            +
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item"
-                               href="{% url 'conferences:event_create-page' object.slug user.username %}?type=lunch">Lunch</a>
-                            <a class="dropdown-item"
-                               href="{% url 'conferences:event_create-page' object.slug user.username %}?type=lecture">Lecture</a>
-                            <a class="dropdown-item" href="#">Poster Session</a>
-                        </div>
-                </div>
-            {% elif user.is_researcher and user_participate %}
-                <p><mark>You already have ticket for this conference. If you wish, you can
-                    <a data-toggle="modal" class='btn-sm btn-link' data-target="#remove_user">
-                        <strong> cancel your participation</strong>
-                    </a>.
-                </mark></p>
-            {% else %}
-                <form method="POST" action="{% url 'conferences:add_user-page' object.slug%}" novalidate>{% csrf_token %}
-                <button class="btn btn-sm btn-info" type="submit">Buy ticket</button>
-                </form>
+            {% if user.is_researcher and user_participate %}
+                <p><mark>You already have ticket for this conference.</mark></p>
+           {% elif not user.is_active%}
+                <h5><mark> <a class="viewlink" href="{% url 'users:login-page' %}"> <strong>Log in</strong> </a>  to buy a ticket.</mark></h5>
             {% endif %}
 
 
@@ -102,26 +97,6 @@
                 <form method="POST" action="{% url 'conferences:conf_delete-page' object.slug %}" novalidate>{% csrf_token %}
                     <h5> Are you sure you want to delete <strong>{{ object.name }}</strong> conference?</h5>
                     <button class="btn btn-primary" type="submit">Delete</button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-
-    <!-- remove user Modal -->
-        <div class="modal" id="remove_user" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h3 class="modal-title" id="exampleModalLongTitle">Delete conference</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <form method="POST" action="{% url 'conferences:remove_user-page' object.slug %}" novalidate>{% csrf_token %}
-                    <h5> Your participation in <strong>{{ object.name }}</strong> conference will be canceled. Continue?</h5>
-                    <button class="btn btn-primary" type="submit">Cancel participation</button>
                 </form>
               </div>
             </div>
