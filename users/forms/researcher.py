@@ -10,6 +10,16 @@ logger = logging.getLogger(__name__)
 
 
 class ResearcherUpdateForm(forms.ModelForm):
+    last_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'type': 'last_name',
+                'placeholder': _('Last Name'),
+            }
+        ),
+        max_length=64,
+        min_length=1
+    )
 
     class Meta:
         model = ResearcherModel

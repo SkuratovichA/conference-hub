@@ -4,10 +4,10 @@
 {% block content %}
 
     <div class="content-section">
-        <div class="row">
-            <div class="col-6">
-                <div class="form-group">
-                    <form method="POST" enctype="multipart/form-data">
+        <form method="POST" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
                         {% csrf_token %}
                         <fieldset class="form-group">
                             <legend class="border-bottom mb-4">Edit profile</legend>
@@ -15,16 +15,17 @@
                             {{ ro_form|crispy }}
                             {{ p_form|crispy }}
                         </fieldset>
-                    </form>
+                    </div>
+                </div>
+                <div class="col-6">
                 </div>
             </div>
-            <div class="col-6">
+            <div class="form-group">
+                <button class="btn1_wide center-text" type="submit">Save</button>
             </div>
-        </div>
-        <div class="form-group">
-            <button class="btn1_wide center-text" type="submit">Save</button>
-        </div>
-        <a class="btn1_wide center-text" style="background: rgba(140,140,140,0.6)"
-           href="{% url 'users:profile-page' user.username %}">Back</a>
+
+            <a class="btn1_wide center-text" style="background: rgba(140,140,140,0.6)"
+               href="{% url 'users:profile-page' user.username %}">Back</a>
+        </form>
     </div>
 {% endblock content %}
