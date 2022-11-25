@@ -1,5 +1,7 @@
-from django.db import models
 import users.models as users_models
+from django.db import models
+import conferences.models as conf_models
+from django.db.models import Q
 
 
 class ResearcherModel(models.Model):
@@ -21,6 +23,12 @@ class ResearcherModel(models.Model):
         """
         full_name = f"{self.user.name} {self.last_name}"
         return full_name
+
+    def get_invites(self):
+        return conf_models.InviteModel.objects.filter(Q(user=self.user) & Q(approved=False))
+
+    def get_number_invites(self):
+        return len(conf_models.InviteModel.objects.filter(Q(user=self.user) & Q(approved=False)))
 
     def __str__(self):
         return f'{self.user} Researcher'

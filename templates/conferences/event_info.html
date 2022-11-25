@@ -2,14 +2,43 @@
 {% load static %}
 
 {% block content %}
-<h1>{{object.name}}
-    <h3>{{object.location}}</h3>
-    <div>
-        {% if user.id == object.conference.organization.user_id%}
-            <a class="btn btn-sm btn-info" href="{% url 'conferences:event_edit-page' object.conference.slug user.username object.event_id %}">Edit event</a>
-            <a class="btn btn-sm btn-info" href="{% url 'conferences:event_delete-page' object.conference.slug user.username object.event_id%}">Delete event</a>
-        {%  endif %}
-    </div>
-</h1>
+    <button style="position:absolute; top:170px; right:250px;" class="btn btn-info" onclick="location.href='{% url 'conferences:conf_detail-page' object.conference.slug %}';">
+    Back to conference detail
+    </button>
+<h1>{{object.name}}</h1>
+<h3>{{object.location}}</h3>
+<div>
+    {% if user.id == object.conference.organization.user_id%}
+        <a class="btn btn-sm btn-info" href="{% url 'conferences:event_edit-page' object.conference.slug user.username object.event_id %}">Edit event</a>
+        <a class="btn btn-sm btn-info" href="{% url 'conferences:event_delete-page' object.conference.slug user.username object.event_id%}">Delete event</a>
+    {%  endif %}
+</div>
 <p>{{ object.date_time }} - {{ object.duration }}</p>
+<h4>Researchers:</h4>
+{% if user == object.conference.organization.user %}
+<menu>
+    {% for res in object.lecture.researchers.all %}
+        <li>
+        <div style="display:flex; flex-direction: row;">
+            <h5>{{ res }}</h5>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <h6 class="{% if res.approved %}btn-outline-success{% else %}btn-outline-danger{% endif %}" >Approved: {{ res.approved }}</h6>
+        </div>
+        </li>
+    {% endfor %}
+</menu>
+
+{% else  %}
+<menu>
+    {% for res in object.lecture.researchers.all %}
+
+        {% if res.approved %}
+            <li>
+            <h5>{{ res }}</h5>
+            </li>
+        {% endif %}
+
+    {% endfor %}
+</menu>
+{% endif %}
 {% endblock %}

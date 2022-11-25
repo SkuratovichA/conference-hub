@@ -27,6 +27,18 @@ class SearchView(generic.ListView):
         def get_users(it):
             return list(map(lambda el: el.user, it))
 
+        def admin_actions():
+            action = request.GET.get('action')
+            if action == "change_status":
+                username = request.GET.get('username')
+                user = users_models.ConferenceUserModel.objects.get(username=username)
+                user.status = not user.status
+                user.save()
+            elif action == "delete_user":
+                username = request.GET.get('username')
+                user = users_models.ConferenceUserModel.objects.get(username=username)
+                user.delete()
+
         type = request.GET.get('type', default='researchers')
         param = request.GET.get('q', default='')  # filter parameter, e.g name pattern
 
@@ -81,6 +93,8 @@ class SearchView(generic.ListView):
             'purs_confs_name_ok': purs_confs_name_ok,
             'purs_confs_name_not_ok': purs_confs_name_not_ok
         }
+
+        admin_actions()
 
         return render(request, self.template_name, context)
 

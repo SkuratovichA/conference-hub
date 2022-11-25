@@ -11,4 +11,5 @@ from .events import (
     CreateEventView,
     EditEventView,
     DeleteEventView,
+    UserEventsView
 )

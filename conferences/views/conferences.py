@@ -8,7 +8,10 @@ from conferences import models as conf_models
 from django.shortcuts import redirect, get_object_or_404
 from conference_hub.utils.message_wrapper import MessageMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+
+
 import logging
+
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +30,7 @@ class DisplayConferenceView(generic.ListView):
     def conf_list(self):
         user = self.request.user
         if user.is_researcher:
-            return ConferenceModel.objects.filter(visitors__user__username=user.username)
+            return ConferenceModel.objects.filter(visitors__username=user.username)
         if user.is_organization:
             return ConferenceModel.objects.filter(organization__user__username=user.username)
 
@@ -106,7 +109,7 @@ class ConferenceInfoView(generic.DetailView):
         for visitor in conference.visitors.all():
             print(visitor)
             print(user)
-            if user == visitor.user:
+            if user == visitor:
                 context['user_participate'] = "true"
         return context
 

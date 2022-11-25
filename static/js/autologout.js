@@ -1,6 +1,6 @@
-let duration = 120;
+let duration_t = 120;
 let timer = document.getElementById("timer");
-timer.innerText = duration.toString() + " min";
+timer.innerText = duration_t.toString() + " min";
 setInterval(updateTimer, 60000);
 
 const modal_container = document.getElementById('modal_container')
@@ -10,12 +10,12 @@ function closePopup() {
 }
 
 function updateTimer() {
-    duration--;
-    timer.innerText = duration.toString() + " min";
-    if (duration === 30) {
+    duration_t--;
+    timer.innerText = duration_t.toString() + " min";
+    if (duration_t === 30) {
         modal_container.classList.add('show');
     }
-    else if (duration < 0) {
+    else if (duration_t < 0) {
         window.location = "/users/logout";
     }
 }
@@ -23,6 +23,6 @@ function updateTimer() {
 window.addEventListener("reset", resetTimer);
 function resetTimer() {
     closePopup();
-    duration = 120;
-    timer.innerText = duration.toString() + " min";
+    duration_t = 120;
+    timer.innerText = duration_t.toString() + " min";
 }

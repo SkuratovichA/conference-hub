@@ -3,7 +3,8 @@ from conferences import forms as conf_forms
 from django.urls import reverse, reverse_lazy
 from users.models import ConferenceUserModel
 from conferences.models import ConferenceModel, EventModel
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404, render
+from users.models.researcher import ResearcherModel
 from conference_hub.utils.message_wrapper import MessageMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 import logging
@@ -42,25 +43,33 @@ class CreateEventView(PermissionRequiredMixin, LoginRequiredMixin, generic.Creat
 
     def form_valid(self, form):
         conf_slug = self.kwargs.get('slug')
-        form.save(conf_slug)
+        users_invite = self.request.POST.getlist('test[]')
+        form.save(conf_slug, users_invite)
         return redirect('conferences:conf_detail-page', conf_slug)
-
-    def form_invalid(self, form):
-        return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
         context = super(CreateEventView, self).get_context_data()
         context['form'] = self.get_form_class()
         context['conf'] = ConferenceModel.objects.get(slug=self.kwargs.get('slug'))
+        results = []
+
+        for obj in ResearcherModel.objects.all():
+            pr_json = {'username': obj.user.username,
+                       'value': obj.user.name + " " + obj.last_name,
+                       'name': obj.user.name + " " + obj.last_name,
+                       'img': obj.user.profile.image.url}
+            results.append(pr_json)
+
+        context['data'] = results
         return context
 
 
 class ModifyEventMixin:
     def has_permission(self):
-        assert False, "it must fail for the first time. " \
-                      "If it fails. Everything is ok and delete this line. " \
-                      "If not, change the order of superclasses (ModifyEventMixin & PermisssionsRequiredMixin). " \
-                      "If not again, call sasha for help"
+        # assert False, "it must fail for the first time. " \
+        #               "If it fails. Everything is ok and delete this line. " \
+        #               "If not, change the order of superclasses (ModifyEventMixin & PermisssionsRequiredMixin). " \
+        #               "If not again, call sasha for help"
         conf_slug = self.kwargs.get('slug')
         conference = ConferenceModel.objects.get(slug=conf_slug)
         logger.debug(f'`{conference}` must exist & be owned by a user trying to create event')
@@ -69,7 +78,7 @@ class ModifyEventMixin:
         can_edit = conference is not None
         can_edit = can_edit and event.conference == conference
         can_edit = can_edit and self.request.user.is_organization  # may be redundant, because the line below
-        can_edit = can_edit and conference.user == self.request.user
+        can_edit = can_edit and conference.organization.user == self.request.user
         return can_edit
 
 
@@ -104,7 +113,7 @@ class EditEventView(ModifyEventMixin, PermissionRequiredMixin, generic.UpdateVie
         return render(request, 'conferences/edit_event.html', context)
 
     def post(self, request, *args, **kwargs):
-        context = self.get_context(request,'POST')
+        context = self.get_context(request, 'POST')
 
         are_valid = [f.is_valid() for f in context.values()]
         if all(are_valid):
@@ -120,3 +129,14 @@ class DeleteEventView(ModifyEventMixin, PermissionRequiredMixin, generic.DeleteV
 
     def get_success_url(self):
         return reverse('conferences:conf_detail-page', kwargs={'slug': self.kwargs.get('slug')})
+
+
+class UserEventsView(generic.ListView):
+    model = EventModel
+    template_name = 'conferences/my_lectures.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        event_list = EventModel.objects.filter(lecture__researchers__user=self.request.user)
+        context['user_events'] = event_list.filter(lecture__researchers__approved=True).order_by('date_time')
+        return context

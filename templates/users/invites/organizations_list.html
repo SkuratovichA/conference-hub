@@ -50,7 +50,6 @@
     }
 
     function process_invite(invite_id, type, path) {
-        alert(type + ' invite' + invite_id)
         console.log('type: ' + type)
         console.log('path: ' + path)
 
@@ -70,6 +69,7 @@
                     element.removeChild(child)
                     child = element.lastElementChild
                 }
+                window.location.reload()
             },
             error: (error) => {
                 alert(error)

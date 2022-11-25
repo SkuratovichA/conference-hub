@@ -113,7 +113,7 @@ class LectureForm(CreateEventForm):
         fields = ('name', 'location', 'date_time', 'duration', 'description',)
 
     @transaction.atomic
-    def save(self, conf_slug):
+    def save(self, conf_slug, users_invite=None):
         event = super().save(commit=False)
         event.conference = conference_models.ConferenceModel.objects.get(slug=conf_slug)
         event.type = conference_models.EventModel.EventType.LECTURE
@@ -121,6 +121,11 @@ class LectureForm(CreateEventForm):
         lecture = conference_models.LectureModel.objects.create(
             event=event,
         )
+
+        for user_login in users_invite:
+            user = user_models.ConferenceUserModel.objects.get(username=user_login)
+            invitation = conference_models.InviteModel.objects.get_or_create(lecture=lecture, user=user)
+
         return event
 
 

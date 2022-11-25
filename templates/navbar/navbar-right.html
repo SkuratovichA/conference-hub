@@ -11,10 +11,6 @@
             color: black !important;
             background: transparent !important;
         }
-        .dropdown-item.evil-and-danger {
-            color: #ED2525 !important;
-            background: transparent !important;
-        }
         .dropdown-item a{
             color: black !important;
             background: transparent !important;
@@ -39,7 +35,34 @@
 
     {#    dropdown toolbar for user & settings#}
     <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
-        {% if user.is_authenticated %}
+        {% if user.is_superuser %}
+            <li class="nav-item dropdown">
+                <a class="nav-link " data-toggle="dropdown" role="button"
+                   id="navbarDropdownMenuLink" aria-haspopup="true"
+                   aria-expanded="false">
+                   <img class="rounded-circle siteheader-img" src="{{ user.profile.image.url  }}">
+                </a>
+
+                <div class="dropdown-menu" style="right: 0; left: auto; border-radius: 10px;"
+                     aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="{% url 'users:profile-page' user.username %}">Profile</a>
+                    <a class="dropdown-item" href="{% url 'users:profile_update-page' user.username %}">Edit Profile</a>
+                    <a class="dropdown-item" href="{% url 'users:logout-page' %}">Log Out</a>
+                </div>
+            </li>
+            <div style="margin-left: 20px;">ADMIN</div>
+        {% elif user.is_authenticated %}
+            {% if user.status %}
+                <div class="status">
+                    <span class="dot" style="  background-color: greenyellow;"></span>
+                    ACTIVE
+                </div>
+            {% else %}
+                <div class="status">
+                    <span class="dot" style="background-color: red;"></span>
+                    INACTIVE
+                </div>
+            {% endif %}
             <li class="nav-item dropdown">
                 <a class="nav-link " data-toggle="dropdown" role="button"
                    id="navbarDropdownMenuLink" aria-haspopup="true"
@@ -55,6 +78,7 @@
                     {% if user.is_researcher %}
                         <a class="dropdown-item" href="{% url 'conferences:conf_display-page' user.username %}">My conferences</a>
                         <a class="dropdown-item" href="#">My scheduler</a>
+                        <a class="dropdown-item" href="{% url 'conferences:user_lectures-page' user.username %}">My lectures</a>
                         <a class="dropdown-item" href="{% url 'users:organizations-page' user.username %}">My organizations</a>
                         <a class="dropdown-item" href="{% url 'users:invites-page' %}">Invites</a>
                     {% elif user.is_organization %}
@@ -73,27 +97,24 @@
                     <a class="dropdown-item" href="{% url 'users:logout-page' %}">Log Out</a>
                 </div>
             </li>
+
+            {#    TODO 43: if bucket is empty, dont't show it #}
+            {#    TODO 44: add a possibility to pay for a conference #}
+            {% if user.is_researcher %}
+                <div class="navbar-nav mr-auto">
+                    <a class="nav-item nav-link" href="{% url 'ch:bucket-page' user.username %}">Bucket</a>
+                </div>
+
+            {#    TODO 45: add notifications (e-mail, browser)#}
+            <div class="navbar-nav mr-auto" onclick="manage_notification_bar()">
+                <a class="nav-item nav-link">Invites <sup id="cnt_invites">{{ user.researcher.get_number_invites }}</sup></a>
+            </div>
+            {% endif %}
+
         {% else %}
             <a class="nav-item nav-link" href="{% url 'users:login-page' %}">Sign In</a>
             <a class="nav-item nav-link" href="{% url 'users:signup-page' %}">Sign Up</a>
         {% endif %}
     </div>
 
-    {#    TODO 43: if bucket is empty, dont't show it #}
-    {#    TODO 44: add a possibility to pay for a conference #}
-    {% if user.is_researcher %}
-        <div class="navbar-nav mr-auto">
-            <a class="nav-item nav-link" href="{% url 'ch:bucket-page' user.username %}">Bucket</a>
-        </div>
-    {% endif %}
-
-    {#    TODO 45: add notifications (e-mail, browser)#}
-    {% if user.is_authenticated %}
-{#        <div class="navbar-nav mr-auto">#}
-{#            <a class="nav-item nav-link" href="{% url 'users:invites-page' %}">Invites</a>#}
-{#        </div>#}
-{#        <div class="navbar-nav mr-auto" onclick="manage_notification_bar()">#}
-{#            <a class="nav-item nav-link">Invites</a>#}
-{#        </div>#}
-    {% endif %}
 </div>

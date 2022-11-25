@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div>
+        <ul style="list-style: none; position: relative;">
+        <h4>My lectures</h4>
+            {% for lecture in user_events %}
+                <li>
+                    <div onclick="location.href='{% url 'conferences:event_detail-page' lecture.conference.slug lecture.event_id%}';"
+                         style="cursor: pointer;" class="content-section media-body hoverable_href">
+                        <fieldset>
+                            <p class="account-heading">{{ lecture.name }}</p>
+                            <p class="text-secondary">{{ lecture.date_time|date:"Y-m-d G:i" }}, duration:
+                                {{ lecture.duration }}</p>
+                            <p class="text-secondary">Location: {{ lecture.location }}</p>
+                            <p class="text-secondary"><a href="{% url 'conferences:conf_detail-page' lecture.conference.slug %}">Conference detail</a></p>
+                        </fieldset>
+                    </div>
+                </li>
+
+                {% empty %}
+                <hr>You don't have any lectures planed yet ;)
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock content %}

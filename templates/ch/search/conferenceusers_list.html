@@ -21,6 +21,22 @@
                             <p class="text-secondary">Address: {{ object.address }}</p>
                         {% endif %}
                     </fieldset>
+                    {% if user.is_superuser %}
+                        <button type="button" class="btn btn-warning my_btn" id="status_btn"
+                                            onclick="admin_users('change_status',
+                                                        '{{ object.username }}')">
+                            {% if object.status %}
+                                Deactivate
+                            {% else %}
+                                Activate
+                            {% endif %}
+                        </button>
+                        <button type="button" class="btn btn-danger my_btn"
+                                            onclick="admin_users('delete_user',
+                                                        '{{ object.username }}')">
+                            Delete
+                        </button>
+                    {% endif %}
                 </div>
             </div>
         </div>
