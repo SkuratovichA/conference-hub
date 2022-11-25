@@ -130,7 +130,7 @@ class LectureForm(CreateEventForm):
 
 
 class LunchForm(CreateEventForm):
-    price = MoneyField(max_digits=10, decimal_places=2, default_currency='EUR')
+    price = MoneyField(max_digits=10, decimal_places=2)
     menu = forms.Field(
         widget=forms.Textarea(
             attrs={
