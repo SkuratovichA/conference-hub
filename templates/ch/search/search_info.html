@@ -1,25 +1,31 @@
 {% load blog_tags %}
-
 <div class="col-12 col-md-2 float-left px-md-2">
-    <nav class="menu border d-none d-md-block">
+    <div class="menu-left">
+         <nav class="menu border d-none d-md-block">
 
-        <a class="menu-item whois {% if type == "researchers" %} selected {% endif %}"
-           href="?{% url_replace request 'type' 'researchers' %}">
-            Researchers
-            <span class="ml-1 Counter" data-type="researchers">{{ researchers|length }}</span>
-        </a>
+            <a class="menu-item whois {% if type == "researchers" %} selected {% endif %}"
+               href="?{% url_replace request 'type' 'researchers' %}">
+                Researchers
+                <span class="ml-1 Counter" data-type="researchers">{{ researchers|length }}</span>
+            </a>
 
-        <a class="menu-item whois {% if type == "organizations" %} selected {% endif %}"
-           href="?{% url_replace request 'type' 'organizations' %}">
-            Organizations
-            <span class="ml-1 Counter" data-type="organizations">{{ organizations|length }}</span>
-        </a>
+            <a class="menu-item whois {% if type == "organizations" %} selected {% endif %}"
+               href="?{% url_replace request 'type' 'organizations' %}">
+                Organizations
+                <span class="ml-1 Counter" data-type="organizations">{{ organizations|length }}</span>
+            </a>
 
-        <a class="menu-item whois {% if type == "conferences" %} selected {% endif %}"
-           href="?{% url_replace request 'type' 'conferences' %}">
-            Conferences
-            <span class="ml-1 Counter" data-type="conferences">{{ conferences|length }}</span>
-        </a>
-    </nav>
+            <a class="menu-item whois {% if type == "conferences" %} selected {% endif %}"
+               href="?{% url_replace request 'type' 'conferences' %}">
+                Conferences
+                <span class="ml-1 Counter" data-type="conferences">{{ conferences|length }}</span>
+            </a>
+        </nav>
+
+        {% if user.is_superuser %}
+            <button type="button" class="btn btn-primary" onclick="show_all()">Show all</button>
+        {% endif %}
+    </div>
 </div>
+
 

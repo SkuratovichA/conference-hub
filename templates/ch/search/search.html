@@ -100,6 +100,14 @@
                 }
             })
         }
+
+        function show_all() {
+            let queryParams = new URLSearchParams(window.location.search);
+            queryParams.set('q', '');
+            history.replaceState(null, null, "?" + queryParams.toString());
+            window.location.reload()
+            // console.log(window.location.search);
+        }
     </script>
 {% endblock content %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
