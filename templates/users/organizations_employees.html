@@ -46,8 +46,8 @@
                     </div>
 
                     <button style='display: none' id="removeButton"
-                            name="{% if url_user.is_organization %}{{ object.organization.user.username }}{% elif url_user.is_researcher %}{{ object.organization.user.username }}{% endif %}_button"
-                            onclick="remove_item('{% if url_user.is_organization %}{{ object.organization.user.username }}{% elif url_user.is_researcher %}{{ object.organization.user.username }}{% endif %}')">
+                            name="{% if url_user.is_organization %}{{ object.researcher.user.username }}{% elif url_user.is_researcher %}{{ object.organization.user.username }}{% endif %}_button"
+                            onclick="remove_item('{% if url_user.is_organization %}{{ object.researcher.user.username }}{% elif url_user.is_researcher %}{{ object.organization.user.username }}{% endif %}')">
                     </button>
                 </div>
 
@@ -152,6 +152,7 @@
                     break;
 
                 case "managing":
+                    alert(`sending ${Array.from(removedItems)}`)
                     $.ajax({
                         type: 'POST',
                         headers: {
