@@ -9,6 +9,16 @@
                 <img class="rounded-circle account-img" src=" {{ object.profile.image.url }} ">
             </div>
 
+            {% if object.address %}
+                <p class="text-secondary"><b>Address:</b> {{ object.address }}</p>
+            {% endif %}
+
+        </div> <!-- col-4 -->
+
+        {% if not object.is_superuser %}
+
+        <div class="col-6">
+
             <fieldset>
                 {% if object.is_researcher %}
                     <p class="account-heading">{{ object.name }} {{ object.researcher.last_name }}</p>
@@ -18,10 +28,6 @@
                 <p class="text-secondary">{{ object.username }}</p>
                 <p class="text-secondary"><b>Email:</b> {{ object.email }}</p>
             </fieldset>
-
-            {% if object.address %}
-                <p class="text-secondary"><b>Address:</b> {{ object.address }}</p>
-            {% endif %}
 
             {% if object.is_researcher and organizations.count > 0 %}
                 <div>
@@ -37,28 +43,22 @@
                     {% endfor %}
                 </ul>
             {% endif %}
-
-        </div> <!-- col-4 -->
-
-        {% if not object.is_superuser %}
-
-        <div class="col-6">
-            {% if object.is_organization %}
-                <div>
-                    <h2>Researchers</h2>
-                </div>
-                <div>
-                    <h2>Conferences</h2>
-                </div>
-            {% elif object.is_researcher %}
-                <div>
-                    <h2>Lectures</h2>
-                </div>
-                <div>
-                    <h2>Poster Sessions</h2>
-                </div>
-            {% else %}
-            {% endif %}
+{#            {% if object.is_organization %}#}
+{#                <div>#}
+{#                    <h2>Researchers</h2>#}
+{#                </div>#}
+{#                <div>#}
+{#                    <h2>Conferences</h2>#}
+{#                </div>#}
+{#            {% elif object.is_researcher %}#}
+{#                <div>#}
+{#                    <h2>Lectures</h2>#}
+{#                </div>#}
+{#                <div>#}
+{#                    <h2>Poster Sessions</h2>#}
+{#                </div>#}
+{#            {% else %}#}
+{#            {% endif %}#}
         </div> <!-- col-6 -->
 
         {#Dropdown button - edit, change password, delete#}
