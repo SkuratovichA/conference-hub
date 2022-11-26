@@ -70,8 +70,9 @@ class EmployeesView(generic.ListView):
         if is_ajax:
             data = json.load(request)
             user = request.user
+            logger.debug(f'organization: {user}; id__in: {data}')
             jobs_to_delete = OrganizationEmployeeModel.objects.filter(
-                Q(organization__user=user, researcher__user__username__in=data)
+                Q(organization__user=user, id__in=data)
             ).distinct()
             logger.debug(f'jobs to delete: {len(jobs_to_delete)}')
             for org in jobs_to_delete:

@@ -69,7 +69,7 @@ class OrganizationsView(generic.ListView):
             user = request.user
             # create database query (can use functools.reduce also)
             jobs_to_delete = OrganizationEmployeeModel.objects.filter(
-                Q(organization__user__username__in=data, researcher__user=user)
+                Q(id__in=data, researcher__user=user)
             ).distinct()
             logger.debug(f'jobs to delete: {len(jobs_to_delete)}')
             for org in jobs_to_delete:
