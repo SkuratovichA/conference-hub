@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-2" charset="UTF-8"/>
+<title>Project IIS</title>
+<style type="text/css">
+    table { border-collapse: collapse; }
+    td, th { border: 1px solid black; padding: 0.3em 0.5em; text-align: left; }
+    dt { font-weight: bold; margin-top: 0.5em; }
+</style>
+</head>
+<body>
+
+<!-- Zkontrolujte prosím nastavení kódování v hlavičce dokumentu 
+ podle použitého editoru -->
+
+<h1>Conference Hub</h1> <!-- Nahradte názvem svého zadání -->
+
+<dl>
+	<dt>Authors</dt>
+	<dd>Skuratovich Aliaksandr <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	    <a href="mailto:xskura01@stud.fit.vutbr.cz">xskura01@stud.fit.vutbr.cz</a> - 
+        smth.
+	</dd>
+	<dd>Khrystsiuk Dziyana <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	    <a href="mailto:xkhrys00@stud.fit.vutbr.cz">xkhrys00@stud.fit.vutbr.cz</a> - 
+        conference model + forms + validation + CRUD, event model + forms + validation + CRUD.
+	</dd>
+    <dd>Andrei Shchapaniak <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	    <a href="mailto:xshcha00@stud.fit.vutbr.cz">xshcha00@stud.fit.vutbr.cz</a> - 
+        bucket for tickets, autologout, autocomplete for search, user invites on lectures, deploy.
+	</dd>
+	<dt>URL aplikace</dt>
+	<dd><a href="https://xshcha00.pythonanywhere.com">https://xshcha00.pythonanywhere.com</a></dd>
+</dl>
+
+<h2>System users for tests</h2>
+<table>
+    <tr>
+        <th>Login</th>
+        <th>Password</th>
+        <th>Role</th>
+    </tr>
+    <tr>
+        <td>admin</td>
+        <td>admin</td>
+        <td>Admin</td>
+    </tr>
+    <tr>
+        <td>xshcha00</td>
+        <td>Andrei00test</td>
+        <td>Researcher1</td>
+    </tr>
+    <tr>
+        <td>xkhrys00</td>
+        <td>Dziyana00test</td>
+        <td>Researcher2</td>
+    </tr>
+    <tr>
+        <td>xskura01</td>
+        <td>Aliaksandr01test</td>
+        <td>Researcher3</td>
+    </tr>
+    <tr>
+        <td>vut@vutbr.cz</td>
+        <td>vut1234test</td>
+        <td>Organization1</td>
+    </tr>
+    <tr>
+        <td>muni@muni.cz</td>
+        <td>muni1234test</td>
+        <td>Organization2</td>
+    </tr>
+</table>
+
+<p>Use Case Diagram</p>
+<iframe src="use_case_conferences.pdf#toolbar=0" width="590px" height="460px"></iframe>
+
+<h3>Video</h3>
+A brief 5-minutes video with basic use-ceses of using <b>conference_hub</b> application.
+<br>
+<a href="#">Video</a>
+
+<h2>Implementation</h2>
+<ul>
+    <li>Technologies:</li>
+    <ul>
+        <li><p><b>Front end</b> - HTML, CSS, Bootstrap, Ajax</p></li>
+        <li><p><b>Backed end</b> - Python (Django)</p></li>
+        <li><p><b>Database system</b> - MySQL</p></li>
+    </ul>
+    <li>File structure:</li>
+    <ul>
+        <li><p><b>ch/</b> - contains views for processing the search field and a bucket for tickets.</p></li>
+        <li><p><b>conference_hub/</b> - main folder with <i>setting.py</i>, <i>wsgi.py</i> and <i>asgi.py</i> files.</p></li>
+        <li><p><b>templates/</b> - contains all html files.</p></li>
+        <li><p><b>static/</b> - contains css/js files.</p></li>
+        <li><p><b>media/</b> contains images.</p></li>
+        <li><p>
+            <b>conferences/</b> 
+            <ul>
+                <li><b>models/</b> - contains models for conferences and their events (lunch and lecture).</li>
+                <li><b>views/</b>
+                    <ol>
+                        <li><b>conferences.py</b> - contains views for display, create, modify, edit and delete conferences.</li>
+                        <li><b>events.py</b> - contains views for display, create, modify, edit and delete events.</li>
+                    </ol>
+                </li>
+                <li><b>forms/</b> - contains forms for create and edit conferences/lectures/lunches.</li>
+            </ul>
+        </p></li>
+        <li><p>
+            <b>users/</b>
+            <ul>
+                <li><b>models/</b> - contains models for conferenceuser (each registered user), organization, researcher,
+                    profile and organization-employee.
+                </li>
+                <li><b>views/</b>
+                    <ol>
+                        <li><b>conferenceuser.py</b> - contains views for sign up, log out and sign in users.</li>
+                        <li><b>organization.py</b> - contains views for emplyees of organization.</li>
+                        <li><b>profile.py</b> - contains views for update and delete account, change password.</li>
+                        <li><b>researcher.py</b> - contains views for organization members'.</li>
+                    </ol>
+                </li>
+                <li><b>forms/</b> - contains forms for sign up users/organizations/researchers anf profile update.</li>
+            </ul>
+        </p></li>
+    </ul>
+    <li>Deploy:</li>
+        <br>
+        &emsp;To deploy our web application we used <a href="https://www.pythonanywhere.com">pythonanywhere.com</a>
+        It is an online integrated development environment and web hosting service. 
+        <br>
+        &emsp;Reasons why we choose it:
+        <ul>
+            <li>It provides WSGI-based web hosting for Django.</li>
+            <li>Easy set up a fully functional web server within a couple of clicks.</li>
+            <li>It provides 100 free CPU-seconds per day.</li>
+        </ul>
+</ul>
+
+<h3>Database</h3>
+<p>Entity Relationship Diagram - TODO</p>
+<iframe src="erd.pdf#toolbar=0" width="100%" height="1486px">
+</iframe>
+
+<h2>Installation</h2>
+<p>Before start you should install <b>Python 3.10.6</b> and <b>MySQL server 8.0.31</b>.</p>
+<p><b>mysql -u root -p</b> - launch the mysql shell and enter it as the root user.
+    <ul>
+        <li><b>create database conference_hub;</b> - create database.</li>
+        <li><b>exit</b> - go back to the shell.</li>
+    </ul>
+</p>
+<p><b>python3 -m venv &lt;path_to_env&gt; && source &lt;path_to_env&gt;/bin/activate</b> - create new virtual environment and activate it.</p>
+<p><b>pip3 install -r requirements.txt</b> - install Python libraries using requirements.txt.</p>
+<p><b>python3 manage.py makemigrations</b> - create new migrations based on your models.</p>
+<p><b>python3 manage.py migrate</b> - apply your migrations from the previous step.</p>
+<p><b>python3 manage.py collectstatic</b> - collect all static files in one place.</p>
+<p><b>python3 manage.py runserver</b> - run server.</p> 
+
+</body>
+</html>

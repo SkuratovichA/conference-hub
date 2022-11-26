@@ -15,7 +15,7 @@ class ResearcherModel(models.Model):
         primary_key=True
     )
     last_name = models.CharField(max_length=64)
-    date_of_birth = models.DateField()
+    date_of_birth = models.DateField(null=True)
 
     def get_full_name(self):
         """
