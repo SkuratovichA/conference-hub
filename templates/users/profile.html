@@ -14,8 +14,6 @@
                     <p class="account-heading">{{ object.name }} {{ object.researcher.last_name }}</p>
                 {% elif object.is_organization %}
                     <p class="account-heading">{{ object.name }}</p>
-                {% else %}
-                    {#             admin?#}
                 {% endif %}
                 <p class="text-secondary">{{ object.username }}</p>
                 <p class="text-secondary"><b>Email:</b> {{ object.email }}</p>
@@ -41,6 +39,8 @@
             {% endif %}
 
         </div> <!-- col-4 -->
+
+        {% if not object.is_superuser %}
 
         <div class="col-6">
             {% if object.is_organization %}
@@ -100,6 +100,8 @@
             </div>
           </div>
         </div>
+
+        {% endif %}
     </div>
 
 {% endblock content %}
