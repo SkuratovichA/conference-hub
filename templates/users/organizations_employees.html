@@ -163,12 +163,12 @@
                         dataType: 'json',
                         success: (data) => {
                             cancelChanges()
-                            window.location.reload()
                         },
                         error: (error) => {
                             alert(error)
                         }
                     })
+                    window.location.reload()
                     break;
 
                 default:
