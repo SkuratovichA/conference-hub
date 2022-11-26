@@ -13,6 +13,7 @@
                             <p class="text-secondary">{{ object.date_from|date:"D, d M, Y" }} -
                                 {{ object.date_to|date:"D, d M, Y" }}</p>
                             <p class="text-secondary">Address: {{ object.address }}</p>
+                            <p class="text-secondary">Price: {{ object.price }}</p>
                         </a>
                     </fieldset>
                     {% if user.is_researcher %}

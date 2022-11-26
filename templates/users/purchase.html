@@ -21,6 +21,7 @@
                                     <p class="text-secondary">{{ pur.conference.date_from|date:"D, d M, Y" }} -
                                         {{ pur.conference.date_to|date:"D, d M, Y" }}</p>
                                     <p class="text-secondary">Address: {{ pur.conference.address }}</p>
+                                    <p class="text-secondary">Prcie: {{ pur.conference.price }}</p>
                                 </a>
                                 <input type="checkbox" id="{{ pur.conference.id }}" onclick="change_price(event)" checked />
                                 <input type="hidden" id='{{ pur.conference.id }}__price' name="custId" value="{{ pur.conference.price.amount }}">

@@ -9,7 +9,9 @@
                      src=" {{ object.profile.image.url }} ">
                 <div class="media-body">
                     <fieldset>
-                        <p class="account-heading">{{ object.name }} {{ object.researcher.last_name }}</p>
+                        <a href="{% url 'users:profile-page' object.username %}">
+                            <p class="account-heading">{{ object.name }} {{ object.researcher.last_name }}</p>
+                        </a>
                         {% if object.is_researcher %}
                             <p class="text-secondary">Researcher</p>
                         {% elif object.is_organization %}
