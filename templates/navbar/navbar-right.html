@@ -1,7 +1,7 @@
 {% load static %}
 {% load compress %}
 
-<link type="text/x-scss" href="{% static 'css/dropdown.scss' %}" rel="stylesheet" media="screen">
+{#<link type="text/x-scss" href="{% static 'css/dropdown.scss' %}" rel="stylesheet" media="screen">#}
 
 {#<script src="{% static 'static/js/dropdown.js' %}"></script>#}
 
@@ -77,10 +77,9 @@
                     <div class="dropdown-divider"></div>
                     {% if user.is_researcher %}
                         <a class="dropdown-item" href="{% url 'conferences:conf_display-page' user.username %}">My conferences</a>
-                        <a class="dropdown-item" href="#">My scheduler</a>
                         <a class="dropdown-item" href="{% url 'conferences:user_lectures-page' user.username %}">My lectures</a>
                         <a class="dropdown-item" href="{% url 'users:organizations-page' user.username %}">My organizations</a>
-                        <a class="dropdown-item" href="{% url 'users:invites-page' %}">Invites</a>
+                        <a class="dropdown-item" href="{% url 'users:invites-page' %}">Membership invites</a>
                     {% elif user.is_organization %}
                         {# TODO 41: add list of members with crud functionality#}
                         <a class="dropdown-item" href="{% url 'users:employees-page' user.username %}">Members</a>
@@ -107,7 +106,7 @@
 
             {#    TODO 45: add notifications (e-mail, browser)#}
             <div class="navbar-nav mr-auto" onclick="manage_notification_bar()">
-                <a class="nav-item nav-link">Invites <sup id="cnt_invites">{{ user.researcher.get_number_invites }}</sup></a>
+                <a class="nav-item nav-link">Lecture invites <sup id="cnt_invites">{{ user.researcher.get_number_invites }}</sup></a>
             </div>
             {% endif %}
 

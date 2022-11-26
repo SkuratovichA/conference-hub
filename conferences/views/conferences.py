@@ -103,12 +103,9 @@ class ConferenceInfoView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super(ConferenceInfoView, self).get_context_data()
         slug = self.kwargs.get('slug')
-        print(slug)
         conference = get_object_or_404(ConferenceModel, slug=slug)
         user = self.request.user
         for visitor in conference.visitors.all():
-            print(visitor)
-            print(user)
             if user == visitor:
                 context['user_participate'] = "true"
         return context

@@ -130,7 +130,7 @@ class LectureForm(CreateEventForm):
 
 
 class LunchForm(CreateEventForm):
-    price = MoneyField(max_digits=10, decimal_places=2, default_currency='EUR')
+    price = MoneyField(max_digits=10, decimal_places=2)
     menu = forms.Field(
         widget=forms.Textarea(
             attrs={
@@ -145,7 +145,7 @@ class LunchForm(CreateEventForm):
         fields = ('name',  'location', 'date_time', 'duration', 'price', 'menu')
 
     @transaction.atomic
-    def save(self, conf_slug):
+    def save(self, conf_slug, user_invites = None):
         event = super().save(commit=False)
         event.conference = conference_models.ConferenceModel.objects.get(slug=conf_slug)
         event.type = conference_models.EventModel.EventType.LUNCH

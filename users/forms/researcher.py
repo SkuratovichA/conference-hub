@@ -39,10 +39,10 @@ class ResearcherSignupForm(ConferenceUserSignupForm):
         min_length=1
     )
     date_of_birth = forms.DateField(
-        input_formats=[f'%d{s}%m{s}%Y' for s in '. / -'.split()],
+        input_formats=[f'%Y-%m-%d'],
         widget=forms.DateInput(
             attrs={
-                'placeholder': _('Date of birth'),
+                'placeholder': 'yyyy-mm-dd',
                 'type': 'date of birth',
                 'class': 'form-control',
             }

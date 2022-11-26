@@ -46,8 +46,8 @@
             <form method="POST" novalidate name="event_form">{% csrf_token %}
                 <input type="hidden" name="next" value="{{ next }}">
                 {{ form|crispy }}
-                    <p> Warning! You will not be able to add any researches or change them after you save this event!</p>
                     <div id="users_for_invite">
+                        <p> Warning! You will not be able to add any researches or change them after you save this event!</p>
                         <input id="project" class="user_res" name="invite_user">
                         <input type="hidden" id="project-id">
                         <input type="hidden" id="pr">
