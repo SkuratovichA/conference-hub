@@ -18,7 +18,7 @@ class PurchasesModel(models.Model):
     )
 
     status = models.BooleanField(default=False)
-    date = models.DateField(default=timezone.now())
+    date = models.DateField(default=timezone.now)
 
     class Meta:
         unique_together = ['conference', 'researcher']
