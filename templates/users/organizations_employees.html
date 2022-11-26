@@ -46,10 +46,8 @@
                     </div>
 
                     <button style='display: none' id="removeButton"
-                            name="
-                                    {% if url_user.is_organization %}{{ object.organization.user.username }}{% elif url_user.is_researcher %}{{ object.organization.user.username }}{% endif %}_button"
-                            onclick="remove_item('
-                                    {% if url_user.is_organization %}{{ object.organization.user.username }}{% elif url_user.is_researcher %}{{ object.organization.user.username }}{% endif %}')">
+                            name="{% if url_user.is_organization %}{{ object.organization.user.username }}{% elif url_user.is_researcher %}{{ object.organization.user.username }}{% endif %}_button"
+                            onclick="remove_item('{% if url_user.is_organization %}{{ object.organization.user.username }}{% elif url_user.is_researcher %}{{ object.organization.user.username }}{% endif %}')">
                     </button>
                 </div>
 
@@ -92,10 +90,10 @@
         function remove_item(item_username) {
             if (removedItems.has(item_username)) {
                 removedItems.delete(item_username)
-                document.getElementsByName(item_username + "_button")[0].classList.remove('inactive')
+                document.getElementsByName(item_username + "_button")[0].style.cssText = ''
             } else {
                 removedItems.add(item_username)
-                document.getElementsByName(item_username + "_button")[0].classList.add('inactive')
+                document.getElementsByName(item_username + "_button")[0].style.cssText = 'background: rgba(155, 118, 118, 0.56)'
             }
         }
 
