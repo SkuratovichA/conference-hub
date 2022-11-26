@@ -8,8 +8,9 @@
         <link rel="stylesheet" type="text/x-scss" href="{% static 'css/ch/style.scss' %}">
     {% endcompress %}
 
-    {% for pur in purchases %}
-        <li>
+    {% if purchases %}
+        {% for pur in purchases %}
+        <li style="list-style-type:none;">
             <div class="content-section">
                 <div class="media">
                     <div class="media-body">
@@ -30,16 +31,18 @@
                 </div>
             </div>
         </li>
-    {% empty %}
-        <li class="content-section empty-list center-text">Nothing found</li>
+        <div>
+            <span style="display: inline-flex;">
+                <p>€</p> &nbsp;
+                <p id="finish_price">{{ sum.amount }}</p>
+            </span>
+            <br>
+            <button type="button" class="btn btn-success" onclick="buy_tickets_to_conferences()">Buy</button>
+        </div>
     {% endfor %}
-
-    <button type="button" class="btn btn-success" onclick="buy_tickets_to_conferences()">Buy</button>
-    <br>
-    <span style="display: inline-flex;">
-        <p>€</p> &nbsp;
-        <p id="finish_price">{{ sum.amount }}</p>
-    </span>
+    {% else %}
+        <li class="content-section empty-list center-text">Nothing found</li>
+    {% endif %}
 
 
     <script>
