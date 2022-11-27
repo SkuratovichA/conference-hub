@@ -1,10 +1,10 @@
 from django.http import JsonResponse, HttpResponseBadRequest
-from django.shortcuts import render
-from django.views import generic
-from conferences import models as conferences_models
+from django.contrib.auth.mixins import LoginRequiredMixin
 from users import models as users_models
-from django.db.models import Q
+from django.urls import reverse_lazy
+from django.shortcuts import render
 from django.contrib import messages
+from django.views import generic
 import json
 
 import logging
@@ -12,10 +12,11 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class InviteView(generic.ListView):
+class InviteView(LoginRequiredMixin, generic.ListView):
     # model = users_models.ConferenceUserModel
     template_name = 'users/invites/invites.html'
     paginate_by = 50
+    login_url = reverse_lazy('users:login-page')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
