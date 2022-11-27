@@ -1,8 +1,10 @@
-from django.http import JsonResponse, HttpResponseBadRequest
+from users.models import ConferenceUserModel, OrganizationEmployeeModel
 from conference_hub.utils.message_wrapper import MessageMixin
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView
-from users.models import ConferenceUserModel, OrganizationEmployeeModel, OrganizationModel
 from users.forms import ResearcherSignupForm
+from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from django.contrib.auth import login
 from django.contrib import messages
@@ -37,8 +39,14 @@ class ResearcherSignupView(CreateView):
         return super().form_invalid(form)
 
 
-class OrganizationsView(generic.ListView):
+class OrganizationsView(LoginRequiredMixin, generic.ListView):
     template_name = 'users/organizations_employees.html'
+    login_url = reverse_lazy('users:login-page')
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated or not request.user.is_researcher:
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         url = self.request.get_full_path()
