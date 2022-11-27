@@ -32,7 +32,7 @@ class PurchasesView(generic.ListView):
     def post(self, request, *args,  **kwargs):
         data = json.load(request)
         if data['action'] == "buy":
-            dict_res = self.buy_confs(data['confs'], request.user, data['finish_price'])
+            dict_res = self.buy_confs(data['confs'], request.user)
         elif data['action'] == "delete":
             dict_res = self.rm_from_buket(data['confid'], request.user)
 
@@ -46,7 +46,11 @@ class PurchasesView(generic.ListView):
         return {'valid': 'true'}
 
     @staticmethod
-    def buy_confs(arr_confs, user, finish_price):
+    def buy_confs(arr_confs, user):
+        finish_price = 0
+        for conf_id in arr_confs:
+            finish_price += conf_models.ConferenceModel.objects.get(id=conf_id).price.amount
+
         if finish_price > user.balance.amount:
             return {'valid': 'false'}
 

@@ -16,7 +16,7 @@ function updateTimer() {
     if (time_var === 30) {
         modal_container.classList.add('show');
     }
-    else if (time_var < 0) {
+    else if (time_var < 1) {
         window.location = "/users/logout";
     }
 }
