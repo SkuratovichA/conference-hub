@@ -10,11 +10,11 @@
 
     {% if purchases %}
         {% for pur in purchases %}
-        <li style="list-style-type:none;">
-            <div class="content-section">
-                <div class="media">
-                    <div class="media-body">
-                        <fieldset>
+            <li style="list-style-type:none;">
+                <div class="content-section">
+                    <div class="media">
+                        <div class="media-body">
+                            <fieldset>
                             <span>
                                 <a href="{% url 'conferences:conf_detail-page' pur.conference.slug %}">
                                     <p class="account-heading">{{ pur.conference.name }}</p>
@@ -22,15 +22,19 @@
                                         {{ pur.conference.date_to|date:"D, d M, Y" }}</p>
                                     <p class="text-secondary">Address: {{ pur.conference.address }}</p>
                                 </a>
-                                <input type="checkbox" id="{{ pur.conference.id }}" onclick="change_price(event)" checked />
-                                <input type="hidden" id='{{ pur.conference.id }}__price' name="custId" value="{{ pur.conference.price.amount }}">
-                                <button type="button" class="btn btn-primary" onclick="delete_from_the_bucket('{{ pur.conference.id }}')">Remove from bucket</button>
+                                <input type="checkbox" id="{{ pur.conference.id }}" onclick="change_price(event)"
+                                       checked/>
+                                <input type="hidden" id='{{ pur.conference.id }}__price' name="custId"
+                                       value="{{ pur.conference.price.amount }}">
+                                <button type="button" class="btn btn-primary"
+                                        onclick="delete_from_the_bucket('{{ pur.conference.id }}')">Remove from bucket</button>
                             </span>
-                        </fieldset>
+                            </fieldset>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </li>
+            </li>
+        {% endfor %}
         <div>
             <span style="display: inline-flex;">
                 <p>€</p> &nbsp;
@@ -39,7 +43,6 @@
             <br>
             <button type="button" class="btn btn-success" onclick="buy_tickets_to_conferences()">Buy</button>
         </div>
-    {% endfor %}
     {% else %}
         <li class="content-section empty-list center-text">Nothing found</li>
     {% endif %}
@@ -54,8 +57,7 @@
 
             if (state_box === true) {
                 document.getElementById("finish_price").innerText = (finish_price + price_el).toFixed(2);
-            }
-            else if (state_box === false) {
+            } else if (state_box === false) {
                 document.getElementById("finish_price").innerText = (finish_price - price_el).toFixed(2);
             }
         }

@@ -1,16 +1,18 @@
-from django.http import JsonResponse, HttpResponseBadRequest
+from users.models import ConferenceUserModel, OrganizationEmployeeModel
 from conference_hub.utils.message_wrapper import MessageMixin
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView
 from users.forms import OrganizationSignupForm
-from users.models import ConferenceUserModel, ResearcherModel, OrganizationEmployeeModel, OrganizationModel
 from django.contrib.auth import login
 from django.shortcuts import redirect
-from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.contrib import messages
 from django.views import generic
 from django.db.models import Q
 from django.http import Http404
 from datetime import datetime
+
 import json
 import logging
 
@@ -38,10 +40,16 @@ class OrganizationSignupView(CreateView):
 
 
 # TODO: add permissions mixin
-class EmployeesView(generic.ListView):
+class EmployeesView(LoginRequiredMixin, generic.ListView):
     template_name = 'users/organizations_employees.html'
     username = None
     organization = None
+    login_url = reverse_lazy('users:login-page')
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated or not request.user.is_organization:
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         url = self.request.get_full_path()
