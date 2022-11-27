@@ -14,23 +14,19 @@
                 <div class="content-section">
                     <div class="media">
                         <div class="media-body">
-                            <fieldset>
-                            <span>
-                                <a href="{% url 'conferences:conf_detail-page' pur.conference.slug %}">
-                                    <p class="account-heading">{{ pur.conference.name }}</p>
-                                    <p class="text-secondary">{{ pur.conference.date_from|date:"D, d M, Y" }} -
-                                        {{ pur.conference.date_to|date:"D, d M, Y" }}</p>
-                                    <p class="text-secondary">Address: {{ pur.conference.address }}</p>
-                                    <p class="text-secondary">Prcie: {{ pur.conference.price }}</p>
-                                </a>
-                                <input type="checkbox" id="{{ pur.conference.id }}" onclick="change_price(event)"
-                                       checked/>
-                                <input type="hidden" id='{{ pur.conference.id }}__price' name="custId"
-                                       value="{{ pur.conference.price.amount }}">
-                                <button type="button" class="btn btn-primary"
-                                        onclick="delete_from_the_bucket('{{ pur.conference.id }}')">Remove from bucket</button>
-                            </span>
-                            </fieldset>
+                            <a href="{% url 'conferences:conf_detail-page' pur.conference.slug %}"><p class="account-heading">{{ pur.conference.name }}</p></a>
+                            <div style="display: flex;  justify-content: space-between;">
+                                <div>
+                                <p class="text-secondary">{{ pur.conference.date_from|date:"D, d M, Y" }} - {{ pur.conference.date_to|date:"D, d M, Y" }}</p>
+                                <p class="text-secondary">Address: {{ pur.conference.address }}</p>
+                                <p class="text-secondary">Prcie: {{ pur.conference.price }}</p>
+                                </div>
+                                <input type="checkbox" id="{{ pur.conference.id }}" onclick="change_price(event)" checked/>
+                            </div>
+                            <input type="hidden" id='{{ pur.conference.id }}__price' name="custId"
+                                   value="{{ pur.conference.price.amount }}">
+                            <button type="button" class="btn btn-primary"
+                                    onclick="delete_from_the_bucket('{{ pur.conference.id }}')">Remove from bucket</button>
                         </div>
                     </div>
                 </div>
@@ -95,13 +91,7 @@
         }
 
         function buy_tickets_to_conferences() {
-            let user_balance = parseFloat({{ user.balance.amount }})
             let finish_price = parseFloat(document.getElementById("finish_price").innerText)
-
-            if (finish_price > user_balance) {
-                alert("You do not have enough money")
-                return;
-            }
 
             let buy_confs = []
             for (conf_id of {{ purs_conf_id }}) {
@@ -117,9 +107,14 @@
                     'X-Requested-With': 'XMLHttpRequest',
                     'X-CSRFToken': getCookie('csrftoken')
                 },
-                data: JSON.stringify({'confs': buy_confs, 'action': 'buy'}),
+                data: JSON.stringify({'confs': buy_confs, 'action': 'buy', 'finish_price': finish_price}),
                 dataType: 'json',
                 success: (data) => {
+                    if (data['valid'] === 'false') {
+                        alert("You do not have enough money")
+                        return;
+                    }
+
                     window.location.reload();
                 }
             })
