@@ -85,8 +85,9 @@ class CreateEventForm(ModelForm):
             }
         )
     )
-    description = forms.Field(
-        required=False
+    description = forms.CharField(
+        required=False,
+        max_length=5000,
     )
 
     class Meta:
@@ -99,13 +100,14 @@ class CreateEventForm(ModelForm):
 
 
 class LectureForm(CreateEventForm):
-    description = forms.Field(
+    description = forms.CharField(
         widget=forms.Textarea(
             attrs={
                 'rows': 10,
             }
         ),
-        required=False
+        required=False,
+        max_length=5000,
     )
 
     class Meta:
@@ -131,12 +133,13 @@ class LectureForm(CreateEventForm):
 
 class LunchForm(CreateEventForm):
     price = MoneyField(max_digits=10, decimal_places=2)
-    menu = forms.Field(
+    menu = forms.CharField(
         widget=forms.Textarea(
             attrs={
                 'rows': 10,
             }
         ),
+        max_length=250,
     )
     name = forms.Field(initial='Lunch')
 
@@ -159,12 +162,31 @@ class LunchForm(CreateEventForm):
 
 
 class EditLunchForm(ModelForm):
+    menu = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                'rows': 10,
+            }
+        ),
+        max_length=250,
+    )
+
     class Meta:
         model = conference_models.LunchModel
         fields = ('price', 'menu')
 
 
 class EditEventForm(ModelForm):
+    description = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                'rows': 10,
+            }
+        ),
+        required=False,
+        max_length=5000,
+    )
+
     class Meta:
         model = conference_models.EventModel
         exclude = ('conference', 'type')
