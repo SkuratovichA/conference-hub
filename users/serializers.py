@@ -1,9 +1,13 @@
 from rest_framework import serializers
 import users.models as u_models
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class CreateUserMixin:
     def create(self, validated_data):
+        logger.debug('create!!')
         user = u_models.ConferenceUserModel(
             email=validated_data['email'],
             username=validated_data['username'],
@@ -16,17 +20,17 @@ class CreateUserMixin:
         return user
 
 
-class CreateUserSerializer(CreateUserMixin, serializers.ModelSerializer):
+class ConferenceUserSerializer(CreateUserMixin, serializers.ModelSerializer):
     class Meta:
         model = u_models.ConferenceUserModel
-        fields = ['email', 'username', 'name', 'country', 'city']
+        fields = ('email', 'username', 'name', 'country', 'city', 'password')
         extra_kwargs = {'password': {'write_only': True}}
 
 
-class CreateResearcherSerializer(CreateUserMixin, serializers.ModelSerializer):
+class ResearcherSerializer(CreateUserMixin, serializers.ModelSerializer):
     class Meta:
         model = u_models.ResearcherModel
-        fields = ['last_name', 'date_of_birth']
+        fields = ('last_name', 'date_of_birth', 'user_id', *[p for p in dir(model) if p.startswith('prop_')])
 
     def create(self, validated_data):
         user = super().create(validated_data)
@@ -39,7 +43,7 @@ class CreateResearcherSerializer(CreateUserMixin, serializers.ModelSerializer):
         return researcher
 
 
-class CreateOrganizationSerializer(CreateUserMixin, serializers.ModelSerializer):
+class OrganizationSerializer(CreateUserMixin, serializers.ModelSerializer):
     class Meta:
         model = u_models.OrganizationModel
         fields = []
@@ -54,4 +58,3 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = u_models.ProfileModel
         fields = "__all__"
-        depth = 1  # TODO look how this works

@@ -3,9 +3,12 @@ from conference_hub.utils.message_wrapper import MessageMixin
 from django.views.generic.base import TemplateView
 from users.forms import ConferenceUserSigninForm, ConferenceUserSignupForm
 from django.contrib.auth import logout, views
-from users.models import ConferenceUserModel
+from users import models as u_models
 from django.views import generic
 from django.views import View
+
+from rest_framework import viewsets, generics
+from users import serializers as sers
 
 
 class ConferenceUserSignupView(TemplateView):
@@ -28,6 +31,11 @@ class ConferenceUserSigninView(views.LoginView, SuccessMessageMixin):
     # TODO 20: add MessagesMixin
 
 
-class ConferenceUserListView(generic.ListView):
-    model = ConferenceUserModel
-    template_name = 'users/users.html'
+# class ConferenceUserListView(generic.ListView):
+#     model = ConferenceUserModel
+#     template_name = 'users/users.html'
+#
+
+class ConferenceUserListView(viewsets.ModelViewSet):
+    serializer_class = sers.ConferenceUserSerializer
+    queryset = u_models.ConferenceUserModel.objects.all()

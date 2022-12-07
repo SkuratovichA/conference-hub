@@ -33,7 +33,6 @@ SECRET_KEY = 'django-insecure-h(sd6#t^bpow)d%f9s%swn555m=t1j(h#9b-=2z8cmwaz1t+@7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.localhost', '127.0.0.1', '::1']
 
 # Application definition
 INSTALLED_APPS = [
@@ -54,19 +53,22 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'rest_framework'
+    'corsheaders',
+    'rest_framework',
 ]
 
 ASGI_APPLICATION = 'conference_hub.asgi.application'
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.common.CommonMiddleware'
 ]
 
 ROOT_URLCONF = 'conference_hub.urls'
@@ -207,3 +209,13 @@ LOGGING = {
 }
 
 GOOGLE_API_KEY = ""
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+
+ALLOWED_HOSTS = ['*']
+#ALLOWED_HOSTS = ['.localhost', '127.0.0.1', '::1']
+
+# CORS_ORIGIN_WHITELIST = (
+#     'http://localhost:3000',
+# )

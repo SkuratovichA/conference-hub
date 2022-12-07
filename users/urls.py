@@ -1,14 +1,22 @@
 from django.contrib.auth import views as auth_views
-from django.urls import path
+from django.urls import path, include
 from users import views
+
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register(r'users_list', views.ConferenceUserListView, 'users-list')
 
 app_name = 'users'
 
 urlpatterns = [
-    path('', views.ConferenceUserListView.as_view(), name='users-models'),
+    # path('', views.ConferenceUserListView.as_view(), name='users-models'),  # move to routers
+    path('api/', include(router.urls)),  # move to routers
+
     path('invites', views.InviteView.as_view(), name='invites-page'),
     path('login', views.ConferenceUserSigninView.as_view(), name='login-page'),
     path('logout', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout-page'),
+
     path('signup', views.ConferenceUserSignupView.as_view(), name='signup-page'),
 
     path('signup/researcher', views.ResearcherSignupView.as_view(), name='signup_researcher-page'),

@@ -2,6 +2,7 @@ import users.models as users_models
 from django.db import models
 import conferences.models as conf_models
 from django.db.models import Q
+# from .mixins import SubUserMixin
 
 
 class ResearcherModel(models.Model):
@@ -16,6 +17,22 @@ class ResearcherModel(models.Model):
     )
     last_name = models.CharField(max_length=64)
     date_of_birth = models.DateField(null=True)
+
+    @property
+    def prop_username(self):
+        return self.user.username
+
+    @property
+    def prop_email(self):
+        return self.user.email
+
+    @property
+    def prop_city(self):
+        return self.user.city
+
+    @property
+    def prop_country(self):
+        return self.user.country
 
     def get_full_name(self):
         """
