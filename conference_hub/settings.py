@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'rest_framework'
 ]
 
 ASGI_APPLICATION = 'conference_hub.asgi.application'
@@ -201,17 +203,6 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True
         },
-        # 'django': {
-        #     'handlers': ['console'],
-        #     'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-        #     'propagate': False
-        # },
-        # 'users.views': {
-        #     'handlers': ['console'],
-        #     'level': 'INFO',
-        #     'propagate': False
-        # }
-        # 'users.views': ...
     }
 }
 

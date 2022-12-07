@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 class ProfileModel(models.Model):
     user = models.OneToOneField(ConferenceUserModel, related_name='profile', on_delete=models.CASCADE)
     image = models.ImageField(default='static/default.png', upload_to='profiles/profile_pics')
+    # brief = models.CharField(default=None, null=True, blank=False, max_length=32)
 
     def __str__(self):
         return f'{self.user.username} Profile'
