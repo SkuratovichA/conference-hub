@@ -7,7 +7,7 @@ from rest_framework import routers
 router = routers.DefaultRouter()
 router.register(r'users_list', views.ConferenceUserListAPIView, 'users-list')
 router.register(r'signup-researcher', views.ResearcherSignupAPIView, 'signup-researcher')
-# router.register(r'signup-organization', views.OrganizationSignupAPIView, 'signup-organization')
+router.register(r'signup-organization', views.OrganizationSignupAPIView, 'signup-organization')
 
 app_name = 'users'
 
