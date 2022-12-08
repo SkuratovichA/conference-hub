@@ -5,8 +5,9 @@ from users import views
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register(r'users_list', views.ConferenceUserListView, 'users-list')
-#router.register(r'login', views.ConferenceUserSigninView)
+router.register(r'users_list', views.ConferenceUserListAPIView, 'users-list')
+router.register(r'signup-researcher', views.ResearcherSignupAPIView, 'signup-researcher')
+# router.register(r'signup-organization', views.OrganizationSignupAPIView, 'signup-organization')
 
 app_name = 'users'
 
@@ -15,7 +16,7 @@ urlpatterns = [
     path('api/', include(router.urls)),  # move to routers
 
     path('invites', views.InviteView.as_view(), name='invites-page'),
-    # path('login', views.ConferenceUserSigninView.as_view(), name='login-page'),
+    path('login', views.ConferenceUserSigninView.as_view(), name='login-page'),
     path('logout', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout-page'),
 
     path('signup', views.ConferenceUserSignupView.as_view(), name='signup-page'),

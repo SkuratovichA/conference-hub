@@ -1,60 +1,76 @@
 from rest_framework import serializers
 import users.models as u_models
 import logging
+from django.contrib.auth.password_validation import validate_password
 
 logger = logging.getLogger(__name__)
 
 
-class CreateUserMixin:
+class ConferenceUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = u_models.ConferenceUserModel
+        fields = ['email', 'username', 'name', 'country', 'city']
+
+
+class CreateUserMixin(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    password2 = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+
+    class Meta(ConferenceUserSerializer.Meta):
+        fields = ConferenceUserSerializer.Meta.fields + ['password', 'password2']
+
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError({"password": "Password fields didn't match"})
+
     def create(self, validated_data):
         logger.debug('create!!')
+        logger.debug(f'validated_data: {validated_data}')
         user = u_models.ConferenceUserModel(
             email=validated_data['email'],
             username=validated_data['username'],
             name=validated_data['name'],
-            country=validated_data['country'],
-            city=validated_data['city']
+            # country=validated_data['country'],
+            # city=validated_data['city']
         )
         user.set_password(validated_data['password'])
         user.save()
         return user
 
 
-class ConferenceUserSerializer(CreateUserMixin, serializers.ModelSerializer):
-    class Meta:
-        model = u_models.ConferenceUserModel
-        fields = ('email', 'username', 'name', 'country', 'city', 'password')
-        extra_kwargs = {'password': {'write_only': True}}
+class RegisterResearcherSerializer(CreateUserMixin, serializers.ModelSerializer):
+    last_name = serializers.CharField(source="researcher.last_name")
 
-
-class ResearcherSerializer(CreateUserMixin, serializers.ModelSerializer):
-    class Meta:
-        model = u_models.ResearcherModel
-        fields = ('last_name', 'date_of_birth', 'user_id', *[p for p in dir(model) if p.startswith('prop_')])
+    class Meta(CreateUserMixin.Meta):
+        fields = CreateUserMixin.Meta.fields + ['last_name']
 
     def create(self, validated_data):
         user = super().create(validated_data)
         user.set_password(validated_data['password'])
         user.save()
         researcher = u_models.ResearcherModel(
-            last_name=validated_data['last_name'],
-            date_of_birth=validated_data['date_of_birth']
+            user=user,
+            last_name=validated_data['researcher']['last_name'],
         )
-        return researcher
-
-
-class OrganizationSerializer(CreateUserMixin, serializers.ModelSerializer):
-    class Meta:
-        model = u_models.OrganizationModel
-        fields = []
-
-    def create(self, validated_data):
-        # create user
-        user = super().create(validated_data)
+        researcher.save()
+        logger.debug(f"created researcher {researcher}")
         return user
 
 
-class ProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = u_models.ProfileModel
-        fields = "__all__"
+class RegisterOrganizationSerializer(CreateUserMixin, serializers.ModelSerializer):
+
+    class Meta(CreateUserMixin.Meta):
+        pass
+
+    def create(self, validated_data):
+        user = super().create(validated_data)
+        user.set_password(validated_data['password'])
+        user.save()
+        organization = u_models.OrganizationModel(
+            user=user,
+        )
+        organization.save()
+        logger.debug(f"created organization {organization}")
+        return user
+
+
