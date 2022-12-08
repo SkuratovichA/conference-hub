@@ -9,6 +9,7 @@ import UsersList from './components/UsersList'
 import LogIn from './components/LogIn'
 import {ConferenceGrid} from './components/ConferenceGrid'
 import ConferenceSearch from './components/ConferenceSearch'
+import SignUp from './components/SignUp'
 
 const conferences = [
     {
@@ -100,11 +101,14 @@ class App extends Component {
                     <Navbar/>
                 </header>
                 <main className="content">
-                    <Routes>
-                        <Route path="/" element={<UsersList/>} exact/>
-                        <Route path="/conferences" element={<ConferenceSearch conferences={this.state.conferences} />}/>
-                        <Route path="/login" element={<LogIn/>}/>
-                    </Routes>
+                    <div>
+                        <Navbar />
+                        <Routes>
+                            <Route path="/" element={<UsersList />} exact />
+                            <Route path="/login" element={<LogIn />} />
+                            <Route path="/signup" element={<SignUp />} />
+                        </Routes>
+                    </div>
                 </main>
             </BrowserRouter>
         )

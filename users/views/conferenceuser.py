@@ -99,5 +99,3 @@ class ConferenceUserSigninAPIView(APIView):
         logger.debug(f"username: {request.data.get('username')}")
         logger.debug(f"pwd: {request.data.get('password')}")
         return Response(content, status=status.HTTP_200_OK)
-    Response()
-
