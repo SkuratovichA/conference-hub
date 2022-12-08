@@ -1,3 +1,8 @@
+
+from rest_framework import exceptions, authentication
+from django.contrib.auth import get_user_model, authenticate
+
+import rest_framework.authentication
 from django.contrib.messages.views import SuccessMessageMixin
 from conference_hub.utils.message_wrapper import MessageMixin
 from django.views.generic.base import TemplateView
@@ -23,6 +28,7 @@ logger = logging.getLogger(__name__)
 class ConferenceUserSignupView(TemplateView):
     template_name = 'users/signup.html'
 
+
 class ConferenceUserLogoutView(View, SuccessMessageMixin):
     success_message = MessageMixin.messages.USERS.success.logout
 
@@ -34,15 +40,6 @@ class ConferenceUserSigninView(views.LoginView, SuccessMessageMixin):
     success_message = MessageMixin.messages.USERS.success.login
     template_name = 'users/login.html'
     form = ConferenceUserSigninForm
-
-
-class ConferenceUserSigninView(APIView):
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated   ]
-
-    def post(self, request):
-        print(request.data.get('username', None))
-        return Response({})
 
 
 class ConferenceUserListView(generic.ListView):
@@ -65,8 +62,42 @@ class SignupAPIViewMixin(viewsets.ViewSetMixin, generics.CreateAPIView):
 
 
 class ResearcherSignupAPIView(SignupAPIViewMixin):
+    queryset = u_models.ResearcherModel.objects.all()
     serializer_class = sers.RegisterResearcherSerializer
 
 
 class OrganizationSignupAPIView(viewsets.ViewSetMixin, generics.CreateAPIView):
+    queryset = u_models.OrganizationModel.objects.all()
     serializer_class = sers.RegisterOrganizationSerializer
+
+
+class Auth(authentication.BaseAuthentication):
+    def authenticate(self, request):
+        # Get the username and password
+        username = request.data.get('username', None)
+        password = request.data.get('password', None)
+        if not username or not password:
+            raise exceptions.AuthenticationFailed('No credentials provided.')
+        credentials = {
+            get_user_model().USERNAME_FIELD: username,
+            'password': password
+        }
+        user = authenticate(**credentials)
+        if user is None:
+            raise exceptions.AuthenticationFailed('Invalid username/password.')
+        if not user.is_active:
+            raise exceptions.AuthenticationFailed('User inactive or deleted.')
+        return (user, None)  # authentication successful
+
+
+class ConferenceUserSigninAPIView(APIView):
+    authentication_classes = (SessionAuthentication, Auth)
+    permission_classes = (IsAuthenticated, )
+
+    def post(self, request, format=None):
+        content = {
+            "user": request.user,
+            "auth": request.auth,
+        }
+        return Response(content)
+

@@ -22,16 +22,16 @@ class CreateUserMixin(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError({"password": "Password fields didn't match"})
+        return attrs
 
     def create(self, validated_data):
-        logger.debug('create!!')
         logger.debug(f'validated_data: {validated_data}')
         user = u_models.ConferenceUserModel(
             email=validated_data['email'],
             username=validated_data['username'],
             name=validated_data['name'],
-            # country=validated_data['country'],
-            # city=validated_data['city']
+            country=validated_data['country'],
+            city=validated_data['city']
         )
         user.set_password(validated_data['password'])
         user.save()
@@ -46,8 +46,8 @@ class RegisterResearcherSerializer(CreateUserMixin, serializers.ModelSerializer)
 
     def create(self, validated_data):
         user = super().create(validated_data)
-        user.set_password(validated_data['password'])
-        user.save()
+        # user.set_password(validated_data['password'])
+        # user.save()
         researcher = u_models.ResearcherModel(
             user=user,
             last_name=validated_data['researcher']['last_name'],
@@ -64,13 +64,11 @@ class RegisterOrganizationSerializer(CreateUserMixin, serializers.ModelSerialize
 
     def create(self, validated_data):
         user = super().create(validated_data)
-        user.set_password(validated_data['password'])
-        user.save()
+        # user.set_password(validated_data['password'])
+        # user.save()
         organization = u_models.OrganizationModel(
             user=user,
         )
         organization.save()
         logger.debug(f"created organization {organization}")
         return user
-
-

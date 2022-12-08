@@ -5,14 +5,15 @@ from users import views
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register(r'users_list', views.ConferenceUserListAPIView, 'users-list')
-router.register(r'signup-researcher', views.ResearcherSignupAPIView, 'signup-researcher')
-router.register(r'signup-organization', views.OrganizationSignupAPIView, 'signup-organization')
+router.register(r'users_list', views.ConferenceUserListAPIView, 'api_users-list')
+router.register(r'signup-researcher', views.ResearcherSignupAPIView, 'api_signup-researcher')
+router.register(r'signup-organization', views.OrganizationSignupAPIView, 'api_signup-organization')
 
 app_name = 'users'
 
 urlpatterns = [
     # path('', views.ConferenceUserListView.as_view(), name='users-models'),  # move to routers
+    path('api/login', views.ConferenceUserSigninAPIView.as_view(), name='api-login-view'),
     path('api/', include(router.urls)),  # move to routers
 
     path('invites', views.InviteView.as_view(), name='invites-page'),
