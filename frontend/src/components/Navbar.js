@@ -16,12 +16,12 @@ class Navbar extends Component {
                         </AccessibleForwardIcon>
                     </IconButton>
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                        <Button color="inherit">Conference Hub</Button>
+                        <Button color="inherit" href="/">Conference Hub</Button>
                     </Typography>
 
                     <Stack direction="row" spacing={2}>
-                        <Button color="inherit">Sign In</Button>
-                        <Button color="inherit">Sign Up</Button>
+                        <Button color="inherit" href="/login">Sign In</Button>
+                        <Button color="inherit" href="/signup">Sign Up</Button>
                     </Stack>
 
                 </Toolbar>
