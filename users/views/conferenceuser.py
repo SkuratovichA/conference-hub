@@ -2,14 +2,15 @@ from django.contrib.messages.views import SuccessMessageMixin
 from conference_hub.utils.message_wrapper import MessageMixin
 from django.views.generic.base import TemplateView
 from users.forms import ConferenceUserSigninForm, ConferenceUserSignupForm
-from django.contrib.auth import logout, views
+from django.contrib.auth import logout, views, get_user_model, authenticate
 from users import models as u_models
 from django.views import generic
 from django.views import View
 
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, authentication
 from users import serializers as sers
 
+from rest_framework import exceptions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
