@@ -1,46 +1,15 @@
-from django.contrib.messages.views import SuccessMessageMixin
-from conference_hub.utils.message_wrapper import MessageMixin
-from django.views.generic.base import TemplateView
-from users.forms import ConferenceUserSigninForm, ConferenceUserSignupForm
-from django.contrib.auth import logout, views
-from users import models as u_models
-from django.views import generic
-from django.views import View
-
-from rest_framework import viewsets, generics
+from rest_framework import exceptions, authentication, viewsets, generics
+from django.contrib.auth import get_user_model, authenticate
 from users import serializers as sers
-
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework import status
+from users import models as u_models
 
 import logging
 
 logger = logging.getLogger(__name__)
-
-
-class ConferenceUserSignupView(TemplateView):
-    template_name = 'users/signup.html'
-
-
-class ConferenceUserLogoutView(View, SuccessMessageMixin):
-    success_message = MessageMixin.messages.USERS.success.logout
-
-    def get(self, request):
-        logout(request)
-
-
-class ConferenceUserSigninView(views.LoginView, SuccessMessageMixin):
-    success_message = MessageMixin.messages.USERS.success.login
-    template_name = 'users/login.html'
-    form = ConferenceUserSigninForm
-
-
-class ConferenceUserListView(generic.ListView):
-    model = u_models.ConferenceUserModel
-    template_name = 'users/users.html'
 
 
 class ConferenceUserListAPIView(viewsets.ReadOnlyModelViewSet):
@@ -91,11 +60,8 @@ class ConferenceUserSigninAPIView(APIView):
     permission_classes = (IsAuthenticated, )
 
     def post(self, request, format=None):
-        logger.debug(f"user: {sers.ConferenceUserSerializer(request.user).data}")
         content = {
-            "user": sers.ConferenceUserSerializer(request.user).data,
+            "user": request.user,
+            "auth": request.auth,
         }
-
-        logger.debug(f"username: {request.data.get('username')}")
-        logger.debug(f"pwd: {request.data.get('password')}")
-        return Response(content, status=status.HTTP_200_OK)
+        return Response(content)
