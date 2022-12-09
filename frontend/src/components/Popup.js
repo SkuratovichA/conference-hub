@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import './styles/LogIn.css'
-import Form from "./Form";
 
 class Popup extends Component {
     constructor(props) {
@@ -14,8 +13,7 @@ class Popup extends Component {
                     <a role="button" onClick={() => this.setState({showPopup: false})}
                     >
                         back
-                    </a>
-                    <Form />
+                </a>
                 </div>
             </div>
         ) : "";

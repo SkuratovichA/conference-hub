@@ -1,7 +1,9 @@
 import './App.css';
 import React, {Component} from "react";
-import {BrowserRouter, Route, Routes} from "react-router-dom"
-// import axios from 'axios';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+
+import { Provider } from "react-redux";
+import store from './store';
 
 
 import Navbar from './components/Navbar'
@@ -10,6 +12,10 @@ import LogIn from './components/LogIn'
 import {ConferenceGrid} from './components/ConferenceGrid'
 import ConferenceSearch from './components/ConferenceSearch'
 import SignUp from './components/SignUp'
+import Profile from './components/Profile'
+import PrivateRoute from './utils/PrivateRoute'
+import { AuthProvider } from './context/AuthContext'
+import AuthContext from "./context/AuthContext";
 
 const conferences = [
     {
@@ -96,21 +102,27 @@ class App extends Component {
 
     render() {
         return (
-            <BrowserRouter>
-                <header className="header">
-                    <Navbar/>
-                </header>
-                <main className="content">
-                    <div>
-                        <Navbar />
+            <Provider store={store} >
+                <BrowserRouter>
+                    <AuthProvider>
+                        <main className="content">
+                            <div>
+                                <Navbar />
+                            </div>
+                        </main>
                         <Routes>
                             <Route path="/" element={<UsersList />} exact />
                             <Route path="/login" element={<LogIn />} />
                             <Route path="/signup" element={<SignUp />} />
+                            <Route path="/:username" element={<Profile />} />
+
+                            <Route exact path='/private-page' element={<PrivateRoute />}>
+                                  <Route exact path='/private-page' element={<UsersList />}/>
+                            </Route>
                         </Routes>
-                    </div>
-                </main>
-            </BrowserRouter>
+                    </AuthProvider>
+                </BrowserRouter>
+            </Provider>
         )
     };
 }

@@ -14,7 +14,7 @@ class SignUp extends Component {
         return(
             <div id="signupform">
                 <FormHeader title="Sign Up" />
-                <div class="my-buttons">
+                <div className="my-buttons">
                     <a className="btnType" role="button"
                        onClick={() => this.setState({showPopup: true})}
                     >

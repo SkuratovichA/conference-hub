@@ -8,6 +8,7 @@ router = routers.DefaultRouter()
 router.register(r'users_list', views.ConferenceUserListAPIView, 'api_users-list')
 router.register(r'signup-researcher', views.ResearcherSignupAPIView, 'api_signup-researcher')
 router.register(r'signup-organization', views.OrganizationSignupAPIView, 'api_signup-organization')
+router.register('', views.ProfileAPIView, 'api_profile')
 
 app_name = 'users'
 

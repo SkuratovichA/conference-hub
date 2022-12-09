@@ -14,10 +14,37 @@ from users.forms import (
     ResearcherUpdateForm,
     OrganizationUpdateForm,
 )
+
+from rest_framework import viewsets, generics
+from users import serializers as sers
+
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+
+
 import logging
 
 logger = logging.getLogger(__name__)
 
+
+class ProfileAPIView(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated, )
+    queryset = ConferenceUserModel.objects.all()
+    serializer_class = sers.ConferenceUserSerializer
+    lookup_field = 'username'
+
+    def get_queryset(self):
+        if self.action == 'list':
+            return self.queryset.filter(user=self.request.user)
+        return self.queryset
+
+    # def get(self, request, *args, **kwargs):
+    #     print("AAAAAAAAAA")
+    #     logger.debug(self.get_queryset())
+    #     return Response({'a':'a'})
 
 class ProfileView(DetailView):
     template_name = 'users/profile.html'
