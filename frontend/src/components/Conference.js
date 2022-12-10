@@ -23,9 +23,14 @@ export const Conference = () => {
         return /^[A-Za-z][A-Za-z0-9\s_\-]+$/.test(newName)
     }
     // TODO: convert to conference somehow...
-    const handleGroupNameChange = (hui) => (
-        alert(hui)
-    )
+    const handleGroupNameChange = (key, newValue) => {
+        // console.log(`KEY: ${JSON.stringify({[key]: newValue})}`)
+        console.log(`OLD state: ${JSON.stringify(values)}`)
+        return setValues({
+            ...values,
+            [key]: newValue
+        })
+    }
 
     // useCallback((newGroupName) => {
     //         onChangeGroupParameter(groupId, 'group', newGroupName)
@@ -38,7 +43,7 @@ export const Conference = () => {
             <CardMedia
                 component={"img"}
                 height={"120"}
-                image={values['image']}
+                src={values['image']}
                 alt="unsplash image"
             />
             <CardContent>
@@ -46,7 +51,7 @@ export const Conference = () => {
                     accept="image/*"
                     style={{display: "none"}}
                     id="icon-button-photo"
-                    onChange={handleGroupNameChange}
+                    onChange={(v) => handleGroupNameChange("image", v)}
                     type="file"
                 />
 
@@ -54,8 +59,6 @@ export const Conference = () => {
                     <IconButton
                         style={{
                             position: "relative",
-                            // top: "10%",
-                            // left: "94%",
                             transform: "translate(0, -120px)",
                             background: "rgba(255,255,255,0.85)"
                         }}
@@ -70,7 +73,7 @@ export const Conference = () => {
                     variant="h1"
                     initialValue={values['name']}
                     onValidate={handleGroupNameValidation}
-                    onSave={handleGroupNameChange}
+                    onSave={(v) => handleGroupNameChange("name", v)}
                     label="Conference Name"
 
                     component="h1"
@@ -87,7 +90,7 @@ export const Conference = () => {
                     component="h4"
                     initialValue={values['brief']}
                     onValidate={handleGroupNameValidation}
-                    onSave={handleGroupNameChange}
+                    onSave={(v) => handleGroupNameChange("brief", v)}
                     label="Brief description of the conference"
                 >
                     {values['brief']}
@@ -105,7 +108,7 @@ export const Conference = () => {
                         variant="h2"
                         initialValue={values['address']}
                         onValidate={handleGroupNameValidation}
-                        onSave={handleGroupNameChange}
+                        onSave={(v) => handleGroupNameChange("address", v)}
                         label="Address"
                     >
                         {values['address']}
@@ -120,7 +123,7 @@ export const Conference = () => {
                         component="h4"
                         initialValue={values['price']}
                         onValidate={handleGroupNameValidation}
-                        onSave={handleGroupNameChange}
+                        onSave={(v) => handleGroupNameChange("price", v)}
                         label="Price"
                     >
                         {values['price']}
