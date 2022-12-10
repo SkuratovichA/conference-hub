@@ -24,6 +24,33 @@ export default function CreateConferenceDialog() {
         'image': "https://source.unsplash.com/random"
     })
 
+    const confCRUDNoBack = (type, conference) => {
+        switch (type) {
+            case "fetch":
+                alert('Fetching data...')
+                return {
+                    'pk': 12340987,
+                    'name': "Conference Name",
+                    'brief': "Brief Description",
+                    'date_from': null,
+                    'date_to': null,
+                    'address': "Address",
+                    'price': "100",
+                    'image': "https://source.unsplash.com/random"
+                }
+                break;
+            case "update":
+                alert('Update a conference...')
+                break;
+            case "delete":
+                alert('Delete a conference...')
+                break;
+            case "create":
+                alert('Create a new conference...')
+                break;
+        }
+    }
+
     return (
         <React.Fragment>
 
@@ -55,7 +82,10 @@ export default function CreateConferenceDialog() {
                         color: 'rgb(245,245,246)'
                     }}
                 >
-                <Conference canEdit={true}/>
+                <Conference
+                    canEdit={true}
+                    conferenceCRUDHandler={confCRUDNoBack}
+                />
                 </ModalDialog>
             </Modal>
         </React.Fragment>

@@ -16,24 +16,29 @@ export const Conference = (
     }
 ) => {
 
-    // TODO: fetch data from backend instead
     // conferenceCRUDHandler("fetch", pk)
-    const [values, setValues] = React.useState({
-        'name': "Conference Name",
-        'brief': "Brief Description",
-        'date_from': null,
-        'date_to': null,
-        'address': "Address",
-        'price': "100",
-        'image': "https://source.unsplash.com/random"
-    })
+    const [conference, setValues] = React.useState((
+        conferenceCRUDHandler ? conferenceCRUDHandler("fetch", {'pk': pk})
+            : {
+                'name': "Dummy",
+                'brief': "Dummy description",
+                'date_from': null,
+                'date_to': null,
+                'address': "Dummy Address",
+                'price': "100",
+                'image': "https://source.unsplash.com/random"
+            }))
+    alert(JSON.stringify(conference))
+
+    // const [conference, setValues] = React.useState({
+    // })
 
     const handleDataValidation = (newName) => {
         return /^[A-Za-z][A-Za-z0-9\s_\-]+$/.test(newName)
     }
     const handleDataChange = (key, newValue) => {
         setValues({
-            ...values,
+            ...conference,
             [key]: newValue
         })
     }
@@ -43,7 +48,7 @@ export const Conference = (
             <CardMedia
                 component={"img"}
                 height={"120"}
-                src={values['image']}
+                src={conference['image']}
                 alt="unsplash image"
             />
             <CardContent>
@@ -79,7 +84,7 @@ export const Conference = (
                 <EditableTypography
                     canEdit={canEdit}
                     variant="h1"
-                    initialValue={values['name']}
+                    initialValue={conference['name']}
                     onValidate={handleDataValidation}
                     onSave={(v) => handleDataChange("name", v)}
                     label="Conference Name"
@@ -88,20 +93,20 @@ export const Conference = (
                     fontSize="1.25em"
                     mb="0.25em"
                 >
-                    {values['name']}
+                    {conference['name']}
                 </EditableTypography>
 
                 {/*brief description*/}
                 <EditableTypography
                     canEdit={canEdit}
                     variant="h4"
-                    initialValue={values['brief']}
+                    initialValue={conference['brief']}
                     onValidate={handleDataValidation}
                     onSave={(v) => handleDataChange("brief", v)}
                     label="Brief description of the conference"
                     color="text.secondary"
                 >
-                    {values['brief']}
+                    {conference['brief']}
                 </EditableTypography>
 
                 {/*date from - date to*/}
@@ -109,8 +114,8 @@ export const Conference = (
                     canEdit={canEdit}
                     fromValueHandler={(newFrom) => handleDataChange("date_from", newFrom)}
                     toValueHandler={(newTo) => handleDataChange("date_to", newTo)}
-                    fromValue={values['date_from']}
-                    toValue={values['date_to']}
+                    fromValue={conference['date_from']}
+                    toValue={conference['date_to']}
                 />
 
                 {/*/!* address*!/*/}
@@ -120,12 +125,12 @@ export const Conference = (
                     <EditableTypography
                         canEdit={canEdit}
                         variant="h2"
-                        initialValue={values['address']}
+                        initialValue={conference['address']}
                         onValidate={handleDataValidation}
                         onSave={(v) => handleDataChange("address", v)}
                         label="Address"
                     >
-                        {values['address']}
+                        {conference['address']}
                     </EditableTypography>
                 </Stack>
 
@@ -136,26 +141,29 @@ export const Conference = (
                         canEdit={canEdit}
                         variant="h4"
                         component="h4"
-                        initialValue={values['price']}
+                        initialValue={conference['price']}
                         onValidate={handleDataValidation}
                         onSave={(v) => handleDataChange("price", v)}
                         label="Price"
                     >
-                        {values['price']}
+                        {conference['price']}
                     </EditableTypography>
                 </Stack>
 
             </CardContent>
 
             {canEdit &&
-                <CardActions >
+                <CardActions>
                     {canDelete && (
                         <>
-                            <Button size="small" color={"error"} onClick={() => conferenceCRUDHandler("delete")}>Delete</Button>
-                            <Button size="small" onClick={() => conferenceCRUDHandler("update")}>Update</Button>
+                            <Button size="small" color={"error"}
+                                    onClick={() => conferenceCRUDHandler("delete", conference)}>Delete</Button>
+                            <Button size="small"
+                                    onClick={() => conferenceCRUDHandler("update", conference)}>Update</Button>
                         </>
                     )}
-                    {!canDelete && <Button size="small" color={"success"} onClick={() => conferenceCRUDHandler("create")}>Create</Button>}
+                    {!canDelete && <Button size="small" color={"success"}
+                                           onClick={() => conferenceCRUDHandler("create", conference)}>Create</Button>}
                 </CardActions>
             }
         </Card>
