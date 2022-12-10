@@ -6,7 +6,7 @@ import {
     CardActionArea,
     CardMedia,
 } from '@mui/material'
-import { Conference } from './Conference'
+import Conference from './Conference'
 
 import plus from '../plus.png'
 
@@ -27,7 +27,7 @@ export default function CreateConferenceDialog() {
     const confCRUDNoBack = (type, conference) => {
         switch (type) {
             case "fetch":
-                alert('Fetching data...')
+                console.log('Fetching data...')
                 return {
                     'pk': 12340987,
                     'name': "Conference Name",
@@ -38,7 +38,6 @@ export default function CreateConferenceDialog() {
                     'price': "100",
                     'image': "https://source.unsplash.com/random"
                 }
-                break;
             case "update":
                 alert('Update a conference...')
                 break;
@@ -56,7 +55,7 @@ export default function CreateConferenceDialog() {
 
             <CardActionArea
                 color="neutral"
-                startDecorator={<Add/>}
+                // startDecorator={<Add/>}
                 onClick={() => setOpen(true)}
             >
                 <CardMedia
@@ -85,6 +84,7 @@ export default function CreateConferenceDialog() {
                 <Conference
                     canEdit={true}
                     conferenceCRUDHandler={confCRUDNoBack}
+                    callBackOnCreate={() => setOpen(false)}
                 />
                 </ModalDialog>
             </Modal>

@@ -4,16 +4,6 @@ import Typography from '@mui/joy/Typography';
 import {Box, IconButton} from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
 
-const useStyles = {
-    noPadding: {
-        'padding': '0',
-    },
-    // iconStyle: {
-    //   width: spacing(2.5),
-    //   height: spacing(2.5),
-    // },
-}
-
 const defaultOnValidate = () => true
 
 export const EditableTypography = (
@@ -27,7 +17,6 @@ export const EditableTypography = (
         containerProps,
         ...rest
     }) => {
-    const classes = useStyles
 
     const [value, setValue] = React.useState(initialValue)
     const [editing, setEditing] = React.useState(false)
@@ -66,10 +55,10 @@ export const EditableTypography = (
     const handleTextFieldOnChange = React.useCallback((e) => setValue(e.target.value), [
         setValue,
     ])
-    const handleSaveClick = React.useCallback(() => handleValueSave(value), [
-        handleValueSave,
-        value,
-    ])
+    // const handleSaveClick = React.useCallback(() => handleValueSave(value), [
+    //     handleValueSave,
+    //     value,
+    // ])
 
     const handleEditClick = React.useCallback(
         (e) => {
@@ -91,11 +80,10 @@ export const EditableTypography = (
                         variant="outlined"
                         onChange={handleTextFieldOnChange}
                         onKeyDown={handleKeyPress}
-                        className={classes.noPadding}
                         {...textFieldProps}
-                        FormHelperTextProps={{
-                            onClick: handleSaveClick
-                        }}
+                        // formhelpertextprops={{
+                        //     onClick: handleSaveClick
+                        // }}
                     />
                 </>
             )}
