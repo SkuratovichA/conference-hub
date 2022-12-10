@@ -14,7 +14,7 @@ app_name = 'users'
 
 urlpatterns = [
     # path('', views.ConferenceUserListView.as_view(), name='users-models'),  # move to routers
-    path('api/get_info_user', views.ConferenceUserGetInfo.as_view(), name='api_get-info-user'),
+    path('api/manipulate_info_user', views.ConferenceUserGetInfo.as_view(), name='api_get-info-user'),
     path('api/login', views.ConferenceUserSigninAPIView.as_view(), name='api-login-view'),
     path('api/', include(router.urls)),  # move to routers
 

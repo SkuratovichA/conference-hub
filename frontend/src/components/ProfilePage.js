@@ -1,5 +1,9 @@
 import React from 'react';
 import './styles/Other.css'
+import {EditableTypography} from "./EditableTypography";
+import {updateProfileUser} from "../actions/UserFunctions";
+import { useContext, useEffect } from "react";
+import authContext from "../context/AuthContext";
 import {
   MDBCol,
   MDBContainer,
@@ -18,7 +22,29 @@ import {
   MDBListGroupItem
 } from 'mdb-react-ui-kit';
 
-export default function ProfilePage(user_info, profile_info) {
+const ProfilePage = (user_info, profile_info) => {
+
+    const handleGroupNameValidation = (newName) => {
+        return /^[A-Za-z][A-Za-z0-9\s_\-]+$/.test(newName)
+    }
+    // TODO: convert to conference somehow...
+    const handleGroupNameChange = (key, new_val) => {
+      let {authTokens} = useContext(authContext)
+
+      if (key === "fullname") {
+        let values = new_val.trim().split(/\s+/);
+        user_info.user_info.lastname = values[1]
+        user_info.user_info.name = values[0]
+
+        updateProfileUser(String("Bearer " + String(authTokens.access)), user_info.user_info)
+      }
+    }
+
+
+  let fullnamevar = String(user_info.user_info.lastname) + " " + String(user_info.user_info.name)
+  console.log(fullnamevar)
+
+
   return (
     <section style={{ backgroundColor: '#eee' }}>
       <MDBContainer className="py-5">
@@ -43,11 +69,25 @@ export default function ProfilePage(user_info, profile_info) {
             <MDBCard className="mb-4">
               <MDBCardBody>
                 <MDBRow>
-                  <MDBCol sm="3">
+                  <MDBCol sm="3" className="card-text-center">
                     <MDBCardText>Full Name</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
-                    <MDBCardText className="text-muted">{user_info.user_info.lastname} {user_info.user_info.name}</MDBCardText>
+                    <MDBCardText className="text-muted">
+                      <EditableTypography
+                        variant="h1"
+                        initialValue={fullnamevar}
+                        onValidate={handleGroupNameValidation}
+                        onSave={(v) => handleGroupNameChange("fullname", v)}
+                        label="FullName"
+
+                        component="h1"
+                        level="inherit"
+                        fontSize="1.25em"
+                        mb="0.25em"
+                      />
+                      {/*{user_info.user_info.lastname} {user_info.user_info.name}*/}
+                    </MDBCardText>
                   </MDBCol>
                 </MDBRow>
                 <hr />
@@ -120,3 +160,5 @@ export default function ProfilePage(user_info, profile_info) {
     </section>
   );
 }
+
+export default ProfilePage

@@ -37,10 +37,11 @@ class ConferenceUserGetInfo(generics.RetrieveUpdateDestroyAPIView):
             content["infouser"]["lastname"] = user.researcher.last_name
 
         content["profile"] = sers.ProfileUserSerializer(user.profile).data
-        # content["infouser"]["image"] = serializers.ImageField(user.profile.image)
-        print(content)
 
         return Response(content, status=status.HTTP_200_OK)
+
+    def patch(self, request, *args, **kwargs):
+        print("PATH WORKS")
 
 
 
