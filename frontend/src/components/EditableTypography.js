@@ -18,6 +18,7 @@ const defaultOnValidate = () => true
 
 export const EditableTypography = (
     {
+        canEdit,
         initialValue,
         onSave,
         onValidate,
@@ -80,7 +81,7 @@ export const EditableTypography = (
 
     return (
         <Box display="flex" alignItems="center" {...containerProps}>
-            {editing && (
+            {(canEdit && editing) && (
                 <>
                     <TextField
                         autoFocus
@@ -98,12 +99,14 @@ export const EditableTypography = (
                     />
                 </>
             )}
-            {!editing && (
+            {(!canEdit || !editing) && (
                 <>
                     <Typography color="inherit" {...rest}>{value}</Typography>
-                    <IconButton onClick={handleEditClick} {...iconButtonProps}>
+                    {canEdit && (
+                        < IconButton onClick={handleEditClick} {...iconButtonProps}>
                         <EditIcon color="inherit" size="small"/>
-                    </IconButton>
+                        </IconButton>
+                    )}
                 </>
             )}
         </Box>

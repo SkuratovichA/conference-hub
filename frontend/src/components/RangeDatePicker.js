@@ -7,17 +7,21 @@ import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 
 export const MuiDateRangePicker = (
     {
+        canEdit,
         startText,
         endText,
-        width
+        width,
+        fromValue,
+        toValue,
+        fromValueHandler,
+        toValueHandler,
     }
 ) => {
-    const [value, setValue] = useState({
-        'from': null,
-        'to': null
-    })
+    if (!fromValueHandler || !toValueHandler) {
+        [fromValue, fromValueHandler] = useState(null);
+        [toValue, toValueHandler] = useState(null);
+    }
 
-    console.log({value})
     if (!width) {
         width = '500px'
     }
@@ -29,23 +33,30 @@ export const MuiDateRangePicker = (
     }
     return (
         <Box width={width}>
-            <Typography>Conference date:</Typography>
+            <Typography
+                color="text.secondary"
+                sx={{m: 1}}
+            >
+                Conference date:
+            </Typography>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Grid container>
                     <Grid item xs={12} sm={4} md={4} lg={4} xl={4}>
                         <DatePicker
-                            label="Start"
-                            value={value.from}
-                            onChange={(newValue) => setValue({...value, ...newValue})}
+                            readOnly={!canEdit}
+                            label={startText}
+                            value={fromValue}
+                            onChange={(newValue) => fromValueHandler(newValue)}
                             renderInput={(params) => <TextField  size="small" {...params} />}
                         />
                     </Grid>
 
                     <Grid item xs={12} sm={4} md={4} lg={4} xl={4}>
                         <DatePicker
-                            label="End"
-                            value={value.to}
-                            onChange={(newValue) => setValue({...value, ...newValue})}
+                            readOnly={!canEdit}
+                            label={endText}
+                            value={toValue}
+                            onChange={(newValue) => toValueHandler(newValue)}
                             renderInput={(params) => <TextField  size="small" {...params} />}
                         />
                     </Grid>

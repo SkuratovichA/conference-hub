@@ -55,7 +55,7 @@ export default function CreateConferenceDialog() {
                         color: 'rgb(245,245,246)'
                     }}
                 >
-                <Conference />
+                <Conference canEdit={true}/>
                 </ModalDialog>
             </Modal>
         </React.Fragment>
