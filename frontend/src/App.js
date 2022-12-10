@@ -9,7 +9,6 @@ import store from './store';
 import Navbar from './components/Navbar'
 import UsersList from './components/UsersList'
 import LogIn from './components/LogIn'
-import {ConferenceGrid} from './components/ConferenceGrid'
 import ConferenceSearch from './components/ConferenceSearch'
 import SignUp from './components/SignUp'
 import Profile from './components/Profile'
@@ -114,6 +113,7 @@ class App extends Component {
                             <Route path="/" element={<UsersList />} exact />
                             <Route path="/login" element={<LogIn />} />
                             <Route path="/signup" element={<SignUp />} />
+                            <Route path="/conferences" element={<ConferenceSearch conferences={conferences} />} />
                             <Route path="/:username" element={<Profile />} />
 
                             <Route exact path='/private-page' element={<PrivateRoute />}>

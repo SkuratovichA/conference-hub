@@ -6,6 +6,7 @@ from enum import Enum
 
 class ConferenceModel(models.Model):
     name = models.CharField(max_length=250)
+    brief = models.CharField(null=True, blank=True, default='')
     slug = models.SlugField(unique=True, null=False)
     date_from = models.DateField('Begins on')
     date_to = models.DateField('Ends on')
