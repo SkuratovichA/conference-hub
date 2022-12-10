@@ -8,7 +8,11 @@ import * as React from "react";
 
 
 export default class Conference extends React.Component {
-
+    // canEdit - can create/delete/update a conference
+    // canDelete - *update* and *delete* buttons are displayed
+    // conferenceCRUDHandler - (type, conference), type in ['create', 'update', 'fetch', 'delete'].
+    // callBackOnCreate - close a window/do something else
+    // callBackOnDelete - close a window/remove the element
     constructor(props) {
         super(props);
 

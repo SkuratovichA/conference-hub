@@ -24,7 +24,11 @@ export const MuiCard = (props) => {
                     </CardContent>
                     <CardActions>
                         <Button size="small">{conference_j.price}</Button>
-                        <Button size="small">Show info</Button>
+                        <Button
+                            size="small"
+                        >
+                            Show info
+                        </Button>
                     </CardActions>
                 </Card>
             </Box>
