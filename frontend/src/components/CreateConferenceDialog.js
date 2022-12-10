@@ -1,66 +1,115 @@
-// import * as React from 'react';
-// import Button from '@mui/joy/Button';
-// import TextField from '@mui/joy/TextField';
-// import Modal from '@mui/joy/Modal';
-// import ModalDialog from '@mui/joy/ModalDialog';
-// import Stack from '@mui/joy/Stack';
-// import Add from '@mui/icons-material/Add';
-// import Typography from '@mui/joy/Typography';
-//
-// export default function CreateConferenceDialog() {
-//   const [open, setOpen] = React.useState(false);
-//   return (
-//     <React.Fragment>
-//       <Button
-//         variant="outlined"
-//         color="neutral"
-//         startDecorator={<Add />}
-//         onClick={() => setOpen(true)}
-//       >
-//         New project
-//       </Button>
-//       <Modal open={open} onClose={() => setOpen(false)}>
-//         <ModalDialog
-//           aria-labelledby="basic-modal-dialog-title"
-//           aria-describedby="basic-modal-dialog-description"
-//           sx={{
-//             maxWidth: 500,
-//             borderRadius: 'md',
-//             p: 3,
-//             boxShadow: 'lg',
-//           }}
-//         >
-//           <Typography
-//             id="basic-modal-dialog-title"
-//             component="h2"
-//             level="inherit"
-//             fontSize="1.25em"
-//             mb="0.25em"
-//           >
-//             Create new project
-//           </Typography>
-//           <Typography
-//             id="basic-modal-dialog-description"
-//             mt={0.5}
-//             mb={2}
-//             textColor="text.tertiary"
-//           >
-//             Fill in the information of the project.
-//           </Typography>
-//           <form
-//             onSubmit={(event) => {
-//               event.preventDefault();
-//               setOpen(false);
-//             }}
-//           >
-//             <Stack spacing={2}>
-//               <TextField label="Name" autoFocus required />
-//               <TextField label="Description" required />
-//               <Button type="submit">Submit</Button>
-//             </Stack>
-//           </form>
-//         </ModalDialog>
-//       </Modal>
-//     </React.Fragment>
-//   );
-// }
+import * as React from 'react'
+import Modal from '@mui/joy/Modal';
+import ModalDialog from '@mui/joy/ModalDialog';
+import Add from '@mui/icons-material/Add';
+import {CardActionArea, CardMedia } from '@mui/material'
+import {MuiDateRangePicker} from './RangeDatePicker'
+import {EditableTypography} from './EditableTypography'
+
+import plus from '../plus.png'
+
+
+export default function CreateConferenceDialog() {
+    const [open, setOpen] = React.useState(false);
+    const [value, setValue] = React.useState("Conference Name");
+
+    const handleGroupNameValidation = (newName) => {
+        return /^[A-Za-z][A-Za-z0-9\s_\-]+$/.test(newName)
+    }
+    // TODO: convert to conference somehow...
+    const handleGroupNameChange = (hui) => (0)
+    // useCallback((newGroupName) => {
+    //         onChangeGroupParameter(groupId, 'group', newGroupName)
+    //     },
+    //     [onChangeGroupParameter, groupId]
+    // )
+
+    return (
+        <React.Fragment>
+            <CardActionArea
+                color="neutral"
+                startDecorator={<Add/>}
+                onClick={() => setOpen(true)}
+            >
+                <CardMedia
+                    component="img"
+                    height="257"
+                    image={plus}
+                    alt="image"
+                />
+            </CardActionArea>
+
+            <Modal open={open} onClose={() => setOpen(false)}>
+                <ModalDialog
+                    aria-labelledby="basic-modal-dialog-title"
+                    aria-describedby="basic-modal-dialog-description"
+                    sx={{
+                        maxWidth: '80%',
+                        minWidth: '60%',
+                        borderRadius: 'md',
+                        p: 3,
+                        boxShadow: 'lg',
+                        background: 'rgba(142,181,225,0.85)',
+                        color: 'rgb(245,245,246)'
+                    }}
+                >
+
+                        {/*name */}
+                        <EditableTypography
+                            variant="h1"
+                            initialValue={value}
+                            onValidate={handleGroupNameValidation}
+                            onSave={handleGroupNameChange}
+                            label="Conference Name"
+
+                            component="h1"
+                            level="inherit"
+                            fontSize="1.25em"
+                            mb="0.25em"
+                        >
+                            {value}
+                        </EditableTypography>
+
+                        {/*brief description*/}
+                        <EditableTypography
+                            variant="h4"
+                            component="h4"
+                            initialValue={value}
+                            onValidate={handleGroupNameValidation}
+                            onSave={handleGroupNameChange}
+                            label="Brief description of the conference"
+                        >
+                            {value}
+                        </EditableTypography>
+
+                        {/*TODO: date from - date to*/}
+                        <MuiDateRangePicker />
+
+
+                        {/*/!*TODO: address*!/*/}
+                        {/*<EditableTypography*/}
+                        {/*    variant="h2"*/}
+                        {/*    initialValue={value}*/}
+                        {/*    onValidate={handleGroupNameValidation}*/}
+                        {/*    onSave={handleGroupNameChange}*/}
+                        {/*    label="Address"*/}
+                        {/*>*/}
+                        {/*    {value}*/}
+                        {/*</EditableTypography>*/}
+
+                        {/*/!*TODO: price*!/*/}
+                        {/*<EditableTypography*/}
+                        {/*    variant="h2"*/}
+                        {/*    initialValue={value}*/}
+                        {/*    onValidate={handleGroupNameValidation}*/}
+                        {/*    onSave={handleGroupNameChange}*/}
+                        {/*    label="Prcie"*/}
+                        {/*>*/}
+                        {/*    {value}*/}
+                        {/*</EditableTypography>*/}
+
+                </ModalDialog>
+            </Modal>
+        </React.Fragment>
+    );
+}
