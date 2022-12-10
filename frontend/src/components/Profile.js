@@ -10,8 +10,8 @@ const Profile = () => {
     let token = String("Bearer " + String(authTokens.access))
 
     useEffect(() => {
-        getInfoUser(token).
-            then((data) => {
+        getInfoUser(token)
+            .then((data) => {
                 SetUserInfo(data['infouser'])
             })
     }, [])

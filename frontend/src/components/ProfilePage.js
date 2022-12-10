@@ -1,10 +1,11 @@
 import React from 'react';
 import './styles/Other.css'
 import {EditableTypography} from "./EditableTypography";
-import {updateProfileUser} from "../actions/UserFunctions";
 import {useNavigate} from "react-router-dom";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import authContext from "../context/AuthContext";
+/* eslint-disable no-useless-escape */
+/* eslint-disable no-unexpected-multiline */
 import {
   MDBCol,
   MDBContainer,
@@ -13,14 +14,8 @@ import {
   MDBCardText,
   MDBCardBody,
   MDBCardImage,
-  MDBBtn,
-  MDBBreadcrumb,
-  MDBBreadcrumbItem,
   MDBProgress,
   MDBProgressBar,
-  MDBIcon,
-  MDBListGroup,
-  MDBListGroupItem
 } from 'mdb-react-ui-kit';
 
 const ProfilePage = ( props ) => {
@@ -30,7 +25,6 @@ const ProfilePage = ( props ) => {
     }
     // TODO: convert to conference somehow...
     const handleGroupNameChange = (key, new_val) => {
-
       if (key === "fullname") {
         let values = new_val.trim().split(/\s+/);
         ((props.user || {}).user || {}).name = values[0]

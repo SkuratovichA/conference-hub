@@ -6,6 +6,7 @@ import {MuiDateRangePicker} from "./RangeDatePicker";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import EuroIcon from "@mui/icons-material/Euro";
 import Scheduler from './Scheduler'
+/* eslint-disable no-useless-escape */
 
 export default class Conference extends React.Component {
     // canEdit - can create/delete/update a conference

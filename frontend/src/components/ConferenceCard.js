@@ -1,6 +1,5 @@
 import React from "react";
-import { CardActionArea, ButtonBase, Box, Card, CardContent, Typography, CardActions, Button, CardMedia} from "@mui/material"
-import AddIcon from '@mui/icons-material/Add';
+import { CardActionArea, Box, Card, CardContent, Typography, CardActions, Button, CardMedia} from "@mui/material"
 import plus from '../plus.png'
 import ConferenceModal from './ConferenceModal'
 

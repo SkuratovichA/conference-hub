@@ -1,4 +1,4 @@
-import React, {Component, useContext} from "react";
+import React, {useContext} from "react";
 import {AppBar, Toolbar, IconButton, Typography, Stack, Button} from "@mui/material";
 import AccessibleForwardIcon from '@mui/icons-material/AccessibleForward';
 import AuthContext from "../context/AuthContext";
@@ -13,7 +13,7 @@ const Navbar = () => {
                     <AccessibleForwardIcon size="large" edge="start" color="inherit" aria-label="logo">
                     </AccessibleForwardIcon>
                 </IconButton>
-                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                <Typography variant="h6" component="span" sx={{ flexGrow: 1 }}>
                     <Button color="inherit" href="/">Conference Hub</Button>
                 </Typography>
 

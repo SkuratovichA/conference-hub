@@ -78,6 +78,7 @@ export const AuthProvider = ({children}) => {
         let interval = setInterval(() => {
             if (authTokens) {
                 updateToken()
+                setLoading() // may be delete
             }
         }, fourMinutes)
         return () => clearInterval(interval)

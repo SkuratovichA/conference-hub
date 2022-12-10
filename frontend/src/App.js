@@ -16,7 +16,7 @@ import {AuthProvider} from './context/AuthContext'
 import Scheduler from './components/Scheduler'
 import AuthContext from "./context/AuthContext";
 import Conference from './components/Conference'
-
+/* eslint-disable no-useless-escape */
 
 const conferences = [
     {
@@ -157,9 +157,8 @@ class App extends Component {
                             <Navbar/>
                         </main>
                         <Routes>
-                            <Route path="/" element={<UsersList/>} exact/>
-                            <Route path="/login" element={<LogIn/>}/>
-                            <Route path="/signup" element={<SignUp/>}/>
+                            <Route path="/" element={<UsersList />} exact />
+                            <Route path="/login" element={<LogIn />} />
                             <Route
                                 path="/conferences"
                                 element={<ConferenceSearchWithRouter

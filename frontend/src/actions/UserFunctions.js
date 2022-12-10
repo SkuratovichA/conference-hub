@@ -1,5 +1,3 @@
-import {useContext} from "react";
-import authContext from "../context/AuthContext";
 export const getInfoUser = async (token) => {
     let response = await fetch('http://localhost:8000/users/api/manipulate_info_user', {
         method: 'GET',

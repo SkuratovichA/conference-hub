@@ -12,7 +12,7 @@ export default function CreateConferenceDialog({
     conferenceCRUDHandler
 }) {
     const [open, setOpen] = React.useState(false);
-
+    
     return (
         <React.Fragment>
 
