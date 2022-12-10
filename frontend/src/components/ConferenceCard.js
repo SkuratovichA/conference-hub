@@ -30,17 +30,17 @@ export const MuiCard = (props) => {
             </Box>
         ) :
         (
-            <Box width="280px">
-                <Card>
-                    <CardActionArea>
-                        <CardMedia
-                            component="img"
-                            height="257"
-                            image={plus}
-                            alt=""
-                        />
-                    </CardActionArea>
-                </Card>
-            </Box>
+                <Box width="280px">
+                    <Card>
+                        <CardActionArea>
+                            <CardMedia
+                                component="img"
+                                height="257"
+                                image={plus}
+                                alt=""
+                            />
+                        </CardActionArea>
+                    </Card>
+                </Box>
         )
 }
