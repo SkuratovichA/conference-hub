@@ -102,7 +102,7 @@ export const EditableTypography = (
                 <>
                     <Typography color="inherit" {...rest}>{value}</Typography>
                     <IconButton onClick={handleEditClick} {...iconButtonProps}>
-                        <EditIcon size="small"/>
+                        <EditIcon color="inherit" size="small"/>
                     </IconButton>
                 </>
             )}

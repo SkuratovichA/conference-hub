@@ -1,8 +1,8 @@
-import {Box, TextField} from '@mui/material'
-import { DateRangePicker }  from '@mui/x-date-pickers-pro'
-import { LocalizationProvider } from '@mui/x-date-pickers-pro';
+import {Box, TextField, Grid, Typography} from '@mui/material'
+import {DatePicker} from '@mui/x-date-pickers'
+import {LocalizationProvider} from '@mui/x-date-pickers-pro';
 import React, {useState} from 'react'
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 
 
 export const MuiDateRangePicker = (
@@ -12,10 +12,14 @@ export const MuiDateRangePicker = (
         width
     }
 ) => {
-    const [value, setValue] = useState([null, null])
+    const [value, setValue] = useState({
+        'from': null,
+        'to': null
+    })
+
     console.log({value})
     if (!width) {
-        width = '200px'
+        width = '500px'
     }
     if (!startText) {
         startText = 'Start'
@@ -25,24 +29,27 @@ export const MuiDateRangePicker = (
     }
     return (
         <Box width={width}>
+            <Typography>Conference date:</Typography>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DateRangePicker
-                    calendars={0}
-                    // startText={startText}
-                    // endText={endText}
-                    value={value}
-                    onChange={(newValue) => {
-                        setValue(newValue)
-                    }}
-                    renderInput={(startProps, endProps) => (
-                        <div>
-                            <TextField sx={{color: 'rgb(245,245,246)'}} {...startProps} />
-                            <Box sx={{mx: 2, color: 'rgb(245,245,246)' }}> to </Box>
-                            <TextField sx={{color: 'rgb(245,245,246)'}} {...endProps} />
-                        </div>
-                    )
-                    }
-                ></DateRangePicker>
+                <Grid container>
+                    <Grid item xs={12} sm={4} md={4} lg={4} xl={4}>
+                        <DatePicker
+                            label="Start"
+                            value={value.from}
+                            onChange={(newValue) => setValue({...value, ...newValue})}
+                            renderInput={(params) => <TextField  size="small" {...params} />}
+                        />
+                    </Grid>
+
+                    <Grid item xs={12} sm={4} md={4} lg={4} xl={4}>
+                        <DatePicker
+                            label="End"
+                            value={value.to}
+                            onChange={(newValue) => setValue({...value, ...newValue})}
+                            renderInput={(params) => <TextField  size="small" {...params} />}
+                        />
+                    </Grid>
+                </Grid>
             </LocalizationProvider>
         </Box>
     )
