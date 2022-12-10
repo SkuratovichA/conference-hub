@@ -2,6 +2,7 @@ import React from 'react';
 import './styles/Other.css'
 import {EditableTypography} from "./EditableTypography";
 import {updateProfileUser} from "../actions/UserFunctions";
+import {useNavigate} from "react-router-dom";
 import { useContext, useEffect } from "react";
 import authContext from "../context/AuthContext";
 import {
@@ -22,28 +23,24 @@ import {
   MDBListGroupItem
 } from 'mdb-react-ui-kit';
 
-const ProfilePage = (user_info, profile_info) => {
+const ProfilePage = ( props ) => {
 
     const handleGroupNameValidation = (newName) => {
         return /^[A-Za-z][A-Za-z0-9\s_\-]+$/.test(newName)
     }
     // TODO: convert to conference somehow...
     const handleGroupNameChange = (key, new_val) => {
-      let {authTokens} = useContext(authContext)
 
       if (key === "fullname") {
         let values = new_val.trim().split(/\s+/);
-        user_info.user_info.lastname = values[1]
-        user_info.user_info.name = values[0]
-
-        updateProfileUser(String("Bearer " + String(authTokens.access)), user_info.user_info)
+        ((props.user || {}).user || {}).name = values[0]
+        (props.user || {}).last_name = values[1]
       }
     }
 
-
-  let fullnamevar = String(user_info.user_info.lastname) + " " + String(user_info.user_info.name)
-  console.log(fullnamevar)
-
+    let {authTokens} = useContext(authContext)
+    let token = String("Bearer " + String(authTokens.access))
+    let navigate = useNavigate()
 
   return (
     <section style={{ backgroundColor: '#eee' }}>
@@ -52,7 +49,7 @@ const ProfilePage = (user_info, profile_info) => {
           <MDBCol lg="4">
               <MDBCardBody className="text-center">
                 <MDBCardImage
-                  src="http://localhost:8000/media/static/default.png"
+                  src={"http://localhost:8000" + (((props.user || {}).user || {}).profile || {}).image}
                   alt="avatar"
                   className="rounded-circle"
                   style={{ width: '200px' }}
@@ -60,7 +57,11 @@ const ProfilePage = (user_info, profile_info) => {
                 <div className="d-flex justify-content-center mb-2 profile-buttons">
                     <button type="button" className="btn btn-danger">Delete profile</button>
                     <div className="divider"/>
-                    <button type="button" className="btn btn-info">Edit Profile</button>
+                    <button type="button" className="btn btn-info" onClick={() => {
+                        props.userCRUDHandler("update", props.user, token)
+                        navigate('/')
+                    }
+                    }>Save Changes</button>
                 </div>
               </MDBCardBody>
           </MDBCol>
@@ -76,7 +77,7 @@ const ProfilePage = (user_info, profile_info) => {
                     <MDBCardText className="text-muted">
                       <EditableTypography
                         variant="h1"
-                        initialValue={fullnamevar}
+                        initialValue={(props.user || {}).last_name + " " + ((props.user || {}).user || {}).name}
                         onValidate={handleGroupNameValidation}
                         onSave={(v) => handleGroupNameChange("fullname", v)}
                         label="FullName"
@@ -96,7 +97,7 @@ const ProfilePage = (user_info, profile_info) => {
                     <MDBCardText>Email</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
-                    <MDBCardText className="text-muted">{user_info.user_info.email}</MDBCardText>
+                    <MDBCardText className="text-muted">{((props.user || {}).user || {}).email}</MDBCardText>
                   </MDBCol>
                 </MDBRow>
                 <hr />
@@ -105,7 +106,7 @@ const ProfilePage = (user_info, profile_info) => {
                     <MDBCardText>Login</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
-                    <MDBCardText className="text-muted">{user_info.user_info.username}</MDBCardText>
+                    <MDBCardText className="text-muted">{((props.user || {}).user || {}).username}</MDBCardText>
                   </MDBCol>
                 </MDBRow>
                 <hr />
@@ -114,7 +115,7 @@ const ProfilePage = (user_info, profile_info) => {
                     <MDBCardText>Balance</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
-                    <MDBCardText className="text-muted">{user_info.user_info.balance}</MDBCardText>
+                    <MDBCardText className="text-muted">{((props.user || {}).user || {}).balance}</MDBCardText>
                   </MDBCol>
                 </MDBRow>
                 <hr />
@@ -123,7 +124,7 @@ const ProfilePage = (user_info, profile_info) => {
                     <MDBCardText>Address</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
-                    <MDBCardText className="text-muted">{user_info.user_info.city}, {user_info.user_info.country}</MDBCardText>
+                    <MDBCardText className="text-muted">{((props.user || {}).user || {}).city}, {((props.user || {}).user || {}).country}</MDBCardText>
                   </MDBCol>
                 </MDBRow>
               </MDBCardBody>

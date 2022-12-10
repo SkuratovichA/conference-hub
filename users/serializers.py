@@ -13,14 +13,29 @@ class ProfileUserSerializer(serializers.ModelSerializer):
 
 
 class ConferenceUserSerializer(serializers.ModelSerializer):
+    profile = ProfileUserSerializer(many=False)
+
     class Meta:
         model = u_models.ConferenceUserModel
-        fields = ['email', 'username', 'name', 'country', 'city']
+        fields = ['email', 'username', 'name', 'country', 'city', 'is_researcher', 'is_organization', 'balance',
+                  'profile', 'is_active']
 
 
 class ResearcherInfoSerializer(serializers.ModelSerializer):
-    class Meta(ConferenceUserSerializer.Meta):
-        fields = ConferenceUserSerializer.Meta.fields + ['is_researcher', 'is_organization', 'balance']
+    user = ConferenceUserSerializer(many=False)
+
+    class Meta:
+        model = u_models.ResearcherModel
+        fields = ['user', 'date_of_birth', 'last_name']
+
+
+class OrganizationInfoSerializer(serializers.ModelSerializer):
+    user = ConferenceUserSerializer(many=False)
+
+    class Meta:
+        model = u_models.OrganizationModel
+        fields = ['user']
+
 
 class CreateUserMixin(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])

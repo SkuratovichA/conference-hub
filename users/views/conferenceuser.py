@@ -33,15 +33,27 @@ class ConferenceUserGetInfo(generics.RetrieveUpdateDestroyAPIView):
 
         content = {}
         if user.is_researcher:
-            content["infouser"] = sers.ResearcherInfoSerializer(request.user).data
-            content["infouser"]["lastname"] = user.researcher.last_name
-
-        content["profile"] = sers.ProfileUserSerializer(user.profile).data
+            content["infouser"] = sers.ResearcherInfoSerializer(user.researcher).data
+        elif user.is_organization:
+            content["infouser"] = sers.OrganizationInfoSerializer(user.organization).data
 
         return Response(content, status=status.HTTP_200_OK)
 
     def patch(self, request, *args, **kwargs):
-        print("PATH WORKS")
+        user = u_models.ConferenceUserModel.objects.get(username=request.user.username)
+
+        if user.is_researcher:
+            serializer = sers.ResearcherInfoSerializer(user.researcher, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+        elif user.is_organization:
+            serializer = sers.ResearcherInfoSerializer(user.organization, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(status=status.HTTP_200_OK)
 
 
 

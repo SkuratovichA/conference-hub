@@ -18,9 +18,10 @@ export const EditableTypography = (
         ...rest
     }) => {
 
-    const [value, setValue] = React.useState(initialValue)
+    let new_val = String(initialValue)
+    const [value, setValue] = React.useState(new_val)
     const [editing, setEditing] = React.useState(false)
-
+    
     const handleKeyPress = React.useCallback(
         (e) => {
             if (e.key === 'Enter') {

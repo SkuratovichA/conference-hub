@@ -20,23 +20,25 @@ export const getInfoUser = async (token) => {
     }
 }
 
-export const updateProfileUser = async (dataUpdate) => {
+export const userCRUDHandler = async (type, dataToUpdate, token) => {
 
-    console.log('dataUpdate', dataUpdate)
+    console.log('type', type, dataToUpdate)
 
-    // let response = await fetch('http://localhost:8000/users/api/manipulate_info_user', {
-    //     method: 'PATCH',
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //         'Authorization': String("Bearer " + String(authTokens.access)),
-    //     },
-    //     body: {'data': dataUpdate}
-    // })
-    //
-    // if (response.status === 200) {
-    //     alert("!EBAC CHOROSHO!")
-    // }
-    // else {
-    //     alert("!PIZDA SAPOGAM INFO USER!")
-    // }
+    let response = await fetch('http://localhost:8000/users/api/manipulate_info_user', {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token,
+        },
+        body: JSON.stringify({
+            data: dataToUpdate,
+        }),
+    })
+
+    if (response.status === 200) {
+        alert("!EBAC CHOROSHO!")
+    }
+    else {
+        alert("!PIZDA SAPOGAM CRUD USER!")
+    }
 }
