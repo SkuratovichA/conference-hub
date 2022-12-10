@@ -1,17 +1,25 @@
-import React from 'react';
+import React, {useState} from 'react';
 import AuthContext from "../context/AuthContext";
 import { useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import {AppBar, Button, IconButton, Stack, Toolbar, Typography} from "@mui/material";
-import AccessibleForwardIcon from "@mui/icons-material/AccessibleForward";
+import ProfilePage from "./ProfilePage";
+import {getInfoUser} from "../actions/UserFunctions";
 
 const Profile = () => {
-    let {user} = useContext(AuthContext)
-    let navigate = useNavigate()
-    console.log(user)
+    let {authTokens} = useContext(AuthContext)
+    let [user_info, SetUserInfo] = useState({})
+    let [profile_info, SetProfileInfo] = useState({})
+    let token = String("Bearer " + String(authTokens.access))
+
+    useEffect(() => {
+        getInfoUser(token).
+            then((data) => {
+                SetUserInfo(data['infouser'])
+                SetProfileInfo(data['profile'])
+            })
+    }, [])
 
     return (
-        <p>{user.username}</p>
+        <ProfilePage user_info={user_info} profile_info={profile_info} />
     )
 }
 

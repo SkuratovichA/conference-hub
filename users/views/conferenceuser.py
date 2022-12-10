@@ -9,17 +9,39 @@ from django.views import View
 
 from rest_framework import viewsets, generics, authentication
 from users import serializers as sers
+from rest_framework import serializers
 
 from rest_framework import exceptions
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 
 import logging
 
 logger = logging.getLogger(__name__)
+
+
+class ConferenceUserGetInfo(generics.RetrieveUpdateDestroyAPIView):
+    queryset = u_models.ConferenceUserModel.objects.all()
+    serializer_class = sers.ResearcherInfoSerializer
+    permission_classes = (IsAuthenticated, )
+
+    def get(self, request, *args, **kwargs):
+        user = u_models.ConferenceUserModel.objects.get(username=request.user.username)
+
+        content = {}
+        if user.is_researcher:
+            content["infouser"] = sers.ResearcherInfoSerializer(request.user).data
+            content["infouser"]["lastname"] = user.researcher.last_name
+
+        content["profile"] = sers.ProfileUserSerializer(user.profile).data
+        # content["infouser"]["image"] = serializers.ImageField(user.profile.image)
+        print(content)
+
+        return Response(content, status=status.HTTP_200_OK)
+
 
 
 class ConferenceUserSignupView(TemplateView):

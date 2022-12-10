@@ -18,7 +18,10 @@ const Navbar = () => {
                 </Typography>
 
                 {user ? (
-                    <Button color="inherit" href="/login" onClick={logoutUser}>Log Out</Button>
+                    <Stack direction="row" spacing={2}>
+                        <Button color="inherit" href="/login" onClick={logoutUser}>Log Out</Button>
+                        <Button color="inherit" href={"/"+user.username}>View Profile</Button>
+                    </Stack>
                 ) : (
                     <Stack direction="row" spacing={2}>
                         <Button color="inherit" href="/login">Sign In</Button>

@@ -28,7 +28,7 @@ export const AuthProvider = ({children}) => {
             setAuthTokens(data)
             setUser(jwt_decode(data.access))
             localStorage.setItem('authTokens', JSON.stringify(data))
-            navigate('/'+jwt_decode(data.access).username)
+            navigate('/')
         }
         else {
             alert("!PIZDA SAPOGAM ACCESS TOKEN!")
@@ -67,12 +67,13 @@ export const AuthProvider = ({children}) => {
 
     let contextData = {
         user:user,
+        authTokens:authTokens,
         loginUser:loginUser,
         logoutUser:logoutUser
     }
 
     useEffect(() => {
-        console.log("USEEFFECT1")
+        // const fourMinutes = 30 * 24 * 3600 * 1000
         const fourMinutes = 4 * 60 * 1000
         let interval = setInterval(() => {
             if (authTokens) {

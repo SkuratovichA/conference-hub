@@ -6,11 +6,21 @@ from django.contrib.auth.password_validation import validate_password
 logger = logging.getLogger(__name__)
 
 
+class ProfileUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = u_models.ProfileModel
+        fields = ['image']
+
+
 class ConferenceUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = u_models.ConferenceUserModel
         fields = ['email', 'username', 'name', 'country', 'city']
 
+
+class ResearcherInfoSerializer(serializers.ModelSerializer):
+    class Meta(ConferenceUserSerializer.Meta):
+        fields = ConferenceUserSerializer.Meta.fields + ['is_researcher', 'is_organization', 'balance']
 
 class CreateUserMixin(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
