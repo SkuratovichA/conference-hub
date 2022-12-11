@@ -149,7 +149,9 @@ class App extends Component {
                             <Route path="/" element={<UsersList />} exact />
                             <Route path="/login" element={<LogIn />} />
                             <Route path="/signup" element={<SignUp />} />
-                            <Route path="/conferences" element={<ConferenceSearch conferenceCRUDHandler={conferenceCRUDHandler} conferences={conferences} />} />
+                            <Route path="/conferences"
+                                   element={<ConferenceSearch conferenceCRUDHandler={conferenceCRUDHandler} conferences={conferences} />}
+                            />
                             <Route path="/:username" element={<Profile />} />
 
 
