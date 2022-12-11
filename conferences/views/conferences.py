@@ -4,16 +4,100 @@ from django.views import generic
 from django.utils import timezone
 from conferences.models import ConferenceModel
 from conferences import forms as conf_forms
+from users import models as u_models
 from conferences import models as conf_models
 from django.shortcuts import redirect, get_object_or_404
 from conference_hub.utils.message_wrapper import MessageMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+import conferences.serializers as sers
+from rest_framework import viewsets, generics
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
 
 
 import logging
 
 
 logger = logging.getLogger(__name__)
+
+
+class ConferenceGetAllAPi(generics.RetrieveAPIView):
+    queryset = conf_models.ConferenceModel
+    serializer_class = sers.ConferenceSerializer
+
+    def get(self, request, *args, **kwargs):
+        confs = conf_models.ConferenceModel.objects.all()
+        content = sers.ConferenceSerializer(confs, many=True).data
+        return Response(content, status=status.HTTP_200_OK)
+
+
+class ConferenceOrganizationManipulateAPi(APIView):
+    queryset = conf_models.ConferenceModel
+    serializer_class = sers.ConferenceSerializerSlug
+    permission_classes = (IsAuthenticated,)
+    lookup_field = 'slug'
+
+    def get(self, request, *args, **kwargs):
+        content = {}
+        conf = conf_models.ConferenceModel.objects.get(slug=kwargs['slug'])
+        content['conf'] = sers.ConferenceSerializer(conf).data
+
+        return Response(content, status=status.HTTP_200_OK)
+
+    def patch(self, request, *args, **kwargs):
+        conf = conf_models.ConferenceModel.objects.get(name=request.data['name'])
+        conf.name = request.data['data']['name']
+        conf.brief = request.data['data']['brief']
+        conf.slug = request.data['data']['slug']
+        conf.date_from = request.data['data']['date_from']
+        conf.date_to = request.data['data']['dat_to']
+        conf.address = request.data['data']['address']
+        conf.price = request.data['data']['price']
+        conf.image = request.data['data']['image']
+
+        conf.save()
+        return Response(status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        conf = conf_models.ConferenceModel.objects.get(name=request.data['data']['name'])
+        conf.delete()
+
+        return Response(status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+        serializer = sers.ConferenceSerializer(data=request.data['data'])
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
+
+        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class DisplayConferenceView(generic.ListView):

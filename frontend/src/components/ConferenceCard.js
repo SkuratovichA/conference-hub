@@ -21,12 +21,12 @@ export const MuiCard = (props) => {
                         <CardMedia
                             component="img"
                             height="120"
-                            image={props.conference.image}
+                            image={String('http://localhost:8000' + conference_j.image)}
                             alt="unsplash image"
                         />
                         <CardContent>
                             <Typography gutterBottom variant="h5" component={'div'}>{conference_j.name}</Typography>
-                            <Typography variant="body2" color="text.secondary">{conference_j.description}</Typography>
+                            <Typography variant="body2" color="text.secondary">{conference_j.brief}</Typography>
                         </CardContent>
                     </CardActionArea>
                     <CardActions>

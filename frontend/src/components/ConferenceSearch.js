@@ -6,26 +6,44 @@ import {Button} from '@mui/material'
 import Conference from './Conference'
 import withRouter from '../utils/withRouter'
 import queryString from 'query-string';
-
-
+import authContext from "../context/AuthContext";
+import {conferenceCRUDHandler} from "../actions/ConferenceFunctions"
 
 class ConferenceSearch extends Component {
+    static contextType = authContext
+
     constructor(props) {
         super(props);
         let params = queryString.parse(this.props.router.location.search)
 
         this.state = {
-            conferences: props.conferences,
+            loaded: false,
+            conferences: null,
             activeConference: params.conference_name
         }
     }
 
+    componentDidMount() {
+        conferenceCRUDHandler("fetch_all", null, null, null)
+            .then((resp) => {
+                this.setState({conferences: resp})
+            })
+            .then(() => {
+                this.setState({loaded: true})
+            })
+    }
+
     render() {
+        if (this.state.loaded === false) {
+            return ""
+        }
+
         let confXS = this.state.activeConference ? 3 : 12
+
         let conferenceGrid = (
             <ConferenceGrid
-                conferences={this.state.conferences} // TODO: delete me after create conferenceCRUDHandler
-                conferenceCRUDHandler={this.props.conferenceCRUDHandler}
+                conferences={this.state.conferences}
+                conferenceCRUDHandler={conferenceCRUDHandler}
                 tightLeft={this.state.activeConference}
                 conferenceOnClick={(conferenceName) => this.setState({"activeConference": conferenceName})}
             />
@@ -35,7 +53,7 @@ class ConferenceSearch extends Component {
             <>
                 <Button
                     onClick={() => this.setState({activeConference: null})}
-                >CLICK ME
+                >I LOVE KAZASKY
                 </Button>
 
                 <Grid container xs={12} sm={12} md={12} xl={12} lg={12} spacing={4} sx={{m: 4}}>
@@ -49,8 +67,9 @@ class ConferenceSearch extends Component {
                                 <Conference
                                     canEdit
                                     canDelete
+                                    newConf={false}
                                     slug={this.state.activeConference}
-                                    conferenceCRUDHandler={this.props.conferenceCRUDHandler}
+                                    conferenceCRUDHandler={conferenceCRUDHandler}
                                     callBackOnDelete={() => this.setState({activeConference: null})}
                                 />
                             </Box>
@@ -60,7 +79,6 @@ class ConferenceSearch extends Component {
                     <Grid xs={12} sm={12} md={confXS} xl={confXS} lg={confXS}>
                         {conferenceGrid}
                     </Grid>
-
                 </Grid>
             </>
         )

@@ -13,7 +13,18 @@ class ConferenceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = conf_models.ConferenceModel
-        fields = ['name', 'brief', 'slug', 'date_from', 'date_to', 'address', 'price', 'visitors', 'organization']
+        fields = ['name', 'brief', 'slug', 'date_from', 'date_to', 'address', 'price', 'image',
+                  'visitors', 'organization']
+
+class ConferenceSerializerSlug(serializers.HyperlinkedModelSerializer):
+    visitors = ResearcherInfoSerializer(many=True)
+    organization = OrganizationInfoSerializer(many=False)
+
+    class Meta:
+        model = conf_models.ConferenceModel
+        fields = ['name', 'brief', 'slug', 'date_from', 'date_to', 'address', 'price', 'image',
+                  'visitors', 'organization']
+        extra_field_kwargs = {'url': {'lookup_field': 'slug'}}
 
 
 # class ConferenceUserSerializer(serializers.ModelSerializer):

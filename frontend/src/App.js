@@ -110,35 +110,6 @@ const conferences = [
     },
 ]
 
-function conferenceCRUDHandler(type, {_conference}) {
-    console.log(_conference)
-    switch (type) {
-        case "fetch":
-            console.log('Fetching data ...')
-            let conference = _conference
-            console.log(conference)
-
-            for (let conf in conferences) {
-                console.log(conf)
-
-                if (conferences[conf].slug === conference.slug) {
-                    console.log(`Conference found: ${conferences[conf]}`)
-                    return conferences[conf]
-                }
-            }
-            return null
-        case "update":
-            alert('Update a conference...')
-            break;
-        case "delete":
-            alert('Delete a conference...')
-            break;
-        case "create":
-            alert('Create a new conference...')
-            break;
-    }
-}
-
 class App extends Component {
     constructor(props) {
         super(props);
@@ -161,7 +132,6 @@ class App extends Component {
                             <Route
                                 path="/conferences"
                                 element={<ConferenceSearchWithRouter
-                                            conferenceCRUDHandler={conferenceCRUDHandler}
                                             conferences={conferences}/>
                                 }
                             />

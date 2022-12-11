@@ -128,11 +128,8 @@ class ConferenceUserSigninAPIView(APIView):
     permission_classes = (IsAuthenticated, )
 
     def post(self, request, format=None):
-        logger.debug(f"user: {sers.ConferenceUserSerializer(request.user).data}")
         content = {
             "user": sers.ConferenceUserSerializer(request.user).data,
         }
 
-        logger.debug(f"username: {request.data.get('username')}")
-        logger.debug(f"pwd: {request.data.get('password')}")
         return Response(content, status=status.HTTP_200_OK)

@@ -36,7 +36,7 @@ export const ConferenceGrid = (
                     </Box>
                 </Grid>
                 {conferences.map(conference => (
-                        <Grid key={conference.pk} item {...gridProps}>
+                        <Grid key={conference.name} item {...gridProps}>
                             <MuiCard
                                 conferenceOnClick={() => conferenceOnClick(conference.slugName)}
                                 conference={conference}

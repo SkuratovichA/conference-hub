@@ -19,11 +19,11 @@ const Profile = () => {
 
     if ((user.user || {}).is_researcher === true) {
         return (
-            <ProfilePageResearcher user={user} userCRUDHandler={userCRUDHandler} />
+            <ProfilePageResearcher user={user} userCRUDHandler={userCRUDHandler} token={token}/>
         )
     } else {
         return (
-            <ProfilePageOrganization user={user} userCRUDHandler={userCRUDHandler} />
+            <ProfilePageOrganization user={user} userCRUDHandler={userCRUDHandler} token={token}/>
         )
     }
 }

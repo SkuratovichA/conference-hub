@@ -4,14 +4,12 @@ import {
     CardMedia,
 } from '@mui/material'
 import ConferenceModal from './ConferenceModal'
-
 import plus from '../plus.png'
-
 
 export default function CreateConferenceDialog({
     conferenceCRUDHandler
 }) {
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = React.useState(false)
 
     return (
         <React.Fragment>
@@ -33,6 +31,7 @@ export default function CreateConferenceDialog({
                     open={open}
                     onClose={() => setOpen(false)}
                     canEdit={true}
+                    newConf={true}
                     conferenceCRUDHandler={conferenceCRUDHandler}
                     callBackOnCreate={() => setOpen(false)}
             />

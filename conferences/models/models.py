@@ -12,6 +12,7 @@ class ConferenceModel(models.Model):
     date_to = models.DateField('Ends on')
     address = models.CharField(max_length=250)
     price = MoneyField(max_digits=10, decimal_places=2, default_currency='EUR', null=True)
+    image = models.ImageField(default='static/conf_default.jpg', upload_to='profiles/profile_pics')
 
     organization = models.ForeignKey(user_models.OrganizationModel, on_delete=models.CASCADE)
     visitors = models.ManyToManyField(user_models.ConferenceUserModel)
