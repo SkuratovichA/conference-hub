@@ -4,16 +4,20 @@ import {Box, Typography, Stack} from "@mui/material"
 import Grid from '@mui/material/Unstable_Grid2'
 import {Button} from '@mui/material'
 import Conference from './Conference'
+import withRouter from '../utils/withRouter'
+import queryString from 'query-string';
+
 
 
 class ConferenceSearch extends Component {
     constructor(props) {
         super(props);
+        let params = queryString.parse(this.props.router.location.search)
+
         this.state = {
             conferences: props.conferences,
-            activeConference: false
+            activeConference: params.conference_name
         }
-        console.log(this.props)
     }
 
     render() {
@@ -23,13 +27,14 @@ class ConferenceSearch extends Component {
                 conferences={this.state.conferences} // TODO: delete me after create conferenceCRUDHandler
                 conferenceCRUDHandler={this.props.conferenceCRUDHandler}
                 tightLeft={this.state.activeConference}
+                conferenceOnClick={(conferenceName) => this.setState({"activeConference": conferenceName})}
             />
         )
 
         return (
             <>
                 <Button
-                    onClick={() => this.setState({activeConference: !this.state.activeConference})}
+                    onClick={() => this.setState({activeConference: null})}
                 >CLICK ME
                 </Button>
 
@@ -44,6 +49,7 @@ class ConferenceSearch extends Component {
                                 <Conference
                                     canEdit
                                     canDelete
+                                    slug={this.state.activeConference}
                                     conferenceCRUDHandler={this.props.conferenceCRUDHandler}
                                     callBackOnDelete={() => this.setState({activeConference: null})}
                                 />
@@ -61,4 +67,6 @@ class ConferenceSearch extends Component {
     }
 }
 
-export default ConferenceSearch;
+
+export default ConferenceSearch
+export const ConferenceSearchWithRouter = withRouter(ConferenceSearch)

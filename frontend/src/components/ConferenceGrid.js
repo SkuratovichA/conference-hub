@@ -12,6 +12,7 @@ export const ConferenceGrid = (
         conferences,
         conferenceCRUDHandler,
         tightLeft,
+        conferenceOnClick
     }) => {
 
     let gridProps = {
@@ -37,6 +38,7 @@ export const ConferenceGrid = (
                 {conferences.map(conference => (
                         <Grid key={conference.pk} item {...gridProps}>
                             <MuiCard
+                                conferenceOnClick={conferenceOnClick}
                                 conference={conference}
                                 conferenceCRUDHandler={conferenceCRUDHandler}
                             />

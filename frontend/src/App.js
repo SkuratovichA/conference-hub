@@ -9,7 +9,7 @@ import store from './store';
 import Navbar from './components/Navbar'
 import UsersList from './components/UsersList'
 import LogIn from './components/LogIn'
-import ConferenceSearch from './components/ConferenceSearch'
+import {ConferenceSearchWithRouter} from './components/ConferenceSearch'
 import SignUp from './components/SignUp'
 import Profile from './components/Profile'
 import PrivateRoute from './utils/PrivateRoute'
@@ -18,20 +18,115 @@ import AuthContext from "./context/AuthContext";
 import Conference from './components/Conference'
 
 
-const conferenceCRUDHandler = (type, conference) => {
+const conferences = [
+    {
+        "pk": 1,
+        "name": "one",
+        "slug": "one",
+        "description": "hello-one",
+        "date_from": "29.12.2000",
+        "date_to": "10.1.2020",
+        "image": "https://source.unsplash.com/random",
+        "price": "1100$"
+    },
+    {
+        "pk": 2,
+        "name": "two",
+        "slug": "two",
+        "description": "hello-two",
+        "date_from": "29.12.2000",
+        "date_to": "10.1.2020",
+        "image": "https://source.unsplash.com/random",
+        "price": "1200$"
+    },
+    {
+        "pk": 3,
+        "name": "three",
+        "slug": "three",
+        "description": "hello-three",
+        "date_from": "29.12.2000",
+        "date_to": "10.1.2020",
+        "image": "https://source.unsplash.com/random",
+        "price": "1300$"
+    },
+    {
+        "pk": 4,
+        "name": "four",
+        "slug": "four",
+        "description": "hello-four",
+        "date_from": "29.12.2000",
+        "date_to": "10.1.2020",
+        "image": "https://source.unsplash.com/random",
+        "price": "1400$"
+    },
+    {
+        "pk": 5,
+        "name": "five",
+        "slug": "five",
+        "description": "hell-five",
+        "date_from": "29.12.2000",
+        "date_to": "10.1.2020",
+        "image": "https://source.unsplash.com/random",
+        "price": "1500$"
+    },
+    {
+        "pk": 6,
+        "name": "six",
+        "slug": "six",
+        "description": "hello-six",
+        "date_from": "29.12.2000",
+        "date_to": "10.1.2020",
+        "image": "https://source.unsplash.com/random",
+        "price": "1600$"
+    },
+    {
+        "pk": 7,
+        "name": "seven",
+        "slug": "seven",
+        "description": "hello-seven",
+        "date_from": "29.12.2000",
+        "date_to": "10.1.2020",
+        "image": "https://source.unsplash.com/random",
+        "price": "1700$"
+    },
+    {
+        "pk": 8,
+        "name": "eight",
+        "slug": "eight",
+        "description": "hello-eight",
+        "date_from": "29.12.2000",
+        "date_to": "10.1.2020",
+        "image": "https://source.unsplash.com/random",
+        "price": "1800$"
+    },
+    {
+        "pk": 99,
+        "name": "nine",
+        "slug": "nine",
+        "description": "hello-nine",
+        "date_from": "29.12.2000",
+        "date_to": "10.1.2020",
+        "image": "https://source.unsplash.com/random",
+        "price": "1900$"
+    },
+]
+
+const conferenceCRUDHandler = (type, _conference) => {
     switch (type) {
         case "fetch":
             console.log('Fetching data...')
-            return {
-                'pk': 12340987,
-                'name': "Conference Name",
-                'brief': "Brief Description",
-                'date_from': null,
-                'date_to': null,
-                'address': "Address",
-                'price': "100",
-                'image': "https://source.unsplash.com/random"
+            let conference = JSON.parse(JSON.stringify(_conference))
+            console.log(conference)
+
+            for (let conf in conferences) {
+                console.log(JSON.parse(JSON.stringify(conf)))
+
+                if (conferences[conf].slug === conference.slug) {
+                    console.log(`Conference found: ${conferences[conf]}`)
+                    return conferences[conf]
+                }
             }
+            return null
         case "update":
             alert('Update a conference...')
             break;
@@ -43,89 +138,6 @@ const conferenceCRUDHandler = (type, conference) => {
             break;
     }
 }
-const conferences = [
-    {
-        "pk": 1,
-        "name": "one",
-        "description": "hello-one",
-        "date_from": "29.12.2000",
-        "date_to": "10.1.2020",
-        "image": "https://source.unsplash.com/random",
-        "price": "1100$"
-    },
-    {
-        "pk": 2,
-        "name": "two",
-        "description": "hello-two",
-        "date_from": "29.12.2000",
-        "date_to": "10.1.2020",
-        "image": "https://source.unsplash.com/random",
-        "price": "1200$"
-    },
-    {
-        "pk": 3,
-        "name": "three",
-        "description": "hello-three",
-        "date_from": "29.12.2000",
-        "date_to": "10.1.2020",
-        "image": "https://source.unsplash.com/random",
-        "price": "1300$"
-    },
-    {
-        "pk": 4,
-        "name": "four",
-        "description": "hello-four",
-        "date_from": "29.12.2000",
-        "date_to": "10.1.2020",
-        "image": "https://source.unsplash.com/random",
-        "price": "1400$"
-    },
-    {
-        "pk": 5,
-        "name": "five",
-        "description": "hell-five",
-        "date_from": "29.12.2000",
-        "date_to": "10.1.2020",
-        "image": "https://source.unsplash.com/random",
-        "price": "1500$"
-    },
-    {
-        "pk": 6,
-        "name": "six",
-        "description": "hello-six",
-        "date_from": "29.12.2000",
-        "date_to": "10.1.2020",
-        "image": "https://source.unsplash.com/random",
-        "price": "1600$"
-    },
-    {
-        "pk": 7,
-        "name": "seven",
-        "description": "hello-seven",
-        "date_from": "29.12.2000",
-        "date_to": "10.1.2020",
-        "image": "https://source.unsplash.com/random",
-        "price": "1700$"
-    },
-    {
-        "pk": 8,
-        "name": "eight",
-        "description": "hello-eight",
-        "date_from": "29.12.2000",
-        "date_to": "10.1.2020",
-        "image": "https://source.unsplash.com/random",
-        "price": "1800$"
-    },
-    {
-        "pk": 9,
-        "name": "nine",
-        "description": "hello-nine",
-        "date_from": "29.12.2000",
-        "date_to": "10.1.2020",
-        "image": "https://source.unsplash.com/random",
-        "price": "1900$"
-    },
-]
 
 class App extends Component {
     constructor(props) {
@@ -150,7 +162,7 @@ class App extends Component {
                             <Route path="/login" element={<LogIn />} />
                             <Route path="/signup" element={<SignUp />} />
                             <Route path="/conferences"
-                                   element={<ConferenceSearch conferenceCRUDHandler={conferenceCRUDHandler} conferences={conferences} />}
+                                   element={<ConferenceSearchWithRouter conferenceCRUDHandler={conferenceCRUDHandler} conferences={conferences} />}
                             />
                             <Route path="/:username" element={<Profile />} />
 

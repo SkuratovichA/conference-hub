@@ -26,8 +26,10 @@ export default class Conference extends React.Component {
     }
 
     fetchData() {
-        this.setState({conference: this.props.conferenceCRUDHandler("fetch", {"pk": this.props.pk})})
-        console.log(`state fetched: ${JSON.stringify(this.state.conference)}`)
+        let conf = this.props.conferenceCRUDHandler("fetch", {"pk": this.props.pk, "slug": this.props.slug})
+        console.log(`conference fetched: ${conf}`)
+        this.setState({conference: conf})
+        // console.log(`state fetched: ${JSON.stringify(this.state.conference)}`)
     }
 
     componentWillMount() {

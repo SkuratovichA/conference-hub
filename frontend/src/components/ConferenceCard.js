@@ -17,7 +17,7 @@ export const MuiCard = (props) => {
             <Box width="280px">
                 <Card>
                     <CardActionArea
-                        href="/login"
+                        onClick={props.conferenceOnClick}
                     >
                         <CardMedia
                             component="img"
