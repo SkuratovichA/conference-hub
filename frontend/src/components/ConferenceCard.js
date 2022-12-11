@@ -16,16 +16,20 @@ export const MuiCard = (props) => {
         <React.Fragment>
             <Box width="280px">
                 <Card>
-                    <CardMedia
-                        component="img"
-                        height="120"
-                        image={props.conference.image}
-                        alt="unsplash image"
-                    />
-                    <CardContent>
-                        <Typography gutterBottom variant="h5" component={'div'}>{conference_j.name}</Typography>
-                        <Typography variant="body2" color="text.secondary">{conference_j.description}</Typography>
-                    </CardContent>
+                    <CardActionArea
+                        href="/login"
+                    >
+                        <CardMedia
+                            component="img"
+                            height="120"
+                            image={props.conference.image}
+                            alt="unsplash image"
+                        />
+                        <CardContent>
+                            <Typography gutterBottom variant="h5" component={'div'}>{conference_j.name}</Typography>
+                            <Typography variant="body2" color="text.secondary">{conference_j.description}</Typography>
+                        </CardContent>
+                    </CardActionArea>
                     <CardActions>
                         <Button size="small">{conference_j.price}</Button>
                         <Button

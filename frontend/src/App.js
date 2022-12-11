@@ -15,6 +15,7 @@ import Profile from './components/Profile'
 import PrivateRoute from './utils/PrivateRoute'
 import { AuthProvider } from './context/AuthContext'
 import AuthContext from "./context/AuthContext";
+import Conference from './components/Conference'
 
 
 const conferenceCRUDHandler = (type, conference) => {
@@ -150,6 +151,7 @@ class App extends Component {
                             <Route path="/signup" element={<SignUp />} />
                             <Route path="/conferences" element={<ConferenceSearch conferenceCRUDHandler={conferenceCRUDHandler} conferences={conferences} />} />
                             <Route path="/:username" element={<Profile />} />
+
 
                             <Route exact path='/private-page' element={<PrivateRoute />}>
                                   <Route exact path='/private-page' element={<UsersList />}/>
