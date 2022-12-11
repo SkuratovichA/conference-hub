@@ -16,6 +16,32 @@ import PrivateRoute from './utils/PrivateRoute'
 import { AuthProvider } from './context/AuthContext'
 import AuthContext from "./context/AuthContext";
 
+
+const conferenceCRUDHandler = (type, conference) => {
+    switch (type) {
+        case "fetch":
+            console.log('Fetching data...')
+            return {
+                'pk': 12340987,
+                'name': "Conference Name",
+                'brief': "Brief Description",
+                'date_from': null,
+                'date_to': null,
+                'address': "Address",
+                'price': "100",
+                'image': "https://source.unsplash.com/random"
+            }
+        case "update":
+            alert('Update a conference...')
+            break;
+        case "delete":
+            alert('Delete a conference...')
+            break;
+        case "create":
+            alert('Create a new conference...')
+            break;
+    }
+}
 const conferences = [
     {
         "pk": 1,
@@ -23,6 +49,7 @@ const conferences = [
         "description": "hello-one",
         "date_from": "29.12.2000",
         "date_to": "10.1.2020",
+        "image": "https://source.unsplash.com/random",
         "price": "1100$"
     },
     {
@@ -31,6 +58,7 @@ const conferences = [
         "description": "hello-two",
         "date_from": "29.12.2000",
         "date_to": "10.1.2020",
+        "image": "https://source.unsplash.com/random",
         "price": "1200$"
     },
     {
@@ -39,6 +67,7 @@ const conferences = [
         "description": "hello-three",
         "date_from": "29.12.2000",
         "date_to": "10.1.2020",
+        "image": "https://source.unsplash.com/random",
         "price": "1300$"
     },
     {
@@ -47,6 +76,7 @@ const conferences = [
         "description": "hello-four",
         "date_from": "29.12.2000",
         "date_to": "10.1.2020",
+        "image": "https://source.unsplash.com/random",
         "price": "1400$"
     },
     {
@@ -55,6 +85,7 @@ const conferences = [
         "description": "hell-five",
         "date_from": "29.12.2000",
         "date_to": "10.1.2020",
+        "image": "https://source.unsplash.com/random",
         "price": "1500$"
     },
     {
@@ -63,6 +94,7 @@ const conferences = [
         "description": "hello-six",
         "date_from": "29.12.2000",
         "date_to": "10.1.2020",
+        "image": "https://source.unsplash.com/random",
         "price": "1600$"
     },
     {
@@ -71,6 +103,7 @@ const conferences = [
         "description": "hello-seven",
         "date_from": "29.12.2000",
         "date_to": "10.1.2020",
+        "image": "https://source.unsplash.com/random",
         "price": "1700$"
     },
     {
@@ -79,6 +112,7 @@ const conferences = [
         "description": "hello-eight",
         "date_from": "29.12.2000",
         "date_to": "10.1.2020",
+        "image": "https://source.unsplash.com/random",
         "price": "1800$"
     },
     {
@@ -87,6 +121,7 @@ const conferences = [
         "description": "hello-nine",
         "date_from": "29.12.2000",
         "date_to": "10.1.2020",
+        "image": "https://source.unsplash.com/random",
         "price": "1900$"
     },
 ]
@@ -113,7 +148,7 @@ class App extends Component {
                             <Route path="/" element={<UsersList />} exact />
                             <Route path="/login" element={<LogIn />} />
                             <Route path="/signup" element={<SignUp />} />
-                            <Route path="/conferences" element={<ConferenceSearch conferences={conferences} />} />
+                            <Route path="/conferences" element={<ConferenceSearch conferenceCRUDHandler={conferenceCRUDHandler} conferences={conferences} />} />
                             <Route path="/:username" element={<Profile />} />
 
                             <Route exact path='/private-page' element={<PrivateRoute />}>

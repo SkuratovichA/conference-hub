@@ -10,6 +10,8 @@ export default function ConferenceModal ({
     canDelete,
     conferenceCRUDHandler,
     callBackOnCreate,
+    callBackOnDelete,
+    callBackOnUpdate
 }) {
 
     return (
@@ -33,6 +35,7 @@ export default function ConferenceModal ({
                     canDelete={canDelete}
                     conferenceCRUDHandler={conferenceCRUDHandler}
                     callBackOnCreate={callBackOnCreate}
+                    callBackOnDelete={callBackOnDelete}
                 />
             </ModalDialog>
         </Modal>

@@ -2,20 +2,24 @@ import React from "react";
 import { CardActionArea, ButtonBase, Box, Card, CardContent, Typography, CardActions, Button, CardMedia} from "@mui/material"
 import AddIcon from '@mui/icons-material/Add';
 import plus from '../plus.png'
+import ConferenceModal from './ConferenceModal'
+
 
 // TODO: populate cards with data
 export const MuiCard = (props) => {
-    console.log(props)
     const conference_j = props.conference
-    console.log(conference_j)
+    const conferenceCRUDHandler = props.conferenceCRUDHandler
+
+    const [open, setOpen] = React.useState(false);
 
     return conference_j ? (
+        <React.Fragment>
             <Box width="280px">
                 <Card>
                     <CardMedia
                         component="img"
                         height="120"
-                        image="https://source.unsplash.com/random"
+                        image={props.conference.image}
                         alt="unsplash image"
                     />
                     <CardContent>
@@ -26,12 +30,23 @@ export const MuiCard = (props) => {
                         <Button size="small">{conference_j.price}</Button>
                         <Button
                             size="small"
+                            onClick={() => setOpen(true)}
                         >
                             Show info
                         </Button>
                     </CardActions>
                 </Card>
             </Box>
+
+            <ConferenceModal
+                open={open}
+                onClose={() => setOpen(false)}
+                canEdit={true} // TODO: current_user.is_organization
+                canDelete={true} // TODO: current_user.is_organization
+                conferenceCRUDHandler={conferenceCRUDHandler}
+                callBackOnDelete={() => setOpen(false)}
+            />
+        </React.Fragment>
         ) :
         (
                 <Box width="280px">
