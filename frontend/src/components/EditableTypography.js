@@ -16,9 +16,13 @@ export const EditableTypography = (
         ...rest
     }) => {
 
-    let new_val = String(initialValue)
-    const [value, setValue] = React.useState(new_val)
+    console.log(initialValue)
+
+    const [value, setValue] = React.useState(initialValue)
     const [editing, setEditing] = React.useState(false)
+
+    console.log(value)
+
     const isValid = React.useMemo(() => onValidate(value), [onValidate, value])
 
     const handleValueSave = React.useCallback(

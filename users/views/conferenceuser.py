@@ -42,16 +42,17 @@ class ConferenceUserGetInfo(generics.RetrieveUpdateDestroyAPIView):
     def patch(self, request, *args, **kwargs):
         user = u_models.ConferenceUserModel.objects.get(username=request.user.username)
 
+        user.name = request.data['data']['user']['name']
+        user.email = request.data['data']['user']['email']
+        user.username = request.data['data']['user']['username']
+        user.city = request.data['data']['user']['city']
+        user.country = request.data['data']['user']['country']
+
         if user.is_researcher:
-            serializer = sers.ResearcherInfoSerializer(user.researcher, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-        elif user.is_organization:
-            serializer = sers.ResearcherInfoSerializer(user.organization, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            user.researcher.last_name = request.data['data']['last_name']
+            user.researcher.save()
+
+        user.save()
 
         return Response(status=status.HTTP_200_OK)
 

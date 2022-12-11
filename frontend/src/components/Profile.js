@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import AuthContext from "../context/AuthContext";
 import { useContext, useEffect } from "react";
-import ProfilePage from "./ProfilePage";
+import ProfilePageResearcher from "./ProfilePageResearcher";
+import ProfilePageOrganization from "./ProfilePageOrganization";
 import {getInfoUser, userCRUDHandler} from "../actions/UserFunctions";
 
 const Profile = () => {
@@ -16,9 +17,15 @@ const Profile = () => {
             })
     }, [])
 
-    return (
-        <ProfilePage user={user} userCRUDHandler={userCRUDHandler} />
-    )
+    if ((user.user || {}).is_researcher === true) {
+        return (
+            <ProfilePageResearcher user={user} userCRUDHandler={userCRUDHandler} />
+        )
+    } else {
+        return (
+            <ProfilePageOrganization user={user} userCRUDHandler={userCRUDHandler} />
+        )
+    }
 }
 
 export default Profile;

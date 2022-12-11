@@ -25,7 +25,6 @@ const Navbar = () => {
                 ) : (
                     <Stack direction="row" spacing={2}>
                         <Button color="inherit" href="/login">Sign In</Button>
-                        <Button color="inherit" href="/signup">Sign Up</Button>
                     </Stack>
                     )
                 }
