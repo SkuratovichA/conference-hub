@@ -4,13 +4,14 @@ import Conference from './Conference'
 import AuthContext from "../context/AuthContext";
 import { useContext, useEffect } from "react";
 import {getInfoUser} from "../actions/UserFunctions";
+import {useLocation} from "react-router-dom";
 
 
 export default function ConferenceModal ({
     open,
     onClose,
+    slug,
     canEdit,
-    newConf,
     canDelete,
     conferenceCRUDHandler,
     callBackOnCreate,
@@ -28,6 +29,9 @@ export default function ConferenceModal ({
                 SetUserInfo(data['infouser'])
             })
     }, [])
+
+    let query = new URLSearchParams(useLocation().search)
+    console.log('newconfffffffff', open)
 
     return (
         <Modal open={open} onClose={onClose}>
@@ -48,7 +52,8 @@ export default function ConferenceModal ({
                 <Conference
                     canEdit={canEdit}
                     canDelete={canDelete}
-                    newConf={newConf}
+                    newConf={query.get('create')}
+                    slug={slug}
                     conferenceCRUDHandler={conferenceCRUDHandler}
                     owner={user}
                     callBackOnCreate={callBackOnCreate}

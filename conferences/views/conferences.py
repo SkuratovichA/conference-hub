@@ -47,12 +47,13 @@ class ConferenceOrganizationManipulateAPi(APIView):
         return Response(content, status=status.HTTP_200_OK)
 
     def patch(self, request, *args, **kwargs):
-        conf = conf_models.ConferenceModel.objects.get(name=request.data['name'])
+        print(request.data['data']['image'])
+        conf = conf_models.ConferenceModel.objects.get(slug=kwargs['slug'])
         conf.name = request.data['data']['name']
         conf.brief = request.data['data']['brief']
-        conf.slug = request.data['data']['slug']
+        conf.slug = (request.data['data']['name']).replace(" ", "")
         conf.date_from = request.data['data']['date_from']
-        conf.date_to = request.data['data']['dat_to']
+        conf.date_to = request.data['data']['date_to']
         conf.address = request.data['data']['address']
         conf.price = request.data['data']['price']
         conf.image = request.data['data']['image']

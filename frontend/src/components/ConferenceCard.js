@@ -12,6 +12,8 @@ export const MuiCard = (props) => {
 
     const [open, setOpen] = React.useState(false);
 
+    console.log('name ===', conference_j.name)
+
     return (
         <React.Fragment>
             <Box width="280px">
@@ -40,6 +42,7 @@ export const MuiCard = (props) => {
             <ConferenceModal
                 open={open}
                 onClose={() => setOpen(false)}
+                slug={conference_j.slug}
                 canEdit={true} // TODO: current_user.is_organization
                 canDelete={true} // TODO: current_user.is_organization
                 conferenceCRUDHandler={conferenceCRUDHandler}

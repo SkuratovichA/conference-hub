@@ -13,7 +13,7 @@ export const conferenceCRUDHandler = async (type, _conference, token, dataToUpda
             })
 
             data = await response.json()
-            return response.status >= 200 && response.status <= 299 ? data : {}
+            return response.status >= 200 && response.status <= 299 ? data['conf'] : {}
         case "fetch_all":
             console.log("FETCH ALL")
             response = await fetch('http://localhost:8000/conferences/api/get_all_confs', {

@@ -9,6 +9,8 @@ import Scheduler from './Scheduler'
 import authContext from "../context/AuthContext";
 import {getInfoUser} from "../actions/UserFunctions";
 import CustomCardMedia from './CustomCardMedia'
+import {useLocation} from "react-router-dom";
+import {conferenceCRUDHandler} from "../actions/ConferenceFunctions";
 
 
 export default class Conference extends React.Component {
@@ -23,19 +25,19 @@ export default class Conference extends React.Component {
         super(props);
 
         this.state = {
-            conference:
-            {
-                    'name': 'Default Name',
-                    'brief': '',
-                    'slug': 'DefaultName',
-                    'date_from': '',
-                    'date_to': '',
-                    'address': '',
-                    'price': '',
-                    'image': '/media/static/conf_default.jpg',
-                    'visitors': {},
-                    'organization': this.props.owner
-                }
+            conference: JSON.parse(JSON.stringify({
+                'name': 'Default Name',
+                'brief': '',
+                'slug': 'DefaultName',
+                'date_from': '',
+                'date_to': '',
+                'address': '',
+                'price': '',
+                'image': '/static/conf_default.jpg',
+                'visitors': {},
+                'organization': this.props.owner
+            })),
+            loaded: false
         }
         this.handleDataChange = this._handleDataChange.bind(this)
         this.handleDataValidation = this._handleDataValidation.bind(this)
@@ -45,12 +47,20 @@ export default class Conference extends React.Component {
 
     _handleDataChange(key, newValue) {
         this.setState({
-                conference: {
-                    ...this.state.conference,
-                    [key]: newValue
-                }
+            conference: {
+                ...this.state.conference,
+                [key]: newValue
             }
-        )
+        })
+
+        // if (key === "name") {
+        //     this.setState({
+        //         conference: {
+        //             ...this.state.conference,
+        //             "slug": String(newValue).replaceAll(' ', '')
+        //         }
+        //     })
+        // }
     }
 
     _handleDataValidation = (newName) => {
@@ -72,17 +82,44 @@ export default class Conference extends React.Component {
     }
 
     componentDidMount() {
-        let {user, authTokens} = this.context
-        let token = String("Bearer " + String(authTokens.access))
-        this.props.conferenceCRUDHandler("fetch", this.state.conference.slug, token, this.state.conference)
-        console.log(this.props.canEdit, this.props.canDelete)
+        console.log(this.props.JOPA)
+        if (this.props.newConf !== 'true') {
+            let {user, authTokens} = this.context
+            let token = String("Bearer " + String(authTokens.access))
+
+            conferenceCRUDHandler("fetch", this.props.slug, token, this.state.conference)
+                .then((confinfo) => {
+                    this.setState({conference: confinfo})
+                })
+                .then(() => {
+                    this.setState({loaded: true})
+                })
+                .then(() => {
+                    if (user.username !== ((this.state.conference || {}).organization || {}).username) {
+                        this.props.canDelete = false
+                        this.props.canEdit = false
+                    }
+                    else {
+                        this.props.canDelete = false
+                        this.props.canEdit = false
+                    }
+                })
+        }
+        else {
+            this.setState({loaded: true})
+        }
     }
 
     render() {
+        if (this.state.loaded === false) {
+            return ""
+        }
+        console.log('new state', (this.state.conference || {}).slug, this.state.conference)
+
         return (
             <Card>
                 <CustomCardMedia
-                    src={this.state.conference.image}
+                    src={String("http://localhost:8000/media/" + (this.state.conference || {}).image)}
                 />
                 <CardContent>
 
@@ -117,7 +154,7 @@ export default class Conference extends React.Component {
                     <EditableTypography
                         canEdit={this.props.canEdit}
                         variant="h1"
-                        initialValue={this.state.conference.name}
+                        initialValue={(this.state.conference || {}).name}
                         onValidate={this.handleDataValidation}
                         onSave={(v) => this.handleDataChange("name", v)}
                         label="Conference Name"
@@ -126,20 +163,20 @@ export default class Conference extends React.Component {
                         fontSize="1.25em"
                         mb="0.25em"
                     >
-                        {this.state.conference.name}
+                        {(this.state.conference || {}).name}
                     </EditableTypography>
 
                     {/*brief description*/}
                     <EditableTypography
                         canEdit={this.props.canEdit}
                         variant="h4"
-                        initialValue={this.state.conference.brief}
+                        initialValue={(this.state.conference || {}).brief}
                         onValidate={this.handleDataValidation}
                         onSave={(v) => this.handleDataChange("brief", v)}
                         label="Brief description of the conference"
                         color="text.secondary"
                     >
-                        {this.state.conference.brief}
+                        {(this.state.conference || {}).brief}
                     </EditableTypography>
 
                     {/*date from - date to*/}
@@ -147,8 +184,8 @@ export default class Conference extends React.Component {
                         canEdit={this.props.canEdit}
                         fromValueHandler={(newFrom) => this.handleDataChange("date_from", newFrom)}
                         toValueHandler={(newTo) => this.handleDataChange("date_to", newTo)}
-                        fromValue={this.state.conference.date_from}
-                        toValue={this.state.conference.date_to}
+                        fromValue={(this.state.conference || {}).date_from}
+                        toValue={(this.state.conference || {}).date_to}
                     />
 
                     {/*/!* address*!/*/}
@@ -158,12 +195,12 @@ export default class Conference extends React.Component {
                         <EditableTypography
                             canEdit={this.props.canEdit}
                             variant="h2"
-                            initialValue={this.state.conference.address}
+                            initialValue={(this.state.conference || {}).address}
                             onValidate={this.handleDataValidation}
                             onSave={(v) => this.handleDataChange("address", v)}
                             label="Address"
                         >
-                            {this.state.conference.address}
+                            {(this.state.conference.conf || {}).address}
                         </EditableTypography>
                     </Stack>
 
@@ -174,12 +211,12 @@ export default class Conference extends React.Component {
                             canEdit={this.props.canEdit}
                             variant="h4"
                             component="h4"
-                            initialValue={this.state.conference.price}
+                            initialValue={(this.state.conference || {}).price}
                             onValidate={this.handleDataValidation}
                             onSave={(v) => this.handleDataChange("price", v)}
                             label="Price"
                         >
-                            {this.state.conference.price}
+                            {(this.state.conference || {}).price}
                         </EditableTypography>
                     </Stack>
 

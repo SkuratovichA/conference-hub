@@ -28,17 +28,20 @@ class ConferenceSearch extends Component {
 
     _updateActiveConference(conferenceName) {
         console.log ('this.setState (in f) ', this.setState);
-        this.setState({"activeConference": conferenceName}, () => {alert(`${this.state.activeConference} new fucking state`)})
+        this.setState({"activeConference": conferenceName}, () => {console.log(`${this.state.activeConference} new fucking state`)})
     }
 
     componentDidMount() {
         conferenceCRUDHandler("fetch_all", null, null, null)
             .then((resp) => {
                 this.setState({conferences: resp})
+                console.log('aaa', resp)
             })
             .then(() => {
                 this.setState({loaded: true})
             })
+
+        console.log("conffs", this.state.conferences)
     }
 
     render() {
@@ -61,7 +64,8 @@ class ConferenceSearch extends Component {
             <>
                 <Button
                     onClick={() => this.setState({activeConference: null})}
-                >CLICK ME
+                >
+                    CLICK ME
                 </Button>
 
                 <Grid container xs={12} sm={12} md={12} xl={12} lg={12} spacing={4} sx={{m: 4}}>
