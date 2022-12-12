@@ -23,6 +23,7 @@ export const ConferenceGrid = (
     }
 
     return (
+
         <Box style={{maxHeight: '100vh', 'overflowX': 'hidden', 'overflowY': 'scroll'}}>
             <Grid container spacing={2}>
 
@@ -38,7 +39,7 @@ export const ConferenceGrid = (
                 {conferences.map(conference => (
                         <Grid key={conference.name} item {...gridProps}>
                             <MuiCard
-                                conferenceOnClick={() => conferenceOnClick(conference.slugName)}
+                                conferenceOnClick={() => conferenceOnClick(conference.slug)}
                                 conference={conference}
                                 conferenceCRUDHandler={conferenceCRUDHandler}
                             />

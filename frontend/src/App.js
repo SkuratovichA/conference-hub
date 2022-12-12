@@ -9,13 +9,14 @@ import Navbar from './components/Navbar'
 import UsersList from './components/UsersList'
 import LogIn from './components/LogIn'
 import {ConferenceSearchWithRouter} from './components/ConferenceSearch'
+import SignUp from './components/SignUp'
 import Profile from './components/Profile'
 import PrivateRoute from './utils/PrivateRoute'
 import {AuthProvider} from './context/AuthContext'
 import Scheduler from './components/Scheduler'
 import AuthContext from "./context/AuthContext";
 import Conference from './components/Conference'
-/* eslint-disable no-useless-escape */
+
 
 const conferences = [
     {
