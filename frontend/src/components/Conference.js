@@ -8,7 +8,6 @@ import EuroIcon from "@mui/icons-material/Euro";
 import Scheduler from './Scheduler'
 import authContext from "../context/AuthContext";
 import {getInfoUser} from "../actions/UserFunctions";
-import {wait} from "@testing-library/user-event/dist/utils";
 /* eslint-disable no-useless-escape */
 
 export default class Conference extends React.Component {
@@ -18,7 +17,7 @@ export default class Conference extends React.Component {
     // conferenceCRUDHandler - (type, conference), type in ['create', 'update', 'fetch', 'delete'].
     // callBackOnCreate - close a window/do something else
     // callBackOnDelete - close a window/remove the element
-    // slugName - close a window/remove the element
+    // slug - close a window/remove the element
     constructor(props) {
         super(props);
 
