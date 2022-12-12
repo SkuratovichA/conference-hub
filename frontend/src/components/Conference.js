@@ -5,14 +5,10 @@ import {EditableTypography} from "./EditableTypography";
 import {MuiDateRangePicker} from "./RangeDatePicker";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import EuroIcon from "@mui/icons-material/Euro";
-<<<<<<< HEAD
 import Scheduler from './Scheduler'
-=======
 import authContext from "../context/AuthContext";
 import {getInfoUser} from "../actions/UserFunctions";
-import * as React from "react";
 import {wait} from "@testing-library/user-event/dist/utils";
->>>>>>> f4c01aa (work in progress 2, save changes)
 /* eslint-disable no-useless-escape */
 
 export default class Conference extends React.Component {
