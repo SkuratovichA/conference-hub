@@ -1,11 +1,11 @@
+import * as React from "react";
 import {Card, Button, CardActions, CardContent, CardMedia, IconButton, Stack} from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
 import {EditableTypography} from "./EditableTypography";
 import {MuiDateRangePicker} from "./RangeDatePicker";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import EuroIcon from "@mui/icons-material/Euro";
-import * as React from "react";
-
+import Scheduler from './Scheduler'
 
 export default class Conference extends React.Component {
     // canEdit - can create/delete/update a conference
@@ -13,6 +13,7 @@ export default class Conference extends React.Component {
     // conferenceCRUDHandler - (type, conference), type in ['create', 'update', 'fetch', 'delete'].
     // callBackOnCreate - close a window/do something else
     // callBackOnDelete - close a window/remove the element
+    // slugName - close a window/remove the element
     constructor(props) {
         super(props);
 
@@ -29,7 +30,6 @@ export default class Conference extends React.Component {
         let conf = this.props.conferenceCRUDHandler("fetch", {"pk": this.props.pk, "slug": this.props.slug})
         console.log(`conference fetched: ${conf}`)
         this.setState({conference: conf})
-        // console.log(`state fetched: ${JSON.stringify(this.state.conference)}`)
     }
 
     componentWillMount() {
@@ -171,6 +171,8 @@ export default class Conference extends React.Component {
                             {this.state.conference.price}
                         </EditableTypography>
                     </Stack>
+
+                    {/*<Scheduler />*/}
 
                 </CardContent>
 

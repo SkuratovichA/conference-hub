@@ -1,10 +1,9 @@
 import './App.css';
 import React, {Component} from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 
-import { Provider } from "react-redux";
+import {Provider} from "react-redux";
 import store from './store';
-
 
 import Navbar from './components/Navbar'
 import UsersList from './components/UsersList'
@@ -13,7 +12,8 @@ import {ConferenceSearchWithRouter} from './components/ConferenceSearch'
 import SignUp from './components/SignUp'
 import Profile from './components/Profile'
 import PrivateRoute from './utils/PrivateRoute'
-import { AuthProvider } from './context/AuthContext'
+import {AuthProvider} from './context/AuthContext'
+import Scheduler from './components/Scheduler'
 import AuthContext from "./context/AuthContext";
 import Conference from './components/Conference'
 
@@ -111,15 +111,16 @@ const conferences = [
     },
 ]
 
-const conferenceCRUDHandler = (type, _conference) => {
+function conferenceCRUDHandler(type, {_conference}) {
+    console.log(_conference)
     switch (type) {
         case "fetch":
-            console.log('Fetching data...')
-            let conference = JSON.parse(JSON.stringify(_conference))
+            console.log('Fetching data ...')
+            let conference = _conference
             console.log(conference)
 
             for (let conf in conferences) {
-                console.log(JSON.parse(JSON.stringify(conf)))
+                console.log(conf)
 
                 if (conferences[conf].slug === conference.slug) {
                     console.log(`Conference found: ${conferences[conf]}`)
@@ -149,26 +150,28 @@ class App extends Component {
 
     render() {
         return (
-            <Provider store={store} >
+            <Provider store={store}>
                 <BrowserRouter>
                     <AuthProvider>
                         <main className="content">
-                            <div>
-                                <Navbar />
-                            </div>
+                            <Navbar/>
                         </main>
                         <Routes>
-                            <Route path="/" element={<UsersList />} exact />
-                            <Route path="/login" element={<LogIn />} />
-                            <Route path="/signup" element={<SignUp />} />
-                            <Route path="/conferences"
-                                   element={<ConferenceSearchWithRouter conferenceCRUDHandler={conferenceCRUDHandler} conferences={conferences} />}
+                            <Route path="/" element={<UsersList/>} exact/>
+                            <Route path="/login" element={<LogIn/>}/>
+                            <Route path="/signup" element={<SignUp/>}/>
+                            <Route
+                                path="/conferences"
+                                element={<ConferenceSearchWithRouter
+                                            conferenceCRUDHandler={conferenceCRUDHandler}
+                                            conferences={conferences}/>
+                                }
                             />
-                            <Route path="/:username" element={<Profile />} />
+                            <Route path="/:username" element={<Profile/>}/>
 
 
-                            <Route exact path='/private-page' element={<PrivateRoute />}>
-                                  <Route exact path='/private-page' element={<UsersList />}/>
+                            <Route exact path='/private-page' element={<PrivateRoute/>}>
+                                <Route exact path='/private-page' element={<UsersList/>}/>
                             </Route>
                         </Routes>
                     </AuthProvider>
