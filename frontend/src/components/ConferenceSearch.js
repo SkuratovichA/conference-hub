@@ -8,6 +8,7 @@ import withRouter from '../utils/withRouter'
 import queryString from 'query-string';
 import authContext from "../context/AuthContext";
 import {conferenceCRUDHandler} from "../actions/ConferenceFunctions"
+import {ContentSection} from './ContentSection'
 
 
 class ConferenceSearch extends Component {
@@ -35,13 +36,10 @@ class ConferenceSearch extends Component {
         conferenceCRUDHandler("fetch_all", null, null, null)
             .then((resp) => {
                 this.setState({conferences: resp})
-                console.log('aaa', resp)
             })
             .then(() => {
                 this.setState({loaded: true})
             })
-
-        console.log("conffs", this.state.conferences)
     }
 
     render() {
@@ -62,37 +60,43 @@ class ConferenceSearch extends Component {
 
         return (
             <>
-                <Button
-                    onClick={() => this.setState({activeConference: null})}
+                <ContentSection
+                    margin={"1% 2% 1% 2%"}
+                    padding={"2% 2% 2% 2%"}
+                    // justifyContent={"space-between"}
                 >
-                    CLICK ME
-                </Button>
+                    <Button
+                        onClick={() => this.setState({activeConference: null})}
+                    >CLICK ME
+                    </Button>
 
-                <Grid container xs={12} sm={12} md={12} xl={12} lg={12} spacing={4} sx={{m: 4}}>
-                    <Grid xs={10}>
-                        <Typography variant="h2" align="left">Conferences</Typography>
-                    </Grid>
-
-                    {this.state.activeConference &&
-                        <Grid container xs={12} sm={12} md={8} xl={8} lg={8}>
-                            <Box style={{maxHeight: '100vh', 'overflowY': 'scroll', 'width': '90%'}}>
-                                <Conference
-                                    canEdit
-                                    canDelete
-                                    newConf={false}
-                                    slug={this.state.activeConference}
-                                    conferenceCRUDHandler={conferenceCRUDHandler}
-                                    callBackOnDelete={() => this.setState({activeConference: null})}
-                                />
-                            </Box>
+                    <Grid container xs={12} sm={12} md={12} xl={12} lg={12} spacing={4}>
+                        <Grid xs={10}>
+                            <Typography variant="h2" align="left">Conferences</Typography>
                         </Grid>
-                    }
 
-                    <Grid xs={12} sm={12} md={confXS} xl={confXS} lg={confXS}>
-                        {conferenceGrid}
+
+                        {this.state.activeConference &&
+                            <Grid container xs={12} sm={12} md={8} xl={8} lg={8}>
+                                <Box style={{maxHeight: '100vh', 'overflowY': 'scroll', 'width': '90%'}}>
+                                    <Conference
+                                        canEdit
+                                        canDelete
+                                        newConf={false}
+                                        slug={this.state.activeConference}
+                                        conferenceCRUDHandler={conferenceCRUDHandler}
+                                        callBackOnDelete={() => this.setState({activeConference: null})}
+                                    />
+                                </Box>
+                            </Grid>
+                        }
+
+                        <Grid xs={12} sm={12} md={confXS} xl={confXS} lg={confXS}>
+                            {conferenceGrid}
+                        </Grid>
+                        {/**/}
                     </Grid>
-
-                </Grid>
+                </ContentSection>
             </>
         )
     }

@@ -12,7 +12,7 @@ export default function ConferenceModal ({
     onClose,
     slug,
     canEdit,
-    canDelete,
+    newConf,
     conferenceCRUDHandler,
     callBackOnCreate,
     callBackOnDelete,
@@ -21,7 +21,7 @@ export default function ConferenceModal ({
 
     let {authTokens} = useContext(AuthContext)
     let [user, SetUserInfo] = useState({})
-    let token = String("Bearer " + String(authTokens.access))
+    let [token, setToken] = useState(authTokens?.access ? "Bearer " + authTokens?.access : null)
 
     useEffect(() => {
         getInfoUser(token)
@@ -30,7 +30,9 @@ export default function ConferenceModal ({
             })
     }, [])
 
-    let query = new URLSearchParams(useLocation().search)
+    // TODO move to caller
+    // let query = new URLSearchParams(useLocation().search)
+    // query.get('create')
     console.log('newconfffffffff', open)
 
     return (
@@ -51,8 +53,7 @@ export default function ConferenceModal ({
             >
                 <Conference
                     canEdit={canEdit}
-                    canDelete={canDelete}
-                    newConf={query.get('create')}
+                    newConf={newConf}
                     slug={slug}
                     conferenceCRUDHandler={conferenceCRUDHandler}
                     owner={user}

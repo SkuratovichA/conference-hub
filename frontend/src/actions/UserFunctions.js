@@ -13,7 +13,7 @@ export const getInfoUser = async (token) => {
         return data
     }
     else {
-        alert("!PIZDA SAPOGAM INFO USER!")
+        console.log("!PIZDA SAPOGAM INFO USER!")
         return {}
     }
 }
