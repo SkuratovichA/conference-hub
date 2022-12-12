@@ -16,12 +16,8 @@ export const EditableTypography = (
         ...rest
     }) => {
 
-    console.log(initialValue)
-
     const [value, setValue] = React.useState(initialValue)
     const [editing, setEditing] = React.useState(false)
-
-    console.log(value)
 
     const isValid = React.useMemo(() => onValidate(value), [onValidate, value])
 
@@ -47,6 +43,7 @@ export const EditableTypography = (
         [handleValueSave, setEditing, setValue, initialValue, value]
     )
 
+
     const getHelperText = React.useCallback(() => {
         if (!isValid) return 'Invalid'
         return ''
@@ -57,10 +54,10 @@ export const EditableTypography = (
     const handleTextFieldOnChange = React.useCallback((e) => setValue(e.target.value), [
         setValue,
     ])
-    // const handleSaveClick = React.useCallback(() => handleValueSave(value), [
-    //     handleValueSave,
-    //     value,
-    // ])
+    const handleSaveClick = React.useCallback(() => handleValueSave(value), [
+        handleValueSave,
+        value,
+    ])
 
     const handleEditClick = React.useCallback(
         (e) => {

@@ -9,6 +9,7 @@ import queryString from 'query-string';
 import authContext from "../context/AuthContext";
 import {conferenceCRUDHandler} from "../actions/ConferenceFunctions"
 
+
 class ConferenceSearch extends Component {
     static contextType = authContext
 
@@ -21,6 +22,13 @@ class ConferenceSearch extends Component {
             conferences: null,
             activeConference: params.conference_name
         }
+        this.updateActiveConference = this._updateActiveConference.bind(this)
+        console.log("this.setState (in constructor): ", this.setState)
+    }
+
+    _updateActiveConference(conferenceName) {
+        console.log ('this.setState (in f) ', this.setState);
+        this.setState({"activeConference": conferenceName}, () => {alert(`${this.state.activeConference} new fucking state`)})
     }
 
     componentDidMount() {
@@ -45,7 +53,7 @@ class ConferenceSearch extends Component {
                 conferences={this.state.conferences}
                 conferenceCRUDHandler={conferenceCRUDHandler}
                 tightLeft={this.state.activeConference}
-                conferenceOnClick={(conferenceName) => this.setState({"activeConference": conferenceName})}
+                conferenceOnClick={this.updateActiveConference}
             />
         )
 
@@ -53,7 +61,7 @@ class ConferenceSearch extends Component {
             <>
                 <Button
                     onClick={() => this.setState({activeConference: null})}
-                >I LOVE KAZASKY
+                >CLICK ME
                 </Button>
 
                 <Grid container xs={12} sm={12} md={12} xl={12} lg={12} spacing={4} sx={{m: 4}}>
@@ -79,6 +87,7 @@ class ConferenceSearch extends Component {
                     <Grid xs={12} sm={12} md={confXS} xl={confXS} lg={confXS}>
                         {conferenceGrid}
                     </Grid>
+
                 </Grid>
             </>
         )

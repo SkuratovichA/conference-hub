@@ -1,5 +1,5 @@
 import React from "react";
-import {Stack, Grid, CardContent, CardActionArea, Box, Card, CardMedia, Button, Typography} from "@mui/material"
+import { Grid, Box, Card } from "@mui/material"
 import CreateConferenceDialog from './CreateConferenceDialog'
 import plus from '../plus.png'
 import Conference from './Conference'
@@ -23,6 +23,7 @@ export const ConferenceGrid = (
     }
 
     return (
+
         <Box style={{maxHeight: '100vh', 'overflowX': 'hidden', 'overflowY': 'scroll'}}>
             <Grid container spacing={2}>
 
@@ -38,7 +39,7 @@ export const ConferenceGrid = (
                 {conferences.map(conference => (
                         <Grid key={conference.name} item {...gridProps}>
                             <MuiCard
-                                conferenceOnClick={() => conferenceOnClick(conference.slugName)}
+                                conferenceOnClick={() => conferenceOnClick(conference.slug)}
                                 conference={conference}
                                 conferenceCRUDHandler={conferenceCRUDHandler}
                             />

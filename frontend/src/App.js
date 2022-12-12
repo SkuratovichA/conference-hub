@@ -15,7 +15,7 @@ import {AuthProvider} from './context/AuthContext'
 import Scheduler from './components/Scheduler'
 import AuthContext from "./context/AuthContext";
 import Conference from './components/Conference'
-/* eslint-disable no-useless-escape */
+
 
 const conferences = [
     {

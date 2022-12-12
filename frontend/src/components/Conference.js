@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Card, Button, CardActions, CardContent, CardMedia, IconButton, Stack} from "@mui/material";
+import {Card, Button, CardActions, CardContent, IconButton, Stack} from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
 import {EditableTypography} from "./EditableTypography";
 import {MuiDateRangePicker} from "./RangeDatePicker";
@@ -8,8 +8,8 @@ import EuroIcon from "@mui/icons-material/Euro";
 import Scheduler from './Scheduler'
 import authContext from "../context/AuthContext";
 import {getInfoUser} from "../actions/UserFunctions";
-import {wait} from "@testing-library/user-event/dist/utils";
-/* eslint-disable no-useless-escape */
+import CustomCardMedia from './CustomCardMedia'
+
 
 export default class Conference extends React.Component {
     static contextType = authContext
@@ -18,12 +18,12 @@ export default class Conference extends React.Component {
     // conferenceCRUDHandler - (type, conference), type in ['create', 'update', 'fetch', 'delete'].
     // callBackOnCreate - close a window/do something else
     // callBackOnDelete - close a window/remove the element
-    // slugName - close a window/remove the element
+    // slug - close a window/remove the element
     constructor(props) {
         super(props);
 
         this.state = {
-            conference: JSON.parse(JSON.stringify(
+            conference:
             {
                     'name': 'Default Name',
                     'brief': '',
@@ -36,7 +36,6 @@ export default class Conference extends React.Component {
                     'visitors': {},
                     'organization': this.props.owner
                 }
-            ))
         }
         this.handleDataChange = this._handleDataChange.bind(this)
         this.handleDataValidation = this._handleDataValidation.bind(this)
@@ -82,11 +81,8 @@ export default class Conference extends React.Component {
     render() {
         return (
             <Card>
-                <CardMedia
-                    component={"img"}
-                    height={"120"}
-                    src={String("http://localhost:8000" + this.state.conference.image)}
-                    alt="unsplash image"
+                <CustomCardMedia
+                    src={this.state.conference.image}
                 />
                 <CardContent>
 

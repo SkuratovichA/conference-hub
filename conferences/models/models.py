@@ -6,11 +6,13 @@ from enum import Enum
 
 class ConferenceModel(models.Model):
     name = models.CharField(max_length=250)
-    brief = models.CharField(null=True, blank=True, default='', max_length=64)
     slug = models.SlugField(unique=True, null=False)
-    date_from = models.DateField('Begins on')
-    date_to = models.DateField('Ends on')
-    address = models.CharField(max_length=250)
+
+    brief = models.CharField(null=True, blank=True, default='', max_length=64)
+    date_from = models.DateField('Begins on', null=True)
+    date_to = models.DateField('Ends on', null=True)
+
+    address = models.CharField(max_length=250, null=True)
     price = MoneyField(max_digits=10, decimal_places=2, default_currency='EUR', null=True)
     image = models.ImageField(default='static/conf_default.jpg', upload_to='profiles/profile_pics')
 
