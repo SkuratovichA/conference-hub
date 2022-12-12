@@ -1,27 +1,52 @@
 import React from "react";
-import {Grid, CardContent, CardActionArea, Box, Card, CardMedia, Button, Typography} from "@mui/material"
+import {Stack, Grid, CardContent, CardActionArea, Box, Card, CardMedia, Button, Typography} from "@mui/material"
 import CreateConferenceDialog from './CreateConferenceDialog'
 import plus from '../plus.png'
+import Conference from './Conference'
+
 
 import {MuiCard} from './ConferenceCard'
 
-export const ConferenceGrid = ({conferences}) => {
-    return (
-        <Grid container spacing={2} sx={{m: 4}}>
-            <Grid key="add_conference" item xs={12} sm={6} md={4} lg={3} xl={2}>
-                <Box width="280px">
-                    <Card>
-                        <CreateConferenceDialog />
-                    </Card>
-                </Box>
-            </Grid>
+export const ConferenceGrid = (
+    {
+        conferences,
+        conferenceCRUDHandler,
+        tightLeft,
+        conferenceOnClick
+    }) => {
 
-            {conferences.map(conference => (
-                    <Grid key={conference.pk} item xs={12} sm={6} md={4} lg={3} xl={2}>
-                        <MuiCard conference={conference}/>
-                    </Grid>
-                )
-            )}
-        </Grid>
+    let gridProps = {
+        xs: 12,
+        sm: tightLeft? 12: 6,
+        md: tightLeft? 12: 4,
+        xl: tightLeft? 12: 3
+    }
+
+    return (
+        <Box style={{maxHeight: '100vh', 'overflowX': 'hidden', 'overflowY': 'scroll'}}>
+            <Grid container spacing={2}>
+
+                <Grid key="add_conference" item {...gridProps}>
+                    <Box width="280px">
+                        <Card>
+                            <CreateConferenceDialog
+                                conferenceCRUDHandler={conferenceCRUDHandler}
+                            />
+                        </Card>
+                    </Box>
+                </Grid>
+                {conferences.map(conference => (
+                        <Grid key={conference.name} item {...gridProps}>
+                            <MuiCard
+                                conferenceOnClick={() => conferenceOnClick(conference.slugName)}
+                                conference={conference}
+                                conferenceCRUDHandler={conferenceCRUDHandler}
+                            />
+                        </Grid>
+                    )
+                )}
+
+            </Grid>
+        </Box>
     )
 }

@@ -9,17 +9,53 @@ from django.views import View
 
 from rest_framework import viewsets, generics, authentication
 from users import serializers as sers
+from rest_framework import serializers
 
 from rest_framework import exceptions
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 
 import logging
 
 logger = logging.getLogger(__name__)
+
+
+class ConferenceUserGetInfo(generics.RetrieveUpdateDestroyAPIView):
+    queryset = u_models.ConferenceUserModel.objects.all()
+    serializer_class = sers.ResearcherInfoSerializer
+    permission_classes = (IsAuthenticated, )
+
+    def get(self, request, *args, **kwargs):
+        user = u_models.ConferenceUserModel.objects.get(username=request.user.username)
+
+        content = {}
+        if user.is_researcher:
+            content["infouser"] = sers.ResearcherInfoSerializer(user.researcher).data
+        elif user.is_organization:
+            content["infouser"] = sers.OrganizationInfoSerializer(user.organization).data
+
+        return Response(content, status=status.HTTP_200_OK)
+
+    def patch(self, request, *args, **kwargs):
+        user = u_models.ConferenceUserModel.objects.get(username=request.user.username)
+
+        user.name = request.data['data']['user']['name']
+        user.email = request.data['data']['user']['email']
+        user.username = request.data['data']['user']['username']
+        user.city = request.data['data']['user']['city']
+        user.country = request.data['data']['user']['country']
+
+        if user.is_researcher:
+            user.researcher.last_name = request.data['data']['last_name']
+            user.researcher.save()
+
+        user.save()
+
+        return Response(status=status.HTTP_200_OK)
+
 
 
 class ConferenceUserSignupView(TemplateView):
@@ -92,11 +128,8 @@ class ConferenceUserSigninAPIView(APIView):
     permission_classes = (IsAuthenticated, )
 
     def post(self, request, format=None):
-        logger.debug(f"user: {sers.ConferenceUserSerializer(request.user).data}")
         content = {
             "user": sers.ConferenceUserSerializer(request.user).data,
         }
 
-        logger.debug(f"username: {request.data.get('username')}")
-        logger.debug(f"pwd: {request.data.get('password')}")
         return Response(content, status=status.HTTP_200_OK)

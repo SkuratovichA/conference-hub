@@ -1,0 +1,14 @@
+.profile-buttons {
+    margin-top: 20px;
+}
+
+.divider{
+    width:20px;
+    height:auto;
+    display:inline-block;
+}
+
+.card-text-center {
+    margin-top: 7px !important;
+    justify-content: center;
+}

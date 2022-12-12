@@ -4,8 +4,6 @@ import Typography from '@mui/joy/Typography';
 import {Box, IconButton} from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit'
 
-const defaultOnValidate = () => true
-
 export const EditableTypography = (
     {
         canEdit,
@@ -18,8 +16,24 @@ export const EditableTypography = (
         ...rest
     }) => {
 
+    console.log(initialValue)
+
     const [value, setValue] = React.useState(initialValue)
     const [editing, setEditing] = React.useState(false)
+
+    console.log(value)
+
+    const isValid = React.useMemo(() => onValidate(value), [onValidate, value])
+
+    const handleValueSave = React.useCallback(
+        (value) => {
+            setEditing(false)
+            if (isValid) {
+                onSave(value)
+            }
+        },
+        [setEditing, onSave, isValid]
+    )
 
     const handleKeyPress = React.useCallback(
         (e) => {
@@ -33,24 +47,12 @@ export const EditableTypography = (
         [handleValueSave, setEditing, setValue, initialValue, value]
     )
 
-    const isValid = React.useMemo(() => onValidate(value), [onValidate, value])
-
     const getHelperText = React.useCallback(() => {
         if (!isValid) return 'Invalid'
         return ''
     }, [isValid, value, initialValue])
 
     const helperText = React.useMemo(() => getHelperText(value), [getHelperText, value])
-
-    const handleValueSave = React.useCallback(
-        (value) => {
-            setEditing(false)
-            if (isValid) {
-                onSave(value)
-            }
-        },
-        [setEditing, onSave, isValid]
-    )
 
     const handleTextFieldOnChange = React.useCallback((e) => setValue(e.target.value), [
         setValue,

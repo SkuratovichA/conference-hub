@@ -50,8 +50,7 @@ const mapStateToProps = state => ({
     changenameother: state.changename.changename
 });
 
-export default connect(mapStateToProps, { getConfs })
-(UsersList);
+export default connect(mapStateToProps, { getConfs }) (UsersList);
 
 // import React, {Component} from "react";
 // import axios from 'axios';

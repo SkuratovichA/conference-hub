@@ -32,13 +32,13 @@ const FormHeader = props => (
 );
 
 const FormButton = props => (
-  <div id="button" className="row">
+  <div id="button" className="row-login">
     <button>{props.title}</button>
   </div>
 );
 
 const FormInput = props => (
-  <div className="row">
+  <div className="row-login">
     <label>{props.description}</label>
     <input type={props.type} placeholder={props.placeholder}
            name={props.input} id={props.id} required

@@ -1,37 +1,51 @@
+import * as React from "react";
 import {Card, Button, CardActions, CardContent, CardMedia, IconButton, Stack} from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
 import {EditableTypography} from "./EditableTypography";
 import {MuiDateRangePicker} from "./RangeDatePicker";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import EuroIcon from "@mui/icons-material/Euro";
+<<<<<<< HEAD
+import Scheduler from './Scheduler'
+=======
+import authContext from "../context/AuthContext";
+import {getInfoUser} from "../actions/UserFunctions";
 import * as React from "react";
-
+import {wait} from "@testing-library/user-event/dist/utils";
+>>>>>>> f4c01aa (work in progress 2, save changes)
+/* eslint-disable no-useless-escape */
 
 export default class Conference extends React.Component {
+    static contextType = authContext
     // canEdit - can create/delete/update a conference
     // canDelete - *update* and *delete* buttons are displayed
     // conferenceCRUDHandler - (type, conference), type in ['create', 'update', 'fetch', 'delete'].
     // callBackOnCreate - close a window/do something else
     // callBackOnDelete - close a window/remove the element
+    // slugName - close a window/remove the element
     constructor(props) {
         super(props);
 
         this.state = {
-            conference: null
+            conference: JSON.parse(JSON.stringify(
+            {
+                    'name': 'Default Name',
+                    'brief': '',
+                    'slug': 'DefaultName',
+                    'date_from': '',
+                    'date_to': '',
+                    'address': '',
+                    'price': '',
+                    'image': '/media/static/conf_default.jpg',
+                    'visitors': {},
+                    'organization': this.props.owner
+                }
+            ))
         }
         this.handleDataChange = this._handleDataChange.bind(this)
         this.handleDataValidation = this._handleDataValidation.bind(this)
         this.createConference = this._createConference.bind(this)
         this.deleteConference = this._deleteConference.bind(this)
-    }
-
-    fetchData() {
-        this.setState({conference: this.props.conferenceCRUDHandler("fetch", {"pk": this.props.pk})})
-        console.log(`state fetched: ${JSON.stringify(this.state.conference)}`)
-    }
-
-    componentWillMount() {
-        this.fetchData()
     }
 
     _handleDataChange(key, newValue) {
@@ -62,13 +76,20 @@ export default class Conference extends React.Component {
         }
     }
 
+    componentDidMount() {
+        let {user, authTokens} = this.context
+        let token = String("Bearer " + String(authTokens.access))
+        this.props.conferenceCRUDHandler("fetch", this.state.conference.slug, token, this.state.conference)
+        console.log(this.props.canEdit, this.props.canDelete)
+    }
+
     render() {
         return (
             <Card>
                 <CardMedia
                     component={"img"}
                     height={"120"}
-                    src={this.state.conference.image}
+                    src={String("http://localhost:8000" + this.state.conference.image)}
                     alt="unsplash image"
                 />
                 <CardContent>
@@ -170,6 +191,8 @@ export default class Conference extends React.Component {
                         </EditableTypography>
                     </Stack>
 
+                    {/*<Scheduler />*/}
+
                 </CardContent>
 
                 {this.props.canEdit &&
@@ -177,13 +200,32 @@ export default class Conference extends React.Component {
                         {this.props.canDelete && (
                             <>
                                 <Button size="small" color={"error"}
-                                        onClick={this.deleteConference}>Delete</Button>
+                                        onClick={() => {
+                                            let {user, authTokens} = this.context
+                                            let token = String("Bearer " + String(authTokens.access))
+                                            this.props.conferenceCRUDHandler("delete", this.state.conference.slug, token, this.state.conference)
+                                        }
+                                    }
+                                >
+                                    Delete
+                                </Button>
                                 <Button size="small"
-                                        onClick={() => this.props.conferenceCRUDHandler("update", this.state)}>Update</Button>
+                                        onClick={() => {
+                                            let {user, authTokens} = this.context
+                                            let token = String("Bearer " + String(authTokens.access))
+                                            this.props.conferenceCRUDHandler("update", this.state.conference.slug, token, this.state.conference)
+                                        }
+                                    }
+                                >
+                                    Update
+                                </Button>
                             </>
                         )}
                         {!this.props.canDelete && <Button size="small" color={"success"}
-                                                          onClick={this.createConference}>Create</Button>}
+                                          onClick={this.createConference}
+                        >
+                            Create
+                        </Button>}
                     </CardActions>
                 }
             </Card>

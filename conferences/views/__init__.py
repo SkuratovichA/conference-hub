@@ -5,6 +5,8 @@ from .conferences import (
     DeleteConferenceView,
     ConferenceInfoView,
     ConferencesListView,
+    ConferenceGetAllAPi,
+    ConferenceOrganizationManipulateAPi
 )
 from .events import (
     EventInfoView,
