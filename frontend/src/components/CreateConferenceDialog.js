@@ -19,8 +19,8 @@ export default function CreateConferenceDialog({
                 // startDecorator={<Add/>}
                     onClick={() => {
                         console.log("CREATE NEW")
-                        var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?create=true';
-                        window.history.pushState({path:newurl},'',newurl);
+                        // var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?create=true';
+                        // window.history.pushState({path:newurl},'',newurl);
                         setOpen(true)
                     }
                 }
