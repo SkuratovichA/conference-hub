@@ -17,7 +17,13 @@ export default function CreateConferenceDialog({
             <CardActionArea
                 color="neutral"
                 // startDecorator={<Add/>}
-                onClick={() => setOpen(true)}
+                    onClick={() => {
+                        console.log("CREATE NEW")
+                        var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?create=true';
+                        window.history.pushState({path:newurl},'',newurl);
+                        setOpen(true)
+                    }
+                }
             >
                 <CardMedia
                     component="img"

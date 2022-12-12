@@ -56,6 +56,11 @@ export default class ProfilePageOrganization extends React.Component {
     }
 
     render() {
+
+        if (((this.props.user || {}).user || {}).username === undefined) {
+            return ""
+        }
+
         return (
         <section style={{ backgroundColor: '#eee' }}>
       <MDBContainer className="py-5">
@@ -70,7 +75,7 @@ export default class ProfilePageOrganization extends React.Component {
                   fluid />
                 <div className="d-flex justify-content-center mb-2 profile-buttons">
                     <button type="button" className="btn btn-danger" onClick={() => {
-                        console.log((((this.props.user || {}).user || {}).profile || {}).image, this.state.user)
+                        console.log("Delete profile")
                     }
                     }>Delete profile</button>
                     <div className="divider"/>
@@ -94,7 +99,7 @@ export default class ProfilePageOrganization extends React.Component {
                       <EditableTypography
                         canEdit={true}
                         variant="h1"
-                        initialValue="AMOGUS"
+                        initialValue={((this.props.user || {}).user || {}).name}
                         onValidate={this.handleDataValidation}
                         onSave={(v) => this.handleDataChange("name", v)}
                         label="Name"
