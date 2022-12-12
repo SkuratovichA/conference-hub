@@ -1,5 +1,5 @@
 import React from "react";
-import {Stack, Grid, CardContent, CardActionArea, Box, Card, CardMedia, Button, Typography} from "@mui/material"
+import { Grid, Box, Card } from "@mui/material"
 import CreateConferenceDialog from './CreateConferenceDialog'
 import plus from '../plus.png'
 import Conference from './Conference'

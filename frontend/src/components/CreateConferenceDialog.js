@@ -25,7 +25,7 @@ export default function CreateConferenceDialog({
                     }
                 }
             >
-                <CardMedia
+                <CardMedia // plus
                     component="img"
                     height="257"
                     image={plus}

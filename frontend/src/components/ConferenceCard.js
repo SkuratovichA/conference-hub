@@ -1,7 +1,8 @@
 import React from "react";
-import { CardActionArea, Box, Card, CardContent, Typography, CardActions, Button, CardMedia} from "@mui/material"
+import {CardActionArea, Box, Card, CardContent, Typography, CardActions, Button} from "@mui/material"
 import plus from '../plus.png'
 import ConferenceModal from './ConferenceModal'
+import CustomCardMedia from './CustomCardMedia'
 
 
 // TODO: populate cards with data
@@ -11,19 +12,14 @@ export const MuiCard = (props) => {
 
     const [open, setOpen] = React.useState(false);
 
-    return conference_j ? (
+    return (
         <React.Fragment>
             <Box width="280px">
                 <Card>
                     <CardActionArea
                         onClick={props.conferenceOnClick}
                     >
-                        <CardMedia
-                            component="img"
-                            height="120"
-                            image={String('http://localhost:8000' + conference_j.image)}
-                            alt="unsplash image"
-                        />
+                        <CustomCardMedia src={'http://localhost:8000' + conference_j.image}/>
                         <CardContent>
                             <Typography gutterBottom variant="h5" component={'div'}>{conference_j.name}</Typography>
                             <Typography variant="body2" color="text.secondary">{conference_j.brief}</Typography>
@@ -50,19 +46,5 @@ export const MuiCard = (props) => {
                 callBackOnDelete={() => setOpen(false)}
             />
         </React.Fragment>
-        ) :
-        (
-                <Box width="280px">
-                    <Card>
-                        <CardActionArea>
-                            <CardMedia
-                                component="img"
-                                height="257"
-                                image={plus}
-                                alt=""
-                            />
-                        </CardActionArea>
-                    </Card>
-                </Box>
-        )
+    )
 }
