@@ -3,15 +3,14 @@ import {styled} from '@mui/system'
 import {Box} from '@mui/material'
 
 
-export const ContentSection = styled(Box)(
+export const ContentSection = styled('div')(
     function({theme, children, ...props}) {
-        console.log(props)
         return {
             backgroundColor: props.backgroundColor ? props.backgroundColor : theme.palette.mode === 'dark' ? 'rgba(66,76,93,0.18)' : 'rgba(130,147,185,0.11)',
-            margin: "1% 1% 1% 1%",
+            boxSizing: "borderBox",
+            margin: props.margin ? props.margin : "0 auto",
+            padding: props.padding ? props.padding : null,
             borderRadius: props.borderRadius ? props.borderRadius : "20px",
-            height: String(window.height),
-            paddingBottom: props.paddingBottom ? props.paddingBottom :"200px",
             ...props
         }
     }

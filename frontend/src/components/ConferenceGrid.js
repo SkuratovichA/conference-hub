@@ -25,7 +25,7 @@ export const ConferenceGrid = (
     return (
 
         <Box style={{maxHeight: '100vh', 'overflowX': 'hidden', 'overflowY': 'scroll'}}>
-            <Grid container spacing={2}>
+            <Grid container spacing={2} >
 
                 <Grid key="add_conference" item {...gridProps}>
                     <Box width="280px">

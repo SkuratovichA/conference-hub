@@ -14,7 +14,7 @@ import CustomCardMedia from './CustomCardMedia'
 export default class Conference extends React.Component {
     static contextType = authContext
     // canEdit - can create/delete/update a conference
-    // canDelete - *update* and *delete* buttons are displayed
+    // newConf - creating a new conference, co it's not possible to delete one
     // conferenceCRUDHandler - (type, conference), type in ['create', 'update', 'fetch', 'delete'].
     // callBackOnCreate - close a window/do something else
     // callBackOnDelete - close a window/remove the element
@@ -24,7 +24,7 @@ export default class Conference extends React.Component {
 
         this.state = {
             conference:
-            {
+                {
                     'name': 'Default Name',
                     'brief': '',
                     'slug': 'DefaultName',
@@ -73,45 +73,77 @@ export default class Conference extends React.Component {
 
     componentDidMount() {
         let {user, authTokens} = this.context
-        let token = String("Bearer " + String(authTokens.access))
+        let token = "Bearer " + String(authTokens?.access)
         this.props.conferenceCRUDHandler("fetch", this.state.conference.slug, token, this.state.conference)
-        console.log(this.props.canEdit, this.props.canDelete)
     }
 
     render() {
+        const imageEdit = this.props.canEdit && (
+            <React.Fragment>
+                <input
+                    accept="image/*"
+                    style={{display: "none"}}
+                    id="icon-button-photo"
+                    // onChange={(v) => handleDataChange("image", v)}
+                    type="file"
+                />
+
+                <label htmlFor="icon-button-photo">
+                    <IconButton
+                        style={{
+                            position: "relative",
+                            transform: "translate(0, -120px)",
+                            background: "rgba(255,255,255,0.85)"
+                        }}
+                        color="inherit"
+                        component="span">
+                        <ImageIcon/>
+                    </IconButton>
+                </label>
+
+            </React.Fragment>
+        )
+
+        const cardActions = this.props.canEdit && (
+            <CardActions>
+                {!this.props.newConf ? (
+                    <Stack direction={"row"} justifyContent={"flex-between"}>
+                        <Button size="small" color={"error"}
+                                onClick={() => {
+                                    let {user, authTokens} = this.context
+                                    let token = "Bearer " + String(authTokens?.access)
+                                    this.props.conferenceCRUDHandler("delete", this.state.conference.slug, token, this.state.conference)
+                                }}
+                        >
+                            Delete
+                        </Button>
+                        <Button size="small"
+                                onClick={() => {
+                                    let {user, authTokens} = this.context
+                                    let token = "Bearer " + String(authTokens?.access)
+                                    this.props.conferenceCRUDHandler("update", this.state.conference.slug, token, this.state.conference)
+                                }}
+                        >
+                            Update
+                        </Button>
+                    </Stack>
+                ) : (
+                    <Button size="small" color={"success"}
+                            onClick={this.createConference}
+                    >
+                        Create
+                    </Button>
+                )}
+            </CardActions>
+        )
+
         return (
             <Card>
                 <CustomCardMedia
                     src={this.state.conference.image}
                 />
                 <CardContent>
-
-                    {this.props.canEdit && (
-                        <React.Fragment>
-                            <input
-                                accept="image/*"
-                                style={{display: "none"}}
-                                id="icon-button-photo"
-                                // onChange={(v) => handleDataChange("image", v)}
-                                type="file"
-                            />
-
-                            <label htmlFor="icon-button-photo">
-                                <IconButton
-                                    style={{
-                                        position: "relative",
-                                        transform: "translate(0, -120px)",
-                                        background: "rgba(255,255,255,0.85)"
-                                    }}
-                                    color="inherit"
-                                    component="span">
-                                    <ImageIcon/>
-                                </IconButton>
-                            </label>
-
-                        </React.Fragment>
-                    )}
-
+                    {imageEdit}
 
                     {/*name */}
                     <EditableTypography
@@ -183,43 +215,12 @@ export default class Conference extends React.Component {
                         </EditableTypography>
                     </Stack>
 
-                    {/*<Scheduler />*/}
+                    <Scheduler/>
 
                 </CardContent>
 
-                {this.props.canEdit &&
-                    <CardActions>
-                        {this.props.canDelete && (
-                            <>
-                                <Button size="small" color={"error"}
-                                        onClick={() => {
-                                            let {user, authTokens} = this.context
-                                            let token = String("Bearer " + String(authTokens.access))
-                                            this.props.conferenceCRUDHandler("delete", this.state.conference.slug, token, this.state.conference)
-                                        }
-                                    }
-                                >
-                                    Delete
-                                </Button>
-                                <Button size="small"
-                                        onClick={() => {
-                                            let {user, authTokens} = this.context
-                                            let token = String("Bearer " + String(authTokens.access))
-                                            this.props.conferenceCRUDHandler("update", this.state.conference.slug, token, this.state.conference)
-                                        }
-                                    }
-                                >
-                                    Update
-                                </Button>
-                            </>
-                        )}
-                        {!this.props.canDelete && <Button size="small" color={"success"}
-                                          onClick={this.createConference}
-                        >
-                            Create
-                        </Button>}
-                    </CardActions>
-                }
+                {cardActions}
+
             </Card>
         )
     }

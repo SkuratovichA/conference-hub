@@ -1,3 +1,4 @@
+
 export const conferenceCRUDHandler = async (type, _conference, token, dataToUpdate) => {
     let response, data;
 

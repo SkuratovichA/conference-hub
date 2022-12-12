@@ -41,7 +41,6 @@ export const MuiCard = (props) => {
                 open={open}
                 onClose={() => setOpen(false)}
                 canEdit={true} // TODO: current_user.is_organization
-                canDelete={true} // TODO: current_user.is_organization
                 conferenceCRUDHandler={conferenceCRUDHandler}
                 callBackOnDelete={() => setOpen(false)}
             />

@@ -11,7 +11,6 @@ export default function ConferenceModal ({
     onClose,
     canEdit,
     newConf,
-    canDelete,
     conferenceCRUDHandler,
     callBackOnCreate,
     callBackOnDelete,
@@ -20,7 +19,7 @@ export default function ConferenceModal ({
 
     let {authTokens} = useContext(AuthContext)
     let [user, SetUserInfo] = useState({})
-    let token = String("Bearer " + String(authTokens.access))
+    let [token, setToken] = useState(authTokens?.access ? "Bearer " + authTokens?.access : null)
 
     useEffect(() => {
         getInfoUser(token)
@@ -47,7 +46,6 @@ export default function ConferenceModal ({
             >
                 <Conference
                     canEdit={canEdit}
-                    canDelete={canDelete}
                     newConf={newConf}
                     conferenceCRUDHandler={conferenceCRUDHandler}
                     owner={user}

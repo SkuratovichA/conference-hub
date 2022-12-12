@@ -15,7 +15,7 @@ import Scheduler from './components/Scheduler'
 import AuthContext from "./context/AuthContext";
 import Conference from './components/Conference'
 
-import { ContentSection } from './components/ContentSection'
+import {ContentSection} from './components/ContentSection'
 
 
 class App extends Component {
@@ -29,19 +29,31 @@ class App extends Component {
                 <BrowserRouter>
                     <AuthProvider>
                         <ContentSection>
-                        <main className="content">
-                            <Navbar/>
-                        </main>
-                        <Routes>
-                            <Route path="/" element={<UsersList />} exact />
-                            <Route path="/login" element={<LogIn />} />
-                            <Route
-                                path="/conferences"
-                                element={<ConferenceSearchWithRouter
-                                            conferences={conferences}/>
+                            <main className="content">
+                                <Navbar/>
+                            </main>
+
+
+                            <Routes>
+                                <Route path="/" element={<UsersList/>} exact/>
+                                <Route path="conf_test" element={
+                                    <Conference
+                                        canEdit
+                                        newConf // remove as soon urls are ready
+                                        conferenceCRUDHandler
+                                    />
                                 }
-                            />
-                            <Route path="/:username" element={<Profile/>}/>
+                                />
+
+                                <Route path="/login" element={<LogIn/>}/>
+                                <Route
+                                    path="/conferences"
+                                    element={
+                                        <ConferenceSearchWithRouter
+                                        />
+                                    }
+                                />
+                                <Route path="/:username" element={<Profile/>}/>
 
 
                                 <Route exact path='/private-page' element={<PrivateRoute/>}>
