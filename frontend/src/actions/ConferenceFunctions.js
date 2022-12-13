@@ -3,13 +3,12 @@ export const conferenceCRUDHandler = async (type, _conference, token, dataToUpda
     let response, data;
 
     switch (type) {
-        case "fetch":
-            console.log("FETCH")
-            response = await fetch(String('http://localhost:8000/conferences/api/manipulate_conf/' + _conference), {
+        case "fetch_one":
+            console.log("FETCH ONE")
+            response = await fetch(String('http://localhost:8000/conferences/api/get_conf/' + _conference), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': token,
                 },
             })
 

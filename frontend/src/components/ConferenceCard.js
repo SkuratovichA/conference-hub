@@ -1,8 +1,9 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {CardActionArea, Box, Card, CardContent, Typography, CardActions, Button} from "@mui/material"
 import plus from '../plus.png'
 import ConferenceModal from './ConferenceModal'
 import CustomCardMedia from './CustomCardMedia'
+import {useNavigate} from "react-router-dom";
 
 
 // TODO: populate cards with data
@@ -10,9 +11,16 @@ export const MuiCard = (props) => {
     const conference_j = props.conference
     const conferenceCRUDHandler = props.conferenceCRUDHandler
 
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = React.useState(false)
+    let [manipulate, setManipulate] = React.useState(false)
+    let navigate = useNavigate()
 
-    console.log('name ===', conference_j.name)
+
+    useEffect(() => {
+        if (props.user?.user?.username === conference_j?.organization?.user?.username) {
+            setManipulate(true)
+        }
+    }, [])
 
     return (
         <React.Fragment>
@@ -31,7 +39,11 @@ export const MuiCard = (props) => {
                         <Button size="small">{conference_j.price}</Button>
                         <Button
                             size="small"
-                            onClick={() => setOpen(true)}
+                                onClick={() => {
+                                    navigate('/conferences' + "?conf="+conference_j.slug)
+                                    setOpen(true)
+                                }
+                            }
                         >
                             Show info
                         </Button>
@@ -40,10 +52,12 @@ export const MuiCard = (props) => {
             </Box>
 
             <ConferenceModal
+                user={props.user}
                 open={open}
+                newConf={false}
                 onClose={() => setOpen(false)}
                 slug={conference_j.slug}
-                canEdit={true} // TODO: current_user.is_organization
+                canEdit={manipulate}
                 conferenceCRUDHandler={conferenceCRUDHandler}
                 callBackOnDelete={() => setOpen(false)}
             />

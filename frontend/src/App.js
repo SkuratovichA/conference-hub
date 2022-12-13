@@ -53,7 +53,7 @@ class App extends Component {
                                         />
                                     }
                                 />
-                                <Route path="/:username" element={<Profile/>}/>
+                                <Route path="/users/:username" element={<Profile/>}/>
 
 
                                 <Route exact path='/private-page' element={<PrivateRoute/>}>

@@ -20,7 +20,7 @@ const Navbar = () => {
                 {user ? (
                     <Stack direction="row" spacing={2}>
                         <Button color="inherit" href="/login" onClick={logoutUser}>Log Out</Button>
-                        <Button color="inherit" href={"/"+user.username}>View Profile</Button>
+                        <Button color="inherit" href={"/users/"+user.username}>View Profile</Button>
                     </Stack>
                 ) : (
                     <Stack direction="row" spacing={2}>

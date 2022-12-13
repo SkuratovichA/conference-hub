@@ -33,15 +33,17 @@ export default class Conference extends React.Component {
                 'date_to': '',
                 'address': '',
                 'price': '',
-                'image': '/static/conf_default.jpg',
-                'visitors': {},
+                'image': '/media/static/conf_default.jpg',
+                'visitors': [],
                 'organization': this.props.owner
             })),
-            loaded: false
+            loaded: false,
+            token: null
         }
         this.handleDataChange = this._handleDataChange.bind(this)
         this.handleDataValidation = this._handleDataValidation.bind(this)
         this.createConference = this._createConference.bind(this)
+        this.updateConference = this._updateConference.bind(this)
         this.deleteConference = this._deleteConference.bind(this)
     }
 
@@ -52,60 +54,55 @@ export default class Conference extends React.Component {
                 [key]: newValue
             }
         })
+
+        if (key === 'name') {
+            this.setState({
+                conference: {
+                    ...this.state.conference,
+                    'slug': newValue.replace(/\s+/, "")
+                }
+            })
+        }
     }
 
     _handleDataValidation = (newName) => {
-        return /^[A-Za-z][A-Za-z0-9\s_\-]+$/.test(newName)
+        return true
     }
 
     _deleteConference() {
-        this.props.conferenceCRUDHandler("delete", this.state)
-        if (this.props.callBackOnDelete) {
-            this.props.callBackOnDelete()
-        }
+        conferenceCRUDHandler("delete", this.state.conference.slug, this.state.token, this.state.conference)
+        this.props.callBackOnDelete()
+    }
+
+    _updateConference() {
+        conferenceCRUDHandler("update", this.state.conference.slug, this.state.token, this.state.conference)
     }
 
     _createConference() {
-        this.props.conferenceCRUDHandler("create", this.state)
-        if (this.props.callBackOnCreate) {
-            this.props.callBackOnCreate()
-        }
+        console.log('new conf', this.state.conference)
+        conferenceCRUDHandler("create", this.state.conference.slug, this.state.token, this.state.conference)
+        this.props.callBackOnCreate()
     }
 
     componentDidMount() {
         let {user, authTokens} = this.context
         let token = "Bearer " + authTokens?.access
-        this.props.conferenceCRUDHandler("fetch", this.state.conference.slug, token, this.state.conference)
+
+        this.setState({token: token})
+
+        if (this.props.newConf === false) {
+            conferenceCRUDHandler("fetch_one", this.props.slug, token, this.state.conference)
+            .then((confinfo) => {
+                this.setState({conference: confinfo})
+            })
+            .then(() => {
+                this.setState({loaded: true})
+            })
+        }
+        else {
+            this.setState({loaded: true})
+        }
     }
-    //
-    // componentDidMount() {
-    //     console.log(this.props.JOPA)
-    //     if (this.props.newConf !== 'true') {
-    //         let {user, authTokens} = this.context
-    //         let token = String("Bearer " + String(authTokens.access))
-    //
-    //         conferenceCRUDHandler("fetch", this.props.slug, token, this.state.conference)
-    //             .then((confinfo) => {
-    //                 this.setState({conference: confinfo})
-    //             })
-    //             .then(() => {
-    //                 this.setState({loaded: true})
-    //             })
-    //             .then(() => {
-    //                 if (user.username !== ((this.state.conference || {}).organization || {}).username) {
-    //                     this.props.canDelete = false
-    //                     this.props.canEdit = false
-    //                 }
-    //                 else {
-    //                     this.props.canDelete = false
-    //                     this.props.canEdit = false
-    //                 }
-    //             })
-    //     }
-    //     else {
-    //         this.setState({loaded: true})
-    //     }
-    // }
 
     render() {
         const imageEdit = this.props.canEdit && (
@@ -140,18 +137,16 @@ export default class Conference extends React.Component {
                     <Stack direction={"row"} justifyContent={"flex-between"}>
                         <Button size="small" color={"error"}
                                 onClick={() => {
-                                    let {user, authTokens} = this.context
-                                    let token = "Bearer " + String(authTokens?.access)
-                                    this.props.conferenceCRUDHandler("delete", this.state.conference.slug, token, this.state.conference)
+                                    this._deleteConference()
+                                    alert('Conference deleted!')
                                 }}
                         >
                             Delete
                         </Button>
                         <Button size="small"
                                 onClick={() => {
-                                    let {user, authTokens} = this.context
-                                    let token = "Bearer " + String(authTokens?.access)
-                                    this.props.conferenceCRUDHandler("update", this.state.conference.slug, token, this.state.conference)
+                                    this._updateConference()
+                                    alert('Changes saved!')
                                 }}
                         >
                             Update
@@ -159,7 +154,10 @@ export default class Conference extends React.Component {
                     </Stack>
                 ) : (
                     <Button size="small" color={"success"}
-                            onClick={this.createConference}
+                            onClick={() => {
+                                    this._createConference()
+                                    alert('Conference created!')
+                                }}
                     >
                         Create
                     </Button>
@@ -171,7 +169,7 @@ export default class Conference extends React.Component {
             this.state.loaded && (
             <Card>
                 <CustomCardMedia
-                    src={"http://localhost:8000/media/" + (this.state.conference || {}).image}
+                    src={"http://localhost:8000" + (this.state.conference || {}).image}
                 />
                 <CardContent>
 
@@ -226,7 +224,7 @@ export default class Conference extends React.Component {
                             initialValue={(this.state.conference || {}).address}
                             onValidate={this.handleDataValidation}
                             onSave={(v) => this.handleDataChange("address", v)}
-                            label="Address"
+                            label="address"
                         >
                             {(this.state.conference.conf || {}).address}
                         </EditableTypography>
@@ -242,13 +240,13 @@ export default class Conference extends React.Component {
                             initialValue={(this.state.conference || {}).price}
                             onValidate={this.handleDataValidation}
                             onSave={(v) => this.handleDataChange("price", v)}
-                            label="Price"
+                            label="price"
                         >
                             {(this.state.conference || {}).price}
                         </EditableTypography>
                     </Stack>
 
-                    <Scheduler/>
+                    {/*{<Scheduler/>}*/}
 
                 </CardContent>
 

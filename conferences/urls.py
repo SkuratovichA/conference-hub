@@ -7,6 +7,7 @@ app_name = 'conferences'
 
 urlpatterns = [
     path('', views.ConferencesListView.as_view(), name='conferences-page'),
+    path('api/get_conf/<slug:slug>', views.ConferenceGetOneAPi.as_view(), name='api_get-one-conf'),
     path('api/get_all_confs', views.ConferenceGetAllAPi.as_view(), name='api_get-all-confs'),
     path('api/manipulate_conf/<slug:slug>', views.ConferenceOrganizationManipulateAPi.as_view(), name='api_manipulate-conf'),
     path('<slug:username>/display', views.DisplayConferenceView.as_view(), name='conf_display-page'),

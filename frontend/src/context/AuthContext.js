@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from "react";
 import jwt_decode from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
+import {getInfoUser} from "../actions/UserFunctions";
 
 const AuthContext = createContext()
 
@@ -56,6 +57,7 @@ export const AuthProvider = ({children}) => {
 
         if (response.status === 200) {
             setAuthTokens(data)
+            setUser(jwt_decode(data.access))
             setUser(jwt_decode(data.access))
             localStorage.setItem('authTokens', JSON.stringify(data))
         }

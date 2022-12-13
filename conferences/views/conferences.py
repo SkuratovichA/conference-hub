@@ -22,6 +22,18 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+class ConferenceGetOneAPi(APIView):
+    queryset = conf_models.ConferenceModel
+    serializer_class = sers.ConferenceSerializerSlug
+    lookup_field = 'slug'
+
+    def get(self, request, *args, **kwargs):
+        content = {}
+        conf = conf_models.ConferenceModel.objects.get(slug=kwargs['slug'])
+        content['conf'] = sers.ConferenceSerializer(conf).data
+
+        return Response(content, status=status.HTTP_200_OK)
+
 
 class ConferenceGetAllAPi(generics.RetrieveAPIView):
     queryset = conf_models.ConferenceModel
@@ -47,16 +59,15 @@ class ConferenceOrganizationManipulateAPi(APIView):
         return Response(content, status=status.HTTP_200_OK)
 
     def patch(self, request, *args, **kwargs):
-        print(request.data['data']['image'])
         conf = conf_models.ConferenceModel.objects.get(slug=kwargs['slug'])
         conf.name = request.data['data']['name']
         conf.brief = request.data['data']['brief']
         conf.slug = (request.data['data']['name']).replace(" ", "")
-        conf.date_from = request.data['data']['date_from']
-        conf.date_to = request.data['data']['date_to']
+        conf.date_from = (request.data['data']['date_from']).split('T', 1)[0]
+        conf.date_to = (request.data['data']['date_to']).split('T', 1)[0]
         conf.address = request.data['data']['address']
-        conf.price = request.data['data']['price']
-        conf.image = request.data['data']['image']
+        conf.price.amount = request.data['data']['price']
+        conf.image = (request.data['data']['image']).replace("/media", "", 1)
 
         conf.save()
         return Response(status=status.HTTP_200_OK)
@@ -68,11 +79,19 @@ class ConferenceOrganizationManipulateAPi(APIView):
         return Response(status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
+        # ConferenceModel.objects.create(request.data['data'])
+
+        request.data['data']['date_from'] = (request.data['data']['date_from']).split('T', 1)[0]
+        request.data['data']['date_to'] = (request.data['data']['date_to']).split('T', 1)[0]
+
+        print(request.data['data'])
+
         serializer = sers.ConferenceSerializer(data=request.data['data'])
         if serializer.is_valid():
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)
 
+        print(serializer.errors)
         return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
 

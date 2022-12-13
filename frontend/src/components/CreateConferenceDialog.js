@@ -8,7 +8,7 @@ import plus from '../plus.png'
 import {useParams, useLocation, useNavigate} from "react-router-dom";
 
 export default function CreateConferenceDialog({
-    conferenceCRUDHandler
+    user
 }) {
     const [open, setOpen] = React.useState(false)
     let navigate = useNavigate()
@@ -34,11 +34,12 @@ export default function CreateConferenceDialog({
             </CardActionArea>
 
             <ConferenceModal
+                    user={user}
                     open={open}
+                    slug={null}
                     onClose={() => setOpen(false)}
                     canEdit={true}
                     newConf={true}
-                    conferenceCRUDHandler={conferenceCRUDHandler}
                     callBackOnCreate={() => setOpen(false)}
             />
         </React.Fragment>

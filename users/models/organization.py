@@ -7,5 +7,5 @@ class OrganizationModel(models.Model):
         ConferenceUserModel,
         related_name='organization',
         on_delete=models.CASCADE,
-        primary_key=True
+        # primary_key=True
     )

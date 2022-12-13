@@ -4,36 +4,26 @@ import Conference from './Conference'
 import AuthContext from "../context/AuthContext";
 import { useContext, useEffect } from "react";
 import {getInfoUser} from "../actions/UserFunctions";
-import {useLocation} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 
 export default function ConferenceModal ({
+    user,
     open,
     onClose,
     slug,
     canEdit,
     newConf,
-    conferenceCRUDHandler,
     callBackOnCreate,
     callBackOnDelete,
-    callBackOnUpdate
 }) {
-
-    let {authTokens} = useContext(AuthContext)
-    let [user, SetUserInfo] = useState({})
-    let [token, setToken] = useState(authTokens?.access ? "Bearer " + authTokens?.access : null)
+    let navigate = useNavigate()
 
     useEffect(() => {
-        getInfoUser(token)
-            .then((data) => {
-                SetUserInfo(data['infouser'])
-            })
-    }, [])
-
-    // TODO move to caller
-    // let query = new URLSearchParams(useLocation().search)
-    // query.get('create')
-    console.log('newconfffffffff', open)
+        if (open === false) {
+            navigate('/conferences')
+        }
+    }, [open, ])
 
     return (
         <Modal open={open} onClose={onClose}>
@@ -55,7 +45,6 @@ export default function ConferenceModal ({
                     canEdit={canEdit}
                     newConf={newConf}
                     slug={slug}
-                    conferenceCRUDHandler={conferenceCRUDHandler}
                     owner={user}
                     callBackOnCreate={callBackOnCreate}
                     callBackOnDelete={callBackOnDelete}
