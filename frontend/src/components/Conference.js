@@ -79,7 +79,6 @@ export default class Conference extends React.Component {
     }
 
     _createConference() {
-        console.log('new conf', this.state.conference)
         conferenceCRUDHandler("create", this.state.conference.slug, this.state.token, this.state.conference)
         this.props.callBackOnCreate()
     }
@@ -92,14 +91,13 @@ export default class Conference extends React.Component {
 
         if (this.props.newConf === false) {
             conferenceCRUDHandler("fetch_one", this.props.slug, token, this.state.conference)
-            .then((confinfo) => {
-                this.setState({conference: confinfo})
-            })
-            .then(() => {
-                this.setState({loaded: true})
-            })
-        }
-        else {
+                .then((confinfo) => {
+                    this.setState({conference: confinfo})
+                })
+                .then(() => {
+                    this.setState({loaded: true})
+                })
+        } else {
             this.setState({loaded: true})
         }
     }
@@ -136,28 +134,19 @@ export default class Conference extends React.Component {
                 {!this.props.newConf ? (
                     <Stack direction={"row"} justifyContent={"flex-between"}>
                         <Button size="small" color={"error"}
-                                onClick={() => {
-                                    this._deleteConference()
-                                    alert('Conference deleted!')
-                                }}
+                                onClick={this.deleteConference}
                         >
                             Delete
                         </Button>
                         <Button size="small"
-                                onClick={() => {
-                                    this._updateConference()
-                                    alert('Changes saved!')
-                                }}
+                                onClick={this.updateConference}
                         >
                             Update
                         </Button>
                     </Stack>
                 ) : (
                     <Button size="small" color={"success"}
-                            onClick={() => {
-                                    this._createConference()
-                                    alert('Conference created!')
-                                }}
+                            onClick={this.createConference}
                     >
                         Create
                     </Button>
@@ -167,93 +156,91 @@ export default class Conference extends React.Component {
 
         return (
             this.state.loaded && (
-            <Card>
-                <CustomCardMedia
-                    src={"http://localhost:8000" + (this.state.conference || {}).image}
-                />
-                <CardContent>
-
-                    {imageEdit}
-
-
-                    {/*name */}
-                    <EditableTypography
-                        canEdit={this.props.canEdit}
-                        variant="h1"
-                        initialValue={(this.state.conference || {}).name}
-                        onValidate={this.handleDataValidation}
-                        onSave={(v) => this.handleDataChange("name", v)}
-                        label="Conference Name"
-
-                        level="inherit"
-                        fontSize="1.25em"
-                        mb="0.25em"
-                    >
-                        {(this.state.conference || {}).name}
-                    </EditableTypography>
-
-                    {/*brief description*/}
-                    <EditableTypography
-                        canEdit={this.props.canEdit}
-                        variant="h4"
-                        initialValue={(this.state.conference || {}).brief}
-                        onValidate={this.handleDataValidation}
-                        onSave={(v) => this.handleDataChange("brief", v)}
-                        label="Brief description of the conference"
-                        color="text.secondary"
-                    >
-                        {(this.state.conference || {}).brief}
-                    </EditableTypography>
-
-                    {/*date from - date to*/}
-                    <MuiDateRangePicker
-                        canEdit={this.props.canEdit}
-                        fromValueHandler={(newFrom) => this.handleDataChange("date_from", newFrom)}
-                        toValueHandler={(newTo) => this.handleDataChange("date_to", newTo)}
-                        fromValue={(this.state.conference || {}).date_from}
-                        toValue={(this.state.conference || {}).date_to}
+                <Card>
+                    <CustomCardMedia
+                        src={"http://localhost:8000" + (this.state.conference || {}).image}
                     />
+                    <CardContent>
+                        {imageEdit}
 
-                    {/*/!* address*!/*/}
-                    <Stack direction={'row'}>
-                        <LocationOnIcon sx={{mt: 1, mb: 1}}>
-                        </LocationOnIcon>
+                        {/*name */}
                         <EditableTypography
                             canEdit={this.props.canEdit}
-                            variant="h2"
-                            initialValue={(this.state.conference || {}).address}
+                            variant="h1"
+                            initialValue={(this.state.conference || {}).name}
                             onValidate={this.handleDataValidation}
-                            onSave={(v) => this.handleDataChange("address", v)}
-                            label="address"
-                        >
-                            {(this.state.conference.conf || {}).address}
-                        </EditableTypography>
-                    </Stack>
+                            onSave={(v) => this.handleDataChange("name", v)}
+                            label="Conference Name"
 
-                    {/*/!* price*!/*/}
-                    <Stack direction={'row'}>
-                        <EuroIcon sx={{mt: 1, mb: 1}}/>
+                            level="inherit"
+                            fontSize="1.25em"
+                            mb="0.25em"
+                        >
+                            {(this.state.conference || {}).name}
+                        </EditableTypography>
+
+                        {/*brief description*/}
                         <EditableTypography
                             canEdit={this.props.canEdit}
                             variant="h4"
-                            component="h4"
-                            initialValue={(this.state.conference || {}).price}
+                            initialValue={(this.state.conference || {}).brief}
                             onValidate={this.handleDataValidation}
-                            onSave={(v) => this.handleDataChange("price", v)}
-                            label="price"
+                            onSave={(v) => this.handleDataChange("brief", v)}
+                            label="Brief description of the conference"
+                            color="text.secondary"
                         >
-                            {(this.state.conference || {}).price}
+                            {(this.state.conference || {}).brief}
                         </EditableTypography>
-                    </Stack>
 
-                    {/*{<Scheduler/>}*/}
+                        {/*date from - date to*/}
+                        <MuiDateRangePicker
+                            canEdit={this.props.canEdit}
+                            fromValueHandler={(newFrom) => this.handleDataChange("date_from", newFrom)}
+                            toValueHandler={(newTo) => this.handleDataChange("date_to", newTo)}
+                            fromValue={(this.state.conference || {}).date_from}
+                            toValue={(this.state.conference || {}).date_to}
+                        />
 
-                </CardContent>
+                        {/*/!* address*!/*/}
+                        <Stack direction={'row'}>
+                            <LocationOnIcon sx={{mt: 1, mb: 1}}>
+                            </LocationOnIcon>
+                            <EditableTypography
+                                canEdit={this.props.canEdit}
+                                variant="h2"
+                                initialValue={(this.state.conference || {}).address}
+                                onValidate={this.handleDataValidation}
+                                onSave={(v) => this.handleDataChange("address", v)}
+                                label="address"
+                            >
+                                {(this.state.conference.conf || {}).address}
+                            </EditableTypography>
+                        </Stack>
 
-                {cardActions}
+                        {/*/!* price*!/*/}
+                        <Stack direction={'row'}>
+                            <EuroIcon sx={{mt: 1, mb: 1}}/>
+                            <EditableTypography
+                                canEdit={this.props.canEdit}
+                                variant="h4"
+                                component="h4"
+                                initialValue={(this.state.conference || {}).price}
+                                onValidate={this.handleDataValidation}
+                                onSave={(v) => this.handleDataChange("price", v)}
+                                label="price"
+                            >
+                                {(this.state.conference || {}).price}
+                            </EditableTypography>
+                        </Stack>
 
-            </Card>
-        )
+                        <Scheduler/>
+
+                    </CardContent>
+
+                    {cardActions}
+
+                </Card>
+            )
         )
     }
 }

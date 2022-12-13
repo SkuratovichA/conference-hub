@@ -3,12 +3,13 @@ import {CardMedia} from "@mui/material";
 
 
 export default function CustomCardMedia({src}) {
+
     return (
         <CardMedia
-            component={"img"}
-            height={"120"}
+            component={'img'}
+            height={"120px"}
             src={src}
-            alt=" "
+            alt=""
             onError={({currentTarget}) => {
                 currentTarget.onerror = null; // prevents looping
                 currentTarget.src = null;
