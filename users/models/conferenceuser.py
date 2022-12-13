@@ -16,19 +16,26 @@ logger = logging.getLogger(__name__)
 class ConferenceUserModel(AbstractBaseUser, PermissionsMixin):
     # required fields
     username = models.CharField(
+        'username',
         max_length=64,
-        # validators=[validate_slug],
-        # unique=True,
+        validators=[validate_slug],
+        unique=True,
+        null=False,
+        blank=False
     )
     email = models.CharField(
         "email address",
         max_length=64,
-        # validators=[EmailValidator(message="invalid email")],
-        # unique=True,
+        validators=[EmailValidator(message="invalid email")],
+        unique=True,
+        null=False,
+        blank=False
     )
     name = models.CharField(
         "name",
         max_length=64,
+        null=False,
+        blank=False,
     )
     # dev flags
     is_active = models.BooleanField(
@@ -54,11 +61,15 @@ class ConferenceUserModel(AbstractBaseUser, PermissionsMixin):
     city = models.CharField(null=True, blank=False, max_length=64)
     balance = MoneyField(max_digits=10, decimal_places=2, default_currency='EUR', default=1000      )
 
-    USERNAME_FIELD = 'id'  # use username as a username field, but actually there are two username fields
+    EMAIL_FIELD = 'email'
+    USERNAME_FIELD = 'username'  # use username as a username field, but actually there are two username fields
 
     # NOTE: signatures of attributes "username" and "email" MUST be the same
     # This is not the best way to deal with it by a comment in the code, and it needs further checking, but
     # I don't have time to compare all possible fields in the database. Just be careful and specify it in
+    # conference_hub.utils.constraints.
+    USERNAME_FIELDS = ['username', 'email']
+    REQUIRED_FIELDS = ['name']
 
     objects = ConferenceUserManager()
 

@@ -23,6 +23,58 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+class ConferenceUserGetUsers(APIView):
+    queryset = u_models.ConferenceUserModel
+    serializer_class = sers.ConferenceUserSerializer
+
+    def get(self, request, *args, **kwargs):
+        users = u_models.ConferenceUserModel.objects.all()
+
+        content = {}
+        res = []
+        for user in users:
+            if user.is_researcher:
+                res.append(sers.ResearcherInfoSerializer(user.researcher).data)
+            elif user.is_organization:
+                res.append(sers.OrganizationInfoSerializer(user.organization).data)
+
+        content["users"] = res
+
+        return Response(content, status=status.HTTP_200_OK)
+
+class ConferenceUserGetResearchers(APIView):
+    queryset = u_models.ResearcherModel
+    serializer_class = sers.ResearcherInfoSerializer
+
+    def get(self, request, *args, **kwargs):
+        users = u_models.ConferenceUserModel.objects.all()
+
+        content = {}
+        arr_res = []
+        for user in users:
+            if user.is_researcher:
+                arr_res.append(sers.ResearcherInfoSerializer(user.researcher).data)
+
+        content["users"] = arr_res
+        return Response(content, status=status.HTTP_200_OK)
+
+class ConferenceUserGetOrganizations(APIView):
+    queryset = u_models.OrganizationModel
+    serializer_class = sers.OrganizationInfoSerializer
+
+    def get(self, request, *args, **kwargs):
+        users = u_models.ConferenceUserModel.objects.all()
+
+        content = {}
+        arr_org = []
+        for user in users:
+            if user.is_researcher:
+                arr_org.append(sers.ResearcherInfoSerializer(user.researcher).data)
+
+        content["users"] = arr_org
+        return Response(content, status=status.HTTP_200_OK)
+
+
 class ConferenceUserGetInfo(generics.RetrieveUpdateDestroyAPIView):
     queryset = u_models.ConferenceUserModel.objects.all()
     serializer_class = sers.ResearcherInfoSerializer

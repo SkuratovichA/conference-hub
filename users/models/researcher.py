@@ -13,7 +13,7 @@ class ResearcherModel(models.Model):
         users_models.ConferenceUserModel,
         related_name='researcher',
         on_delete=models.CASCADE,
-        # primary_key=True
+        primary_key=True
     )
     last_name = models.CharField(max_length=64)
     date_of_birth = models.DateField(null=True)

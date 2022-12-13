@@ -14,6 +14,7 @@ import {AuthProvider} from './context/AuthContext'
 import Scheduler from './components/Scheduler'
 import AuthContext from "./context/AuthContext";
 import Conference from './components/Conference'
+import Bucket from "./components/Bucket";
 
 import {ContentSection} from './components/ContentSection'
 
@@ -24,6 +25,7 @@ class App extends Component {
     };
 
     render() {
+        console.log('APP')
         return (
             <Provider store={store}>
                 <BrowserRouter>
@@ -54,6 +56,7 @@ class App extends Component {
                                     }
                                 />
                                 <Route path="/users/:username" element={<Profile/>}/>
+                                <Route path="/:username/bucket" element={<Bucket/>}/>
 
 
                                 <Route exact path='/private-page' element={<PrivateRoute/>}>

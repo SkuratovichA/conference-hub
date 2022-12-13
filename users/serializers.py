@@ -14,6 +14,9 @@ class ProfileUserSerializer(serializers.ModelSerializer):
 
 class ConferenceUserSerializer(serializers.ModelSerializer):
     profile = ProfileUserSerializer(many=False)
+    email = serializers.CharField()
+    username = serializers.CharField()
+    name = serializers.CharField()
 
     class Meta:
         model = u_models.ConferenceUserModel
@@ -23,6 +26,7 @@ class ConferenceUserSerializer(serializers.ModelSerializer):
 
 class ResearcherInfoSerializer(serializers.ModelSerializer):
     user = ConferenceUserSerializer(many=False)
+    last_name = serializers.CharField()
 
     class Meta:
         model = u_models.ResearcherModel

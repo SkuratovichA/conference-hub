@@ -1,0 +1,35 @@
+.bucket-count {
+    margin-left: 0 !important;
+    margin-top: 5px !important;
+}
+
+.my-vline {
+    position:fixed;
+    left:50%;
+    top: 64px;
+    bottom:0; margin:0;
+    border:none;
+    border-right:solid 4px rgba(0, 0, 0, 1) !important;
+}
+
+.my-div {
+    text-align: center;
+    font-size: 30px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width:50%;
+}
+
+.one {
+    background-color: #3c763d;
+    float: left;
+    border-right: solid 1px black;
+}
+.two {
+    background-color: #a94442;
+    float: left;
+    border-left: solid 1px black;
+}
+

@@ -14,6 +14,7 @@ from rest_framework import viewsets, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import FileUploadParser
 from rest_framework import status
 
 
@@ -83,8 +84,10 @@ class ConferenceOrganizationManipulateAPi(APIView):
 
         request.data['data']['date_from'] = (request.data['data']['date_from']).split('T', 1)[0]
         request.data['data']['date_to'] = (request.data['data']['date_to']).split('T', 1)[0]
-
-        print(request.data['data'])
+        # request.data['data']['image'] =
+        # name_org = request.data['data']['organization']['user']['username']
+        # print(name_org)
+        # del request.data['data']['organization']
 
         serializer = sers.ConferenceSerializer(data=request.data['data'])
         if serializer.is_valid():

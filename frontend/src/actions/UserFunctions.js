@@ -18,6 +18,19 @@ export const getInfoUser = async (token) => {
     return response.status >= 200 && response.status <= 299 ? data['infouser'] : {}
 }
 
+export const getUsers = async (type) => {
+     let response = await fetch('http://localhost:8000/users/api/get_users_' + type, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+
+    let data = await response.json()
+    console.log(data['users'])
+    return response.status >= 200 && response.status <= 299 ? data['users'] : {}
+}
+
 export const userCRUDHandler = async (type, dataToUpdate, token) => {
     await fetch('http://localhost:8000/users/api/manipulate_info_user', {
         method: 'PATCH',
