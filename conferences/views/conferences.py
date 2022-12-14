@@ -69,7 +69,6 @@ class ConferenceOrganizationManipulateAPi(APIView):
         conf.date_to = (request.data['data']['date_to']).split('T', 1)[0]
         conf.address = request.data['data']['address']
         conf.price.amount = request.data['data']['price']
-        conf.image = (request.data['data']['image']).replace("/media", "", 1)
 
         conf.save()
         return Response(status=status.HTTP_200_OK)

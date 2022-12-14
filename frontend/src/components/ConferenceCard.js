@@ -4,12 +4,12 @@ import plus from '../plus.png'
 import ConferenceModal from './ConferenceModal'
 import CustomCardMedia from './CustomCardMedia'
 import {useNavigate} from "react-router-dom";
+import {conferenceCRUDHandler} from "../actions/ConferenceFunctions";
 
 
 // TODO: populate cards with data
 export const MuiCard = (props) => {
     const conference_j = props.conference
-    const conferenceCRUDHandler = props.conferenceCRUDHandler
 
     const [open, setOpen] = React.useState(false)
     let [manipulate, setManipulate] = React.useState(false)
@@ -47,6 +47,17 @@ export const MuiCard = (props) => {
                         >
                             Show info
                         </Button>
+                        {props.user.user.is_researcher &&
+                            <Button
+                            size="small"
+                            //     onClick={() => {
+                            //         navigate('/conferences' + "?conf="+conference_j.slug)
+                            //         setOpen(true)
+                            //     }
+                            // }
+                        >
+                            Add to bucket
+                        </Button>}
                     </CardActions>
                 </Card>
             </Box>
@@ -58,7 +69,6 @@ export const MuiCard = (props) => {
                 onClose={() => setOpen(false)}
                 slug={conference_j.slug}
                 canEdit={manipulate}
-                conferenceCRUDHandler={conferenceCRUDHandler}
                 callBackOnDelete={() => setOpen(false)}
             />
         </React.Fragment>

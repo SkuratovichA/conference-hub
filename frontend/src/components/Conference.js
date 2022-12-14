@@ -55,7 +55,7 @@ export default class Conference extends React.Component {
             conference: {
                 ...this.state.conference,
                 [key]: newValue,
-                ['slug']: var1.replace(/\s+/, "")
+                ['slug']: var1.replaceAll(" ", "")
             }
         })
     }
@@ -74,7 +74,6 @@ export default class Conference extends React.Component {
     }
 
     _createConference() {
-        console.log(this.state.conference, 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
         conferenceCRUDHandler("create", this.state.conference.slug, this.state.token, this.state.conference, null)
         this.props.callBackOnCreate()
     }
@@ -150,7 +149,7 @@ export default class Conference extends React.Component {
                 ) : (
                     <Button size="small" color={"success"}
                             onClick={() => {
-                                    this.createConference()
+                                    this._createConference()
                                     alert('Conference created!')
                                 }}
                     >

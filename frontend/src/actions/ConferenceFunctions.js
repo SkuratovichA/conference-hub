@@ -13,8 +13,6 @@ export const conferenceCRUDHandler = async (type, _conference, token, dataToUpda
             })
 
             data = await response.json()
-
-            console.log('NULLL BLYAT???', data)
             return response.status >= 200 && response.status <= 299 ? data['conf'] : {}
         case "fetch_all":
             console.log("FETCH ALL")
