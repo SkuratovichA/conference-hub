@@ -76,7 +76,7 @@ export const EditableTypography = (
                         helperText={helperText}
                         error={!isValid}
                         value={value}
-                        variant="outlined"
+                        variant="standard"
                         onChange={handleTextFieldOnChange}
                         onKeyDown={handleKeyPress}
                         {...textFieldProps}

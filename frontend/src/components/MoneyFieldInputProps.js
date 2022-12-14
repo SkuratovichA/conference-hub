@@ -17,6 +17,7 @@ export const MoneyFieldInputProps = React.forwardRef(function NumericFormatCusto
           },
         });
       }}
+      valueIsNumericString={true}
       thousandSeparator
       prefix="€ "
     />

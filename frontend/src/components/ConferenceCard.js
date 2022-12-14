@@ -54,7 +54,7 @@ export const MuiCard = (props) => {
                         >
                             PREVIEW
                         </Button>
-                        {props.user.user.is_researcher &&
+                        {props.user?.user?.is_researcher &&
                             <Button
                             size="small"
                                 onClick={() => {

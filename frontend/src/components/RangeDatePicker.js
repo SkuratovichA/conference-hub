@@ -1,4 +1,4 @@
-import {Box, TextField, Grid, Typography} from '@mui/material'
+import {Box, Stack, TextField, Grid, Typography} from '@mui/material'
 import {DatePicker} from '@mui/x-date-pickers'
 import {LocalizationProvider} from '@mui/x-date-pickers-pro';
 import React, {useState} from 'react'
@@ -15,6 +15,7 @@ export const MuiDateRangePicker = (
         toValue,
         fromValueHandler,
         toValueHandler,
+        ...other
     }
 ) => {
     if (!fromValueHandler || !toValueHandler) {
@@ -32,36 +33,26 @@ export const MuiDateRangePicker = (
         endText = 'End'
     }
     return (
-        <Box width={width}>
-            <Typography
-                color="text.secondary"
-                sx={{m: 1}}
-            >
-                Conference date:
-            </Typography>
+        <Stack direction={"row"} spacing={1} justifyContent={"space-between"}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Grid container>
-                    <Grid item xs={12} sm={4} md={4} lg={4} xl={4}>
-                        <DatePicker
-                            readOnly={!canEdit}
-                            label={startText}
-                            value={fromValue}
-                            onChange={(newValue) => fromValueHandler(newValue)}
-                            renderInput={(params) => <TextField  size="small" {...params} />}
-                        />
-                    </Grid>
+                <DatePicker
+                    variant={"standard"}
+                    readOnly={!canEdit}
+                    label={startText}
+                    value={fromValue}
+                    onChange={(newValue) => fromValueHandler(newValue)}
+                    renderInput={(params) => <TextField variant={"standard"} size="small" {...params} />}
+                />
 
-                    <Grid item xs={12} sm={4} md={4} lg={4} xl={4}>
-                        <DatePicker
-                            readOnly={!canEdit}
-                            label={endText}
-                            value={toValue}
-                            onChange={(newValue) => toValueHandler(newValue)}
-                            renderInput={(params) => <TextField  size="small" {...params} />}
-                        />
-                    </Grid>
-                </Grid>
+                <DatePicker
+                    variant={"standard"}
+                    readOnly={!canEdit}
+                    label={endText}
+                    value={toValue}
+                    onChange={(newValue) => toValueHandler(newValue)}
+                    renderInput={(params) => <TextField variant={"standard"} size="small" {...params} />}
+                />
             </LocalizationProvider>
-        </Box>
+        </Stack>
     )
 }
