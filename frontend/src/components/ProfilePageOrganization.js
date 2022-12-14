@@ -53,7 +53,7 @@ const ProfilePageOrganization = ( props ) => {
           <MDBCol lg="4">
               <MDBCardBody className="text-center">
                 <MDBCardImage
-                  src={"http://localhost:8000" + (((props.user || {}).user || {}).profile || {}).image}
+                  src={"http://localhost:8000/media/static/default.png"}
                   alt="avatar"
                   className="rounded-circle"
                   style={{ width: '250px' }}

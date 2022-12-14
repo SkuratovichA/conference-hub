@@ -31,7 +31,9 @@ export const ConferenceGrid = (
                     <Grid key="add_conference" item {...gridProps}>
                         <Box width="280px">
                             <Card>
-                                <CreateConferenceDialog user={user}/>
+                                <CreateConferenceDialog
+                                    user={user}
+                                />
                             </Card>
                         </Box>
                     </Grid>
@@ -42,7 +44,6 @@ export const ConferenceGrid = (
                                 user={user}
                                 conferenceOnClick={() => conferenceOnClick(conference.slug)}
                                 conference={conference}
-                                conferenceCRUDHandler={conferenceCRUDHandler}
                             />
                         </Grid>
                     )

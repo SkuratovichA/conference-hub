@@ -9,6 +9,35 @@ from django.shortcuts import render
 import json
 from django.http import JsonResponse, HttpResponseBadRequest
 
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+import ch.serializers as sers
+from rest_framework import viewsets, generics
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import FileUploadParser
+from rest_framework import status
+
+
+
+class PurchaseGetStateConfsUser(APIView):
+    queryset = ch_models.PurchasesModel
+    serializer_class = sers.PurchaseSerializer
+
+    def post(self, request, *args, **kwargs):
+        researcher = user_models.ResearcherModel().objects.get(user__username=request['data']['user']['name'])
+        bucket_objects = ch_models.PurchasesModel().objects.all()
+
+        content = {'in_bucket': [], 'bought': [], 'other': []}
+        # for obj in bucket_objects:
+        #     if researcher
+
+
+        return Response(content, status=status.HTTP_200_OK)
+
+
+
+
 class PurchasesView(generic.ListView):
     template_name = 'users/purchase.html'
     model = ch_models.PurchasesModel

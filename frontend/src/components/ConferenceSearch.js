@@ -42,7 +42,7 @@ const ConferenceSearch = ( props ) => {
     let token = authTokens?.access ? "Bearer " + authTokens.access : null
 
     useEffect(() => {
-        conferenceCRUDHandler("fetch_all", null, null, null)
+        conferenceCRUDHandler("fetch_all", null, null, null, null)
         .then(resp_conf => {
             setConfs(resp_conf)
             return getInfoUser(token)
