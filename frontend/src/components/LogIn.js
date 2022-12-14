@@ -11,7 +11,7 @@ const LogIn = () => {
             <form onSubmit={loginUser}>
                 <FormHeader title="Login"/>
                 <FormInput description="Username or Email"
-                           placeholder="Password"
+                           placeholder="Username or Email"
                            type="text"
                            input="username"
                            id="username-id"

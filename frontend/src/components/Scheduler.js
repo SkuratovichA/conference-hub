@@ -38,7 +38,7 @@ import ClearIcon from '@mui/icons-material/Clear'
 let events = [
     {
         id: 1,
-        brief: "description",
+        brief: "Brief",
         name: 'Lecture One',
         type: "lecture",
         location: "somewhere",
@@ -48,20 +48,9 @@ let events = [
         endDatetime: '2022-05-11T14:30',
     },
     {
-        id: 2,
-        brief: "description",
-        name: 'Ukranian Fascists',
-        type: "lecture",
-        participants: ['Vladimir Putin'],
-        location: "somewhere",
-        imageUrl: 'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        startDatetime: '2022-12-13T15:00',
-        endDatetime: '2022-12-13T15:30',
-    },
-    {
         id: 6,
         brief: "description",
-        name: 'How to be a sexy pretty boy',
+        name: 'How to make a video',
         type: "lecture",
         participants: ['Shchapaniak Andrei'],
         location: "somewhere",
@@ -497,33 +486,35 @@ export default function Scheduler({
                             </Paper>
                         )}
 
-                        {creatingEvent ? (
-                            <>
-                                <Button
-                                    sx={{float: "left"}}
-                                    onClick={() => setCreatingEvent(false)}
-                                    color={"error"}
-                                >
-                                    CANCEL
-                                </Button>
+                        {canEdit ? (creatingEvent ? (
+                                <>
+                                    <Button
+                                        sx={{float: "left"}}
+                                        onClick={() => setCreatingEvent(false)}
+                                        color={"error"}
+                                    >
+                                        CANCEL
+                                    </Button>
 
-                                <Button
-                                    sx={{float: "right",}}
-                                    onClick={handleEventCreate}
-                                    disabled={!canCreateEvent()}
-                                >
-                                    ADD EVENT
-                                </Button>
-                            </>
-                        ) : (
-                            <Stack>
-                                <Button
-                                    onClick={() => setCreatingEvent(true)}
-                                >
-                                    ADD EVENT
-                                </Button>
-                            </Stack>
-                        )}
+                                    <Button
+                                        sx={{float: "right",}}
+                                        onClick={handleEventCreate}
+                                        disabled={!canCreateEvent()}
+                                    >
+                                        ADD EVENT
+                                    </Button>
+                                </>
+                            ) : (
+                                <Stack>
+                                    <Button
+                                        onClick={() => setCreatingEvent(true)}
+                                    >
+                                        ADD EVENT
+                                    </Button>
+                                </Stack>
+                            )
+                        ) : <></>
+                        }
 
                     </section>
 
@@ -553,29 +544,29 @@ function Event({meeting}) {
             style={{background: backgrounds[meeting.type]}}
             className="flex items-center px-4 py-2 space-x-4 group rounded-xl focus-within:bg-gray-100 hover:opacity-36"
         >
-                    <img
-                        src={meeting.imageUrl}
-                        alt=""
-                        className="flex-none w-10 h-10 rounded-full"
-                    />
+            <img
+                src={meeting.imageUrl}
+                alt=""
+                className="flex-none w-10 h-10 rounded-full"
+            />
 
-                    <div className="flex-auto">
-                        <Stack direction={"row"} sx={{justifyContent: "space-between"}}>
-                            {getProp(meeting, "name", "font-semibold text-gray-900")}
-                            {getProp(meeting, "type", "text-gray-400 ")}
-                        </Stack>
+            <div className="flex-auto">
+                <Stack direction={"row"} sx={{justifyContent: "space-between"}}>
+                    {getProp(meeting, "name", "font-semibold text-gray-900")}
+                    {getProp(meeting, "type", "text-gray-400 ")}
+                </Stack>
 
-                        <p className="mt-0.5">
-                            <time dateTime={meeting.startDatetime}>{format(startDateTime, 'h:mm a')}</time>
-                            {' '}-{' '}
-                            <time dateTime={meeting.endDatetime}>{format(endDateTime, 'h:mm a')}</time>
-                        </p>
+                <p className="mt-0.5">
+                    <time dateTime={meeting.startDatetime}>{format(startDateTime, 'h:mm a')}</time>
+                    {' '}-{' '}
+                    <time dateTime={meeting.endDatetime}>{format(endDateTime, 'h:mm a')}</time>
+                </p>
 
-                        <Stack direction="row" sx={{justifyContent: "space-between"}}>
-                            {getProp(meeting, "location", "text-gray-500")}
-                            {getProp(meeting, "price", "text-gray-400")}
-                        </Stack>
-                    </div>
+                <Stack direction="row" sx={{justifyContent: "space-between"}}>
+                    {getProp(meeting, "location", "text-gray-500")}
+                    {getProp(meeting, "price", "text-gray-400")}
+                </Stack>
+            </div>
 
             {/*<Menu*/}
             {/*  as="div"*/}

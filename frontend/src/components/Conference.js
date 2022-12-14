@@ -46,15 +46,21 @@ export default class Conference extends React.Component {
             loaded: false,
             token: null
         }
+
         this.handleDataChange = this._handleDataChange.bind(this)
         this.handleDataValidation = this._handleDataValidation.bind(this)
         this.createConference = this._createConference.bind(this)
         this.updateConference = this._updateConference.bind(this)
         this.deleteConference = this._deleteConference.bind(this)
+        this.imageEdit = this._imageEdit.bind(this)
+        this.cardActions = this._cardActions.bind(this)
+        this.leftSectionEditable = this._leftSectionEditable.bind(this)
+        this.leftSectionStatic = this._leftSectionStatic.bind(this)
+        this.leftSection = this._leftSection.bind(this)
+        this.rightSection = this._rightSection.bind(this)
     }
 
     _handleDataChange(key, newValue) {
-        console.log(key, newValue)
         let var1 = this.state?.conference?.name
 
         this.setState({
@@ -103,7 +109,7 @@ export default class Conference extends React.Component {
         }
     }
 
-    imageEdit = () => (this.props.canEdit && (
+    _imageEdit = () => (this.props.canEdit && (
         <React.Fragment>
             <input
                 accept="image/*"
@@ -128,7 +134,7 @@ export default class Conference extends React.Component {
         </React.Fragment>
     ))
 
-    cardActions = () => (this.props.canEdit && (
+    _cardActions = () => (this.props.canEdit && (
         <CardActions>
             {!this.props.newConf ? (
                 <Stack direction={"row"} justifyContent={"flex-between"}>
@@ -153,7 +159,8 @@ export default class Conference extends React.Component {
         </CardActions>
     ))
 
-    leftSectionEditable = () => (
+
+    _leftSectionEditable = () => (
         <Stack direction={"column"} spacing={1.2}>
             {/*brief*/}
             <TextField
@@ -161,7 +168,7 @@ export default class Conference extends React.Component {
                 size="small"
                 variant={"standard"}
                 value={this.state?.conference?.brief}
-                onChange={(v) => this.handleDataChange("brief", v)}
+                onChange={(v) => this.handleDataChange("brief", v.target.value)}
             />
 
             {/*date_from - date_to*/}
@@ -182,7 +189,7 @@ export default class Conference extends React.Component {
                     label="address"
                     value={this.state?.conference?.address}
                     variant="standard"
-                    onChange={(v) => this.handleDataChange("address", v)}
+                    onChange={(v) => this.handleDataChange("address", v.target.value)}
                     name="address"
                 />
 
@@ -193,14 +200,14 @@ export default class Conference extends React.Component {
                         inputComponent: MoneyFieldInputProps,
                     }}
                     variant="standard"
-                    onChange={(v) => this.handleDataChange("price", v)}
+                    onChange={(v) => this.handleDataChange("price", v.target.value)}
                     name="price"
                 />
             </Stack>
         </Stack>
     )
 
-    leftSectionStatic = () => (
+    _leftSectionStatic = () => (
         <React.Fragment>
             {/*brief*/}
             {this.state?.conference?.brief && (
@@ -238,7 +245,7 @@ export default class Conference extends React.Component {
         </React.Fragment>
     )
 
-    leftSection = () => (
+    _leftSection = () => (
         this.props.canEdit ? (
             this.leftSectionEditable()
         ) : (
@@ -246,13 +253,13 @@ export default class Conference extends React.Component {
         )
     )
 
-    rightSection = () => (
+    _rightSection = () => (
         <React.Fragment>
             <Stack direction={"column"} spacing={2}>
                 <Stack
                     spacing={2}
                     direction={"row"}
-                    style={{padding: '4px', "background": 'rgba(182,182,182,0.62)', 'border-radius': '8px'}}
+                    style={{padding: '4px', "background": 'rgba(182,182,182,0.62)', borderRadius: '8px'}}
                 >
                     <Avatar
                         alt="VUT"
@@ -303,7 +310,7 @@ export default class Conference extends React.Component {
                             {this.state?.conference?.name}
                         </EditableTypography>
 
-                        <Divider flexItem middle style={{marginBottom: "10px"}}/>
+                        <Divider flexItem style={{marginBottom: "10px"}}/>
 
                         <div className={"row"} style={{justifyContent: "space-between", padding: "0px 24px"}}>
                             <div className={"col-6"}>
@@ -321,7 +328,7 @@ export default class Conference extends React.Component {
 
                     </CardContent>
 
-                    {this.cardActions}
+                    {this.cardActions()}
 
                 </Card>
             )
