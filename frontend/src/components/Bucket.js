@@ -1,3 +1,5 @@
+// author: Shchapaniak Andrei
+
 import React, {useEffect} from 'react';
 import './styles/Other.css'
 import { useContext } from "react";

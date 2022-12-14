@@ -1,3 +1,5 @@
+// author: Shchapaniak Andrei
+
 export const setProperty = (obj, path, value) => {
     const [head, ...rest] = path.split('.')
 

@@ -1,3 +1,5 @@
+// author: Skuratovich Aliaksandr
+
 import * as React from 'react'
 import {
     CardActionArea,

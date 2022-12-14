@@ -1,3 +1,5 @@
+// author: Skuratovich Aliaksandr
+
 import React, {Component} from "react";
 import {styled} from '@mui/system'
 import {Box} from '@mui/material'

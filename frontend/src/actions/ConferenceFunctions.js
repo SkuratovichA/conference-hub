@@ -1,3 +1,4 @@
+// author: Shchapaniak Andrei
 
 export const conferenceCRUDHandler = async (type, _conference, token, dataToUpdate, imagee) => {
     let response, data;

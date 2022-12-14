@@ -1,3 +1,5 @@
+// author: Skuratovich Aliaksandr
+
 const conferences = [{'pk': 0,
   'name': 'Interspeech',
   'brief': 'This is a brief of Interspeech2021',

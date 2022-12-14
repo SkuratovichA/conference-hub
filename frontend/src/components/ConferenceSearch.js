@@ -1,3 +1,6 @@
+// author: Skuratovich Aliaksandr
+// author: Shchapaniak Andrei
+
 import React, {Component, useContext, useState} from "react";
 import {ConferenceGrid} from './ConferenceGrid'
 import {Box, Typography, Stack} from "@mui/material"

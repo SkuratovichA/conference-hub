@@ -1,3 +1,5 @@
+// author: Shchapaniak Andrei
+
 import { GET_CONFS } from '../actions/types';
 
 const initialState = {

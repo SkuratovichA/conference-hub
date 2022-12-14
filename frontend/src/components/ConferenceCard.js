@@ -1,3 +1,5 @@
+// author: Skuratovich Aliaksandr
+
 import React, {useEffect} from "react";
 import {CardActionArea, Box, Card, CardContent, Typography, CardActions, Button, Stack} from "@mui/material"
 import plus from '../plus.png'
