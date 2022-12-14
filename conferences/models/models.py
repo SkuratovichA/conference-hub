@@ -1,3 +1,5 @@
+# author: Khrystsiuk Dziyana
+
 import users.models as user_models
 from djmoney.models.fields import MoneyField
 from django.db import models

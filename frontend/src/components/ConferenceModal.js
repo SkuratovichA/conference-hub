@@ -1,3 +1,5 @@
+// author: Skuratovich Aliaksandr
+
 import React, {useState} from 'react'
 import {Modal, ModalDialog} from '@mui/joy'
 import Conference from './Conference'

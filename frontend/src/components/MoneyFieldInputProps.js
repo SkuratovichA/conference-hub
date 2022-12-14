@@ -1,3 +1,5 @@
+// author: Skuratovich Aliaksandr
+
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import {NumericFormat} from 'react-number-format';

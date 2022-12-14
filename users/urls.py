@@ -1,3 +1,6 @@
+# author: Shchapaniak Andrei
+# author: Skuratovich Aliaksandr
+
 from django.contrib.auth import views as auth_views
 from django.urls import path, include
 from users import views

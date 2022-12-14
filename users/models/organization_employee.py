@@ -1,3 +1,5 @@
+# author: Skuratovich Aliaksandr
+
 from django.db import models
 from users.models import OrganizationModel, ResearcherModel
 from datetime import datetime

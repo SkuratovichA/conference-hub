@@ -1,3 +1,6 @@
+# author: Shchapaniak Andrei
+# author: Khrystsiuk Dziyana
+
 from django.urls import path
 from conferences import views
 

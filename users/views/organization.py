@@ -1,3 +1,5 @@
+# author: Skuratovich Aliaksandr
+
 from users.models import ConferenceUserModel, OrganizationEmployeeModel
 from conference_hub.utils.message_wrapper import MessageMixin
 from django.http import JsonResponse, HttpResponseBadRequest

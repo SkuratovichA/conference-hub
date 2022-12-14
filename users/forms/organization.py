@@ -1,3 +1,5 @@
+# author: Skuratovich Aliaksandr
+
 from users.forms import ConferenceUserSignupForm
 from users.models import OrganizationModel, ConferenceUserModel
 from django.db import transaction

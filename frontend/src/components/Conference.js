@@ -1,3 +1,6 @@
+// author: Skuratovich Aliaksandr
+// author: Shchapaniak Andrei
+
 import * as React from "react";
 import {AvatarGroup, Avatar, Divider, TextField, Typography, Card, Button, CardActions, CardContent, IconButton, Stack} from "@mui/material";
 import {EditableTypography} from "./EditableTypography";

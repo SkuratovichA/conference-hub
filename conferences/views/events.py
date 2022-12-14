@@ -1,3 +1,5 @@
+# author: Khrystsiuk Dziyana
+
 from django.views import generic
 from conferences import forms as conf_forms
 from django.urls import reverse, reverse_lazy
