@@ -1,3 +1,5 @@
+# author: Shchapaniak Andrei
+
 from rest_framework import serializers
 from users.serializers import ResearcherInfoSerializer, ConferenceUserSerializer, OrganizationInfoSerializer
 import conferences.models as conf_models

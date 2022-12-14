@@ -1,3 +1,5 @@
+// author: Skuratovich Aliaksandr
+
 import React, {useState} from 'react';
 import {CardMedia} from "@mui/material";
 

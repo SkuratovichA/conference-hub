@@ -1,3 +1,5 @@
+# author: Shchapaniak Andrei
+
 from django.views import generic
 from django.shortcuts import render
 import conferences.models as conf_models

@@ -1,3 +1,5 @@
+// author: Skuratovich Aliaksandr
+
 import {useEffect, Fragment, useState} from 'react'
 import './styles/Scheduler.css'
 import {Menu, Transition} from '@headlessui/react'

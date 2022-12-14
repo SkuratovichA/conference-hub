@@ -1,3 +1,5 @@
+# author: Skuratovich Aliaksandr
+
 import users.models as users_models
 from django.db import models
 import conferences.models as conf_models

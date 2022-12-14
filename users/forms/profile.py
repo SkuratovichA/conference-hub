@@ -1,3 +1,5 @@
+# author: Skuratovich Aliaksandr
+
 from users.models import ProfileModel
 from django import forms
 

@@ -1,3 +1,5 @@
+# author: Shchapaniak Andrei
+
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
@@ -18,8 +20,8 @@ urlpatterns = [
 
     # path('', include('ch.urls')),
     path('users/', include('users.urls')),
-    path('conferences/', include('conferences.urls'))
-
+    path('conferences/', include('conferences.urls')),
+    path('ch/', include('ch.urls'))
 ]
 
 if settings.DEBUG:

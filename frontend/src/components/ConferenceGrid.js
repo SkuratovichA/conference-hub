@@ -1,3 +1,5 @@
+// author: Skuratovich Aliaksandr
+
 import React from "react";
 import { Grid, Box, Card } from "@mui/material"
 import CreateConferenceDialog from './CreateConferenceDialog'

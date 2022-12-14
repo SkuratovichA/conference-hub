@@ -1,3 +1,5 @@
+// author: Shchapaniak Andrei
+
 import React, { createContext, useState, useEffect } from "react";
 import jwt_decode from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
@@ -32,7 +34,7 @@ export const AuthProvider = ({children}) => {
             navigate('/')
         }
         else {
-            alert("!PIZDA SAPOGAM ACCESS TOKEN!")
+            alert("Incorrect password or username. Try again.")
         }
 
     }
@@ -62,7 +64,6 @@ export const AuthProvider = ({children}) => {
             localStorage.setItem('authTokens', JSON.stringify(data))
         }
         else {
-            alert("!PIZDA SAPOGAM REFRESH TOKEN LOGOUT!")
             logoutUser()
         }
     }

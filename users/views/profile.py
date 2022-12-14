@@ -1,3 +1,6 @@
+# author: Skuratovich Aliaksandr
+# author: Andrei Shchapaniak
+
 from django.contrib.messages.views import SuccessMessageMixin
 from conference_hub.utils.message_wrapper import MessageMixin
 from django.contrib.auth.mixins import LoginRequiredMixin

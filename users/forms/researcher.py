@@ -1,3 +1,5 @@
+# author: Skuratovich Aliaksandr
+
 from django.utils.translation import gettext_lazy as _
 from users.models import ConferenceUserModel, ResearcherModel
 from users.forms import ConferenceUserSignupForm

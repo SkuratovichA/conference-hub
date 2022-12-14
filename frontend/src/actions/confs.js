@@ -1,3 +1,5 @@
+// author: Shchapaniak Andrei
+
 import axios from "axios";
 
 import { GET_CONFS } from "./types";

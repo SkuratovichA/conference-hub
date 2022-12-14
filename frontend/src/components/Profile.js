@@ -1,3 +1,5 @@
+// author: Shchapaniak Andrei
+
 import React, {useState} from 'react';
 import AuthContext from "../context/AuthContext";
 import { useContext, useEffect } from "react";

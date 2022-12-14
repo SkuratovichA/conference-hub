@@ -1,3 +1,6 @@
+# author: Khrystsiuk Dziyana
+# author: Shchapaniak Andrei
+
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse, reverse_lazy
 from django.views import generic

@@ -1,3 +1,6 @@
+// author: Skuratovich Aliaksandr
+// author: Shchapaniak Andrei
+
 import React, {useContext} from "react";
 import {AppBar, Toolbar, IconButton, Typography, Stack, Button} from "@mui/material";
 import AccessibleForwardIcon from '@mui/icons-material/AccessibleForward';

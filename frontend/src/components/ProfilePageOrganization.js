@@ -1,3 +1,5 @@
+// author: Shchapaniak Andrei
+
 import React from 'react';
 import './styles/Other.css'
 import {EditableTypography} from "./EditableTypography";
