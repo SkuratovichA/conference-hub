@@ -1,3 +1,5 @@
+# author: Shchapaniak Andrei
+
 import decimal
 
 from django.views import generic

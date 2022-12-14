@@ -1,3 +1,5 @@
+# author: Skuratovich Aliaksandr
+
 from django.utils.translation import gettext_lazy as _
 from users.models import ConferenceUserModel
 from django.urls import reverse

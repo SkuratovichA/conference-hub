@@ -1,3 +1,5 @@
+# author: Shchapaniak Andrei
+
 from django.urls import path
 
 import ch.views as views

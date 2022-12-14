@@ -1,3 +1,5 @@
+# author: Skuratovich Aliaksandr
+
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.contrib.auth.mixins import LoginRequiredMixin
 from users import models as users_models

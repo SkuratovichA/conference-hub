@@ -1,3 +1,5 @@
+# author: Shchapaniak Andrei
+
 from django.db import models
 import users.models as users_models
 import conferences.models as conf_models

@@ -1,3 +1,6 @@
+# author: Skuratovich Aliaksandr
+# author: Andrei Shchapaniak
+
 from rest_framework import exceptions, authentication, viewsets, generics
 from django.contrib.auth import get_user_model, authenticate
 from users import serializers as sers

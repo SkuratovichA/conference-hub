@@ -1,3 +1,5 @@
+# author: Shchapaniak Andrei
+
 from django import template
 
 register = template.Library()

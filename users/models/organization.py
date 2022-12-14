@@ -1,3 +1,5 @@
+# author: Skuratovich Aliaksandr
+
 from users.models import ConferenceUserModel
 from django.db import models
 
