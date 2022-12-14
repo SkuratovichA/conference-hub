@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Divider, TextField, Typography, Card, Button, CardActions, CardContent, IconButton, Stack} from "@mui/material";
+import {AvatarGroup, Avatar, Divider, TextField, Typography, Card, Button, CardActions, CardContent, IconButton, Stack} from "@mui/material";
 import {EditableTypography} from "./EditableTypography";
 import {MuiDateRangePicker} from "./RangeDatePicker";
 import Scheduler from './Scheduler'
@@ -247,7 +247,32 @@ export default class Conference extends React.Component {
     )
 
     rightSection = () => (
-        <React.Fragment></React.Fragment>
+        <React.Fragment>
+            <Stack direction={"column"} spacing={2}>
+                <Stack
+                    spacing={2}
+                    direction={"row"}
+                    style={{padding: '4px', "background": 'rgba(182,182,182,0.62)', 'border-radius': '8px'}}
+                >
+                    <Avatar
+                        alt="VUT"
+                        src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                    />
+                    <Typography color={"white"}>Vysoke Uceni Technicke V Brne</Typography>
+                    {/*<Typography>{this.state?.conference?.user?.name}</Typography>*/}
+                </Stack>
+
+                <AvatarGroup max={4}>
+                   <Avatar alt="Skuratovich Aliaksandr" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" />
+                   <Avatar alt="Shchapaniak Andrei" src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" />
+                   <Avatar alt="Agnes Walker" src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" />
+                   <Avatar alt="Agnes Walker" src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" />
+                   <Avatar alt="Agnes Walker" src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" />
+                   <Avatar alt="Agnes Walker" src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" />
+                   <Avatar alt="Trevor Henderson" src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" />
+                </AvatarGroup>
+            </Stack>
+        </React.Fragment>
     )
 
     render() {
