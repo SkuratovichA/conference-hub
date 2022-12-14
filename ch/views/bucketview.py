@@ -19,23 +19,69 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework import status
 
 
+import logging
+
+
+logger = logging.getLogger(__name__)
+
+class PurchaseManipulateBucket(APIView):
+    queryset = ch_models.PurchasesModel
+    serializer_class = sers.PurchaseSerializerSlug
+    lookup_field = 'slug'
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        conf = conf_models.ConferenceModel.objects.get(slug=kwargs['slug'])
+        user = user_models.ConferenceUserModel.objects.get(username=request.user.username)
+        state = ch_models.PurchasesModel(researcher=user.researcher, conference=conf, state=False)
+        state.save()
+
+        return Response(status=status.HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        conf = conf_models.ConferenceModel.objects.get(slug=kwargs['slug'])
+        user = user_models.ConferenceUserModel.objects.get(username=request.user.username)
+        state = ch_models.PurchasesModel.objects.filter(Q(conference__name=conf.name) &
+                                         Q(researcher__user__username=user.username))
+
+        if len(state) > 0:
+            state[0].delete()
+
+        return Response(status=status.HTTP_200_OK)
+
+class PurchaseGetState(APIView):
+    queryset = ch_models.PurchasesModel
+    serializer_class = sers.PurchaseSerializerSlug
+    lookup_field = 'slug'
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        res = {}
+        conf = conf_models.ConferenceModel.objects.get(slug=kwargs['slug'])
+        user = user_models.ConferenceUserModel.objects.get(username=request.user.username)
+        state = ch_models.PurchasesModel.objects.filter(Q(conference__name=conf.name) &
+                                         Q(researcher__user__username=user.username))
+        if len(state) > 0:
+            res = sers.PurchaseSerializer(state[0]).data
+
+        return Response(res, status=status.HTTP_200_OK)
+
 
 class PurchaseGetStateConfsUser(APIView):
     queryset = ch_models.PurchasesModel
     serializer_class = sers.PurchaseSerializer
 
-    def post(self, request, *args, **kwargs):
-        researcher = user_models.ResearcherModel().objects.get(user__username=request['data']['user']['name'])
-        bucket_objects = ch_models.PurchasesModel().objects.all()
+    def get(self, request, *args, **kwargs):
+        print('AAAAAAA')
+        researcher = user_models.ResearcherModel.objects.filter(user__username=request.user.username)
+        print(len(researcher))
+        bucket_objects = ch_models.PurchasesModel.objects.all()
 
         content = {'in_bucket': [], 'bought': [], 'other': []}
         # for obj in bucket_objects:
         #     if researcher
 
-
         return Response(content, status=status.HTTP_200_OK)
-
-
 
 
 class PurchasesView(generic.ListView):

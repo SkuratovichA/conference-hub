@@ -1,70 +1,22 @@
 import React, {useEffect} from 'react';
 import './styles/Other.css'
-import {EditableTypography} from "./EditableTypography";
 import { useContext } from "react";
 import authContext from "../context/AuthContext";
-import {setProperty} from "../actions/OtherFunctions"
-/* eslint-disable no-useless-escape */
-/* eslint-disable no-unexpected-multiline */
-import {
-  MDBCol,
-  MDBContainer,
-  MDBRow,
-  MDBCard,
-  MDBCardText,
-  MDBCardBody,
-  MDBCardImage,
-  MDBProgress,
-  MDBProgressBar,
-} from 'mdb-react-ui-kit';
-import {getToken} from "../actions/UserFunctions";
 import {useState} from "react";
-import {userCRUDHandler} from "../actions/UserFunctions";
 import {conferenceCRUDHandler} from "../actions/ConferenceFunctions";
 import Grid from '@mui/material/Unstable_Grid2'
-import {MuiCard} from "./ConferenceCard";
 import {getInfoUser} from "../actions/UserFunctions";
-import Conference from "./Conference";
-import ConferenceModal from "./ConferenceModal";
-import {getUsers} from "../actions/UserFunctions";
 import BucketCard from "./BucketCard";
 import {Delete, ShoppingCart} from "@mui/icons-material";
 import { Paper } from '@mui/material';
 import { List } from '@mui/material';
 import ListItem from '@mui/material/ListItem';
 import { Button } from '@mui/material';
+import {getAllConfsBucket} from "../actions/OtherFunctions";
+import {getStateConfBucket} from "../actions/OtherFunctions";
 
-function getBase64FromImageUrl(url) {
-    let img = new Image();
-
-    img.setAttribute('crossOrigin', 'anonymous');
-
-    img.onload = function () {
-        let canvas = document.createElement("canvas");
-        canvas.width =this.width;
-        canvas.height =this.height;
-
-        let ctx = canvas.getContext("2d");
-        ctx.drawImage(this, 0, 0);
-
-        let dataURL = canvas.toDataURL("image/png");
-
-        // alert(dataURL.replace(/^data:image\/(png|jpg);base64,/, ""));
-    };
-
-    img.src = url;
-}
-
-async function createFile(){
-  let response = await fetch('http://127.0.0.1:8000/media/static/conf_default.jpg');
-  let data = await response.blob();
-  let metadata = {
-    type: 'image/jpeg'
-  };
-  let file = new File([data], "test.jpg", metadata);
-  console.log(file)
-  // ... do something with the file or return it
-}
+/* eslint-disable no-useless-escape */
+/* eslint-disable no-unexpected-multiline */
 
 const Bucket = ( props ) => {
 
@@ -87,9 +39,10 @@ const Bucket = ( props ) => {
                 setLoad(true)
             })
 
-        //createFile()
-        //getBase64FromImageUrl("http://localhost:8000/media/static/default.png")
-
+        getAllConfsBucket()
+            .then((res) => {
+                console.log(res)
+            })
     }, [])
 
     if (loaded === false) {

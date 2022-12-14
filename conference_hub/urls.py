@@ -18,8 +18,8 @@ urlpatterns = [
 
     # path('', include('ch.urls')),
     path('users/', include('users.urls')),
-    path('conferences/', include('conferences.urls'))
-
+    path('conferences/', include('conferences.urls')),
+    path('ch/', include('ch.urls'))
 ]
 
 if settings.DEBUG:

@@ -5,6 +5,8 @@ import ConferenceModal from './ConferenceModal'
 import CustomCardMedia from './CustomCardMedia'
 import {useNavigate} from "react-router-dom";
 import {conferenceCRUDHandler} from "../actions/ConferenceFunctions";
+import {getStateConfBucket} from "../actions/OtherFunctions";
+import {getToken} from "../actions/UserFunctions";
 
 
 // TODO: populate cards with data
@@ -15,17 +17,22 @@ export const MuiCard = (props) => {
     let [manipulate, setManipulate] = React.useState(false)
     let [inbucket, changeStateBucket] = React.useState(false)
     let navigate = useNavigate()
+    let token = getToken()
 
     const addToBucket = (conf) => {
         changeStateBucket(!inbucket)
         console.log(conf)
     }
 
-
     useEffect(() => {
         if (props.user?.user?.username === conference_j?.organization?.user?.username) {
             setManipulate(true)
         }
+
+        getStateConfBucket(conference_j.slug, token)
+            .then((res) => {
+                console.log("res === ", res.length)
+            })
     }, [inbucket, ])
 
     return (
@@ -65,7 +72,7 @@ export const MuiCard = (props) => {
                             }
                         >
                                 {!inbucket && "Add to bucket"}
-                                {inbucket && "Rm from bucket"}
+                                {inbucket && "Remove from bucket"}
                         </Button>}
                     </CardActions>
                 </Card>

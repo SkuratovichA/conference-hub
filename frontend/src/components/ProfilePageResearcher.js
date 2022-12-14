@@ -1,8 +1,6 @@
 import React from 'react';
 import './styles/Other.css'
 import {EditableTypography} from "./EditableTypography";
-import { useContext } from "react";
-import authContext from "../context/AuthContext";
 import {setProperty} from "../actions/OtherFunctions"
 /* eslint-disable no-useless-escape */
 /* eslint-disable no-unexpected-multiline */
@@ -17,9 +15,7 @@ import {
   MDBProgress,
   MDBProgressBar,
 } from 'mdb-react-ui-kit';
-import {getToken} from "../actions/UserFunctions";
-import {useState} from "react";
-
+import {userCRUDHandler} from "../actions/UserFunctions";
 
 const ProfilePageResearcher = ( props ) => {
 
@@ -206,10 +202,7 @@ const ProfilePageResearcher = ( props ) => {
               <MDBCard className="mb-4 mb-md-0">
                 <MDBCardBody>
                   <MDBCardText className="mb-4">My conferences</MDBCardText>
-                  <MDBCardText className="mb-1" style={{ fontSize: '.77rem' }}>Web Design</MDBCardText>
-                  <MDBProgress className="rounded">
-                    <MDBProgressBar width={80} valuemin={0} valuemax={100} />
-                  </MDBProgress>
+                  <MDBCardText className="mb-1" style={{ fontSize: '.77rem' }}>My conferences</MDBCardText>
                 </MDBCardBody>
               </MDBCard>
             </MDBCol>
@@ -218,10 +211,7 @@ const ProfilePageResearcher = ( props ) => {
               <MDBCard className="mb-4 mb-md-0">
                 <MDBCardBody>
                   <MDBCardText className="mb-4">My lectures</MDBCardText>
-                  <MDBCardText className="mb-1" style={{ fontSize: '.77rem' }}>Web Design</MDBCardText>
-                  <MDBProgress className="rounded">
-                    <MDBProgressBar width={80} valuemin={0} valuemax={100} />
-                  </MDBProgress>
+                  <MDBCardText className="mb-1" style={{ fontSize: '.77rem' }}>My lectures</MDBCardText>
                 </MDBCardBody>
               </MDBCard>
             </MDBCol>
@@ -230,10 +220,7 @@ const ProfilePageResearcher = ( props ) => {
               <MDBCard className="mb-4 mb-md-0">
                 <MDBCardBody>
                   <MDBCardText className="mb-4">My Organizations</MDBCardText>
-                  <MDBCardText className="mb-1" style={{ fontSize: '.77rem' }}>Web Design</MDBCardText>
-                  <MDBProgress className="rounded">
-                    <MDBProgressBar width={80} valuemin={0} valuemax={100} />
-                  </MDBProgress>
+                  <MDBCardText className="mb-1" style={{ fontSize: '.77rem' }}>My organizations</MDBCardText>
                 </MDBCardBody>
               </MDBCard>
             </MDBCol>
