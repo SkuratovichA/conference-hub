@@ -17,58 +17,43 @@ import {
   MDBProgress,
   MDBProgressBar,
 } from 'mdb-react-ui-kit';
+import {getToken} from "../actions/UserFunctions";
+import {useState} from "react";
+import {userCRUDHandler} from "../actions/UserFunctions";
 
+const ProfilePageOrganization = ( props ) => {
 
-export default class ProfilePageOrganization extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            token: this.props.token
-        }
-
-        console.log(this.state)
-        this.handleDataChange = this._handleDataChange.bind(this)
-        this.handleDataValidation = this._handleDataValidation.bind(this)
-    }
-
-    _handleDataValidation = (newName) => {
+    const handleGroupNameValidation = (newName) => {
         return true
     }
 
-    _handleDataChange = (key, new_val) => {
+    const handleGroupNameChange = (key, new_val) => {
         if (key === "name") {
-            Object.assign(this.props.user, setProperty(this.props.user, 'user.name', new_val))
+            Object.assign(props.user, setProperty(props.user, 'user.name', new_val))
         }
         else if (key === "address") {
             let new_values = new_val.trim().split(/\s+/);
             if (new_values.length === 2) {
-                Object.assign(this.props.user, setProperty(this.props.user, 'user.country', new_values[1]))
-                Object.assign(this.props.user, setProperty(this.props.user, 'user.city', new_values[0].slice(0, -1)))
+                Object.assign(props.user, setProperty(props.user, 'user.country', new_values[1]))
+                Object.assign(props.user, setProperty(props.user, 'user.city', new_values[0].slice(0, -1)))
             }
         }
         else if (key === "email") {
-            Object.assign(this.props.user, setProperty(this.props.user, 'user.email', new_val))
+            Object.assign(props.user, setProperty(props.user, 'user.email', new_val))
         }
         else if (key === "login") {
-            Object.assign(this.props.user, setProperty(this.props.user, 'user.username', new_val))
+            Object.assign(props.user, setProperty(props.user, 'user.username', new_val))
         }
     }
 
-    render() {
-
-        if (((this.props.user || {}).user || {}).username === undefined) {
-            return ""
-        }
-
-        return (
+    return (
         <section style={{ backgroundColor: '#eee' }}>
       <MDBContainer className="py-5">
         <MDBRow>
           <MDBCol lg="4">
               <MDBCardBody className="text-center">
                 <MDBCardImage
-                  src={"http://localhost:8000" + (((this.props.user || {}).user || {}).profile || {}).image}
+                  src={"http://localhost:8000/media/static/default.png"}
                   alt="avatar"
                   className="rounded-circle"
                   style={{ width: '250px' }}
@@ -79,10 +64,17 @@ export default class ProfilePageOrganization extends React.Component {
                     }
                     }>Delete profile</button>
                     <div className="divider"/>
-                    <button type="button" className="btn btn-info" onClick={() => {
-                        this.props.userCRUDHandler("update", this.props.user, this.state.token)
+                    <button type="button" className="btn btn-info"
+                        onClick={() => {
+                            userCRUDHandler("update", props.user, props?.token)
+                                .then(() => {
+                                    alert('Changes saved!')
+                                })
+                        }
                     }
-                    }>Save Changes</button>
+                    >
+                        Save Changes
+                    </button>
                 </div>
               </MDBCardBody>
           </MDBCol>
@@ -99,9 +91,9 @@ export default class ProfilePageOrganization extends React.Component {
                       <EditableTypography
                         canEdit={true}
                         variant="h1"
-                        initialValue={((this.props.user || {}).user || {}).name}
-                        onValidate={this.handleDataValidation}
-                        onSave={(v) => this.handleDataChange("name", v)}
+                        initialValue={((props.user || {}).user || {}).name}
+                        onValidate={handleGroupNameValidation}
+                        onSave={(v) => handleGroupNameChange("name", v)}
                         label="Name"
 
                         component="h1"
@@ -122,9 +114,9 @@ export default class ProfilePageOrganization extends React.Component {
                       <EditableTypography
                         canEdit={true}
                         variant="h1"
-                        initialValue={((this.props.user || {}).user || {}).email + ""}
-                        onValidate={this.handleDataValidation}
-                        onSave={(v) => this.handleDataChange("email", v)}
+                        initialValue={((props.user || {}).user || {}).email + ""}
+                        onValidate={handleGroupNameValidation}
+                        onSave={(v) => handleGroupNameChange("email", v)}
                         label="Email"
 
                         component="h1"
@@ -145,9 +137,9 @@ export default class ProfilePageOrganization extends React.Component {
                       <EditableTypography
                         canEdit={true}
                         variant="h1"
-                        initialValue={((this.props.user || {}).user || {}).username + ""}
-                        onValidate={this.handleDataValidation}
-                        onSave={(v) => this.handleDataChange("login", v)}
+                        initialValue={((props.user || {}).user || {}).username + ""}
+                        onValidate={handleGroupNameValidation}
+                        onSave={(v) => handleGroupNameChange("login", v)}
                         label="Login"
 
                         component="h1"
@@ -168,9 +160,9 @@ export default class ProfilePageOrganization extends React.Component {
                       <EditableTypography
                         canEdit={false}
                         variant="h1"
-                        initialValue={((this.props.user || {}).user || {}).balance + " $"}
-                        onValidate={this.handleDataValidation}
-                        onSave={(v) => this.handleDataChange("balance", v)}
+                        initialValue={((props.user || {}).user || {}).balance + " $"}
+                        onValidate={handleGroupNameValidation}
+                        onSave={(v) => handleGroupNameChange("balance", v)}
                         label="Balance"
 
                         component="h1"
@@ -191,9 +183,9 @@ export default class ProfilePageOrganization extends React.Component {
                       <EditableTypography
                         canEdit={true}
                         variant="h1"
-                        initialValue={((this.props.user || {}).user || {}).city + ", " + ((this.props.user || {}).user || {}).country}
-                        onValidate={this.handleDataValidation}
-                        onSave={(v) => this.handleDataChange("address", v)}
+                        initialValue={((props.user || {}).user || {}).city + ", " + ((props.user || {}).user || {}).country}
+                        onValidate={handleGroupNameValidation}
+                        onSave={(v) => handleGroupNameChange("address", v)}
                         label="Address"
 
                         component="h1"
@@ -236,6 +228,7 @@ export default class ProfilePageOrganization extends React.Component {
           </MDBRow>
       </MDBContainer>
     </section>
-        )
-    }
+  );
 }
+
+export default ProfilePageOrganization

@@ -14,13 +14,27 @@ from rest_framework import viewsets, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import FileUploadParser
 from rest_framework import status
+from datetime import date
 
 
 import logging
 
 
 logger = logging.getLogger(__name__)
+
+class ConferenceGetOneAPi(APIView):
+    queryset = conf_models.ConferenceModel
+    serializer_class = sers.ConferenceSerializerSlug
+    lookup_field = 'slug'
+
+    def get(self, request, *args, **kwargs):
+        content = {}
+        conf = conf_models.ConferenceModel.objects.get(slug=kwargs['slug'])
+        content['conf'] = sers.ConferenceSerializer(conf).data
+
+        return Response(content, status=status.HTTP_200_OK)
 
 
 class ConferenceGetAllAPi(generics.RetrieveAPIView):
@@ -47,15 +61,14 @@ class ConferenceOrganizationManipulateAPi(APIView):
         return Response(content, status=status.HTTP_200_OK)
 
     def patch(self, request, *args, **kwargs):
-        conf = conf_models.ConferenceModel.objects.get(name=request.data['name'])
+        conf = conf_models.ConferenceModel.objects.get(slug=kwargs['slug'])
         conf.name = request.data['data']['name']
         conf.brief = request.data['data']['brief']
-        conf.slug = request.data['data']['slug']
-        conf.date_from = request.data['data']['date_from']
-        conf.date_to = request.data['data']['dat_to']
+        conf.slug = (request.data['data']['name']).replace(" ", "")
+        conf.date_from = (request.data['data']['date_from']).split('T', 1)[0]
+        conf.date_to = (request.data['data']['date_to']).split('T', 1)[0]
         conf.address = request.data['data']['address']
-        conf.price = request.data['data']['price']
-        conf.image = request.data['data']['image']
+        conf.price.amount = request.data['data']['price']
 
         conf.save()
         return Response(status=status.HTTP_200_OK)
@@ -67,12 +80,33 @@ class ConferenceOrganizationManipulateAPi(APIView):
         return Response(status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
-        serializer = sers.ConferenceSerializer(data=request.data['data'])
-        if serializer.is_valid():
-            serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
+        logger.debug(request.data)
+        request.data['data']['date_from'] = (request.data['data']['date_from']).split('T', 1)[0]
+        request.data['data']['date_to'] = (request.data['data']['date_to']).split('T', 1)[0]
 
-        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+        org = u_models.OrganizationModel.objects.get(user__username=request.data['data']['organization']['user']['username'])
+
+        object1 = conf_models.ConferenceModel(date_to=date.today(), date_from=date.today(), organization=org,
+                                              price=request.data['data']['price'], address=request.data['data']['address'],
+                                              name=request.data['data']['name'], slug=request.data['data']['slug'],
+                                              brief=request.data['data']['brief'])
+
+        object1.save()
+
+        # request.data['data']['image'] =
+        # name_org = request.data['data']['organization']['user']['username']
+        # print(name_org)
+        # del request.data['data']['organization']
+
+        # serializer = sers.ConferenceSerializer(data=request.data['data'])
+        # if serializer.is_valid():
+        #     serializer.save()
+        #     return Response(status=status.HTTP_201_CREATED)
+        #
+        # print(serializer.errors)
+        #return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+
+        return Response(status=status.HTTP_201_CREATED)
 
 
 

@@ -1,28 +1,29 @@
 import React, {useContext} from "react";
-import './styles/LogIn.css'
 import AuthContext from "../context/AuthContext";
+
+import './styles/LogIn.css'
 
 const LogIn = () => {
     let {loginUser} = useContext(AuthContext)
 
-    return(
+    return (
         <div id="loginform">
-            <FormHeader title="Login" />
             <form onSubmit={loginUser}>
+                <FormHeader title="Login"/>
                 <FormInput description="Username or Email"
-                           placeholder="Placeholder"
+                           placeholder="Password"
                            type="text"
                            input="username"
                            id="username-id"
                 />
                 <FormInput description="Password"
-                           placeholder="Placeholder"
+                           placeholder="Password"
                            type="password"
                            input="password"
                            id="password-id"
                 />
                 <FormButton title="Log in"/>
-           </form>
+            </form>
         </div>
     )
 }
@@ -32,18 +33,18 @@ const FormHeader = props => (
 );
 
 const FormButton = props => (
-  <div id="button" className="row-login">
-    <button>{props.title}</button>
-  </div>
+    <div id="button" className="row-login">
+        <button>{props.title}</button>
+    </div>
 );
 
 const FormInput = props => (
-  <div className="row-login">
-    <label>{props.description}</label>
-    <input type={props.type} placeholder={props.placeholder}
-           name={props.input} id={props.id} required
-    />
-  </div>
+    <div className="row-login">
+        <label>{props.description}</label>
+        <input type={props.type} placeholder={props.placeholder}
+               name={props.input} id={props.id} required
+        />
+    </div>
 );
 
 export default LogIn;

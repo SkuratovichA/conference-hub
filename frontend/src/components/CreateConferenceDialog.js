@@ -5,11 +5,13 @@ import {
 } from '@mui/material'
 import ConferenceModal from './ConferenceModal'
 import plus from '../plus.png'
+import {useParams, useLocation, useNavigate} from "react-router-dom";
 
 export default function CreateConferenceDialog({
-    conferenceCRUDHandler
+    user
 }) {
     const [open, setOpen] = React.useState(false)
+    let navigate = useNavigate()
 
     return (
         <React.Fragment>
@@ -18,9 +20,7 @@ export default function CreateConferenceDialog({
                 color="neutral"
                 // startDecorator={<Add/>}
                     onClick={() => {
-                        console.log("CREATE NEW")
-                        // var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?create=true';
-                        // window.history.pushState({path:newurl},'',newurl);
+                        navigate('/conferences' + "?create=true")
                         setOpen(true)
                     }
                 }
@@ -34,11 +34,12 @@ export default function CreateConferenceDialog({
             </CardActionArea>
 
             <ConferenceModal
+                    user={user}
                     open={open}
+                    slug={null}
                     onClose={() => setOpen(false)}
                     canEdit={true}
                     newConf={true}
-                    conferenceCRUDHandler={conferenceCRUDHandler}
                     callBackOnCreate={() => setOpen(false)}
             />
         </React.Fragment>

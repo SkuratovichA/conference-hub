@@ -1,19 +1,19 @@
-export const conferenceCRUDHandler = async (type, _conference, token, dataToUpdate) => {
+
+export const conferenceCRUDHandler = async (type, _conference, token, dataToUpdate, imagee) => {
     let response, data;
 
     switch (type) {
-        case "fetch":
-            console.log("FETCH")
-            response = await fetch(String('http://localhost:8000/conferences/api/manipulate_conf/' + _conference), {
+        case "fetch_one":
+            console.log("FETCH ONE")
+            response = await fetch(String('http://localhost:8000/conferences/api/get_conf/' + _conference), {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': token,
                 },
             })
 
             data = await response.json()
-            return response.status >= 200 && response.status <= 299 ? data : {}
+            return response.status >= 200 && response.status <= 299 ? data['conf'] : {}
         case "fetch_all":
             console.log("FETCH ALL")
             response = await fetch('http://localhost:8000/conferences/api/get_all_confs', {
@@ -56,7 +56,6 @@ export const conferenceCRUDHandler = async (type, _conference, token, dataToUpda
             data = await response.json()
             return response.status >= 200 && response.status <= 299 ? data : {}
         case "create":
-            console.log("CREATE")
             response = await fetch(String('http://localhost:8000/conferences/api/manipulate_conf/' + _conference), {
                 method: 'POST',
                 headers: {

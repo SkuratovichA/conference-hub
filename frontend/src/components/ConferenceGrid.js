@@ -3,6 +3,7 @@ import { Grid, Box, Card } from "@mui/material"
 import CreateConferenceDialog from './CreateConferenceDialog'
 import plus from '../plus.png'
 import Conference from './Conference'
+import {conferenceCRUDHandler} from "../actions/ConferenceFunctions";
 
 
 import {MuiCard} from './ConferenceCard'
@@ -10,7 +11,7 @@ import {MuiCard} from './ConferenceCard'
 export const ConferenceGrid = (
     {
         conferences,
-        conferenceCRUDHandler,
+        user,
         tightLeft,
         conferenceOnClick
     }) => {
@@ -25,23 +26,24 @@ export const ConferenceGrid = (
     return (
 
         <Box style={{maxHeight: '100vh', 'overflowX': 'hidden', 'overflowY': 'scroll'}}>
-            <Grid container spacing={2}>
-
-                <Grid key="add_conference" item {...gridProps}>
-                    <Box width="280px">
-                        <Card>
-                            <CreateConferenceDialog
-                                conferenceCRUDHandler={conferenceCRUDHandler}
-                            />
-                        </Card>
-                    </Box>
-                </Grid>
+            <Grid container spacing={2} >
+                { user?.user?.is_organization &&
+                    <Grid key="add_conference" item {...gridProps}>
+                        <Box width="280px">
+                            <Card>
+                                <CreateConferenceDialog
+                                    user={user}
+                                />
+                            </Card>
+                        </Box>
+                    </Grid>
+                }
                 {conferences.map(conference => (
                         <Grid key={conference.name} item {...gridProps}>
                             <MuiCard
+                                user={user}
                                 conferenceOnClick={() => conferenceOnClick(conference.slug)}
                                 conference={conference}
-                                conferenceCRUDHandler={conferenceCRUDHandler}
                             />
                         </Grid>
                     )

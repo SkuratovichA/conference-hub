@@ -1,4 +1,11 @@
+import {useContext, useState} from "react";
+import AuthContext from "../context/AuthContext";
+
 export const getInfoUser = async (token) => {
+    if (token === null) {
+        return {}
+    }
+
     let response = await fetch('http://localhost:8000/users/api/manipulate_info_user', {
         method: 'GET',
         headers: {
@@ -8,21 +15,26 @@ export const getInfoUser = async (token) => {
     })
 
     let data = await response.json()
+    return response.status >= 200 && response.status <= 299 ? data['infouser'] : null
+}
 
-    if (response.status === 200) {
-        return data
-    }
-    else {
-        alert("!PIZDA SAPOGAM INFO USER!")
-        return {}
-    }
+export const getUsers = async (type) => {
+    // type in [all, researchers, organizations]
+     let response = await fetch('http://localhost:8000/users/api/get_users_' + type, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+
+    let data = await response.json()
+    console.log("users in getUsers: ", data['users'])
+    console.log("response.status", response.status)
+    return response.status >= 200 && response.status <= 299 ? data['users'] : []
 }
 
 export const userCRUDHandler = async (type, dataToUpdate, token) => {
-
-    console.log('type', type, dataToUpdate)
-
-    let response = await fetch('http://localhost:8000/users/api/manipulate_info_user', {
+    await fetch('http://localhost:8000/users/api/manipulate_info_user', {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
@@ -32,11 +44,9 @@ export const userCRUDHandler = async (type, dataToUpdate, token) => {
             data: dataToUpdate,
         }),
     })
+}
 
-    if (response.status === 200) {
-        alert("!EBAC CHOROSHO!")
-    }
-    else {
-        alert("!PIZDA SAPOGAM CRUD USER!")
-    }
+export const getToken = () => {
+    let {authTokens} = useContext(AuthContext)
+    return "Bearer " + authTokens.access
 }

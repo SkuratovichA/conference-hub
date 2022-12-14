@@ -1,0 +1,159 @@
+.bucket-count {
+    margin-left: 0 !important;
+    margin-top: 5px !important;
+}
+
+.my-vline {
+    position:fixed;
+    left:50%;
+    top: 64px;
+    bottom:0; margin:0;
+    border:none;
+    border-right:solid 4px rgba(0, 0, 0, 1) !important;
+}
+
+.colorful-head-buy {
+    background-color: #3c763d;
+    border-left: solid 1px black;
+    margin-bottom: 20px;
+}
+
+.colorful-head-bucket {
+    background-color: #a94442;
+    border-left: solid 1px black;
+    margin-bottom: 20px;
+}
+
+.my-div {
+    text-align: center;
+    font-size: 30px;
+    float: left;
+    color: white;
+    align-items: center;
+    justify-content: center;
+    width:50%;
+    min-width: 300px;
+}
+
+.list-confs {
+    color: black;
+    font-size: 16px;
+    justify-content: center;
+    align-items: center;
+}
+
+a {
+    text-decoration: none;
+    color: #3498db;
+}
+
+a:hover {
+    color: #2980b9;
+}
+
+ul {
+    list-style: none;
+}
+
+li {
+    margin-bottom: 20px;
+}
+
+h2 {
+  line-height: 1.2;
+  margin-bottom: 1.6rem;
+}
+
+.wrapper {
+  max-width: 400px;
+  margin: 50px auto;
+  padding-right: 1em;
+}
+
+/**
+ * Helpers
+ */
+.border-tlr-radius {
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+}
+
+.text-center { text-align: center; }
+
+.radius { border-radius: 2px; }
+
+.padding-tb { padding-top: 1.6rem; padding-bottom: 1.6rem;}
+
+.shadowDepth0 { box-shadow: 0 1px 3px rgba(0,0,0, 0.12); }
+
+.shadowDepth1 {
+   box-shadow:
+      0 1px 3px rgba(0,0,0, 0.12),
+      0 1px 2px rgba(0,0,0, 0.24);
+}
+
+
+/**
+ * Card Styles
+ */
+
+.card {
+  background-color: #fff;
+  margin-bottom: 1.6rem;
+}
+
+.card__padding {
+  padding: 1.6rem;
+}
+
+.card__image {
+  min-height: 100px;
+  background-color: #eee;
+}
+  .card__image img {
+    width: 100%;
+    max-width: 100%;
+    display: block;
+  }
+
+.card__content {
+  position: relative;
+}
+
+/* card meta */
+.card__meta time {
+  font-size: 1.5rem;
+  color: #bbb;
+  margin-left: 0.8rem;
+}
+
+/* card article */
+.card__article a {
+  text-decoration: none;
+  color: #444;
+  transition: all 0.5s ease;
+}
+  .card__article a:hover {
+    color: #2980b9;
+  }
+
+/* card action */
+.card__action {
+  overflow: hidden;
+  padding-right: 1.6rem;
+  ..padding-left: 1.6rem;
+  padding-bottom: 1.6rem;
+}
+
+.card__author {}
+
+  .card__author img,
+  .card__author-content {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .card__author img{
+    border-radius: 50%;
+    margin-right: 0.6em;
+  }

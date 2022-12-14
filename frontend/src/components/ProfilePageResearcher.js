@@ -17,6 +17,9 @@ import {
   MDBProgress,
   MDBProgressBar,
 } from 'mdb-react-ui-kit';
+import {getToken} from "../actions/UserFunctions";
+import {useState} from "react";
+
 
 const ProfilePageResearcher = ( props ) => {
 
@@ -25,81 +28,84 @@ const ProfilePageResearcher = ( props ) => {
     }
 
     const handleGroupNameChange = (key, new_val) => {
-      if (key === "fullname") {
-        let new_values = new_val.trim().split(/\s+/);
-        if (new_values.length === 2) {
-          Object.assign(props.user, setProperty(props.user, 'user.name', new_values[1]))
-          Object.assign(props.user, setProperty(props.user, 'last_name', new_values[0]))
+        if (key === "fullname") {
+            let new_values = new_val.trim().split(/\s+/);
+            if (new_values.length === 2) {
+                Object.assign(props.user, setProperty(props.user, 'user.name', new_values[1]))
+                Object.assign(props.user, setProperty(props.user, 'last_name', new_values[0]))
+            }
         }
-      }
-      else if (key === "address") {
-        let new_values = new_val.trim().split(/\s+/);
-        if (new_values.length === 2) {
-          Object.assign(props.user, setProperty(props.user, 'user.country', new_values[1]))
-          Object.assign(props.user, setProperty(props.user, 'user.city', new_values[0].slice(0, -1)))
+        else if (key === "address") {
+            let new_values = new_val.trim().split(/\s+/);
+            if (new_values.length === 2) {
+                Object.assign(props.user, setProperty(props.user, 'user.country', new_values[1]))
+                Object.assign(props.user, setProperty(props.user, 'user.city', new_values[0].slice(0, -1)))
+            }
         }
-      }
-      else if (key === "email") {
-        Object.assign(props.user, setProperty(props.user, 'user.email', new_val))
-      }
-      else if (key === "login") {
-        Object.assign(props.user, setProperty(props.user, 'user.username', new_val))
-      }
+        else if (key === "email") {
+            Object.assign(props.user, setProperty(props.user, 'user.email', new_val))
+        }
+        else if (key === "login") {
+            Object.assign(props.user, setProperty(props.user, 'user.username', new_val))
+        }
     }
 
-    let {authTokens} = useContext(authContext)
-    let token = String("Bearer " + String(authTokens.access))
-
-  return (
-    <section style={{ backgroundColor: '#eee' }}>
-      <MDBContainer className="py-5">
-        <MDBRow>
-          <MDBCol lg="4">
-              <MDBCardBody className="text-center">
-                <MDBCardImage
-                  src={"http://localhost:8000" + (((props.user || {}).user || {}).profile || {}).image}
-                  alt="avatar"
-                  className="rounded-circle"
-                  style={{ width: '250px' }}
-                  fluid />
-                <div className="d-flex justify-content-center mb-2 profile-buttons">
-                    <button type="button" className="btn btn-danger">Delete profile</button>
-                    <div className="divider"/>
-                    <button type="button" className="btn btn-info" onClick={() => {
-                        props.userCRUDHandler("update", props.user, token)
-                    }
-                    }>Save Changes</button>
-                </div>
-              </MDBCardBody>
-          </MDBCol>
-
-          <MDBCol lg="8">
-            <MDBCard className="mb-4">
-              <MDBCardBody>
+    return (
+        <section style={{ backgroundColor: '#eee' }}>
+            <MDBContainer className="py-5">
                 <MDBRow>
-                  <MDBCol sm="3" className="card-text-center">
-                    <MDBCardText>Full Name</MDBCardText>
-                  </MDBCol>
-                  <MDBCol sm="9">
-                    <MDBCardText className="text-muted">
-                      <EditableTypography
-                        canEdit={true}
-                        variant="h1"
-                        initialValue={(props.user || {}).last_name + " " + ((props.user || {}).user || {}).name}
-                        onValidate={handleGroupNameValidation}
-                        onSave={(v) => handleGroupNameChange("fullname", v)}
-                        label="FullName"
+                    <MDBCol lg="4">
+                        <MDBCardBody className="text-center">
+                            <MDBCardImage
+                              src={"http://localhost:8000/media/static/default.png"}
+                              alt="avatar"
+                              className="rounded-circle"
+                              style={{ width: '250px' }}
+                              fluid
+                            />
+                            <div className="d-flex justify-content-center mb-2 profile-buttons">
+                                <button type="button" className="btn btn-danger">
+                                    Delete profile
+                                </button>
+                                <div className="divider"/>
+                                <button type="button" className="btn btn-info"
+                                    onClick={() => {
+                                        userCRUDHandler("update", props.user, props.token)
+                                    }
+                                }
+                                >
+                                    Save Changes
+                                </button>
+                            </div>
+                        </MDBCardBody>
+                    </MDBCol>
+                    <MDBCol lg="8">
+                        <MDBCard className="mb-4">
+                            <MDBCardBody>
+                                <MDBRow>
+                                    <MDBCol sm="3" className="card-text-center">
+                                        <MDBCardText>Full Name</MDBCardText>
+                                    </MDBCol>
+                                    <MDBCol sm="9">
+                                        <MDBCardText className="text-muted">
+                                            <EditableTypography
+                                                canEdit={true}
+                                                variant="h1"
+                                                initialValue={(props.user || {}).last_name + " " + ((props.user || {}).user || {}).name}
+                                                onValidate={handleGroupNameValidation}
+                                                onSave={(v) => handleGroupNameChange("fullname", v)}
+                                                label="FullName"
 
-                        component="h1"
-                        level="inherit"
-                        fontSize="1.25em"
-                        mb="0.25em"
-                      />
-                    </MDBCardText>
-                  </MDBCol>
-                </MDBRow>
-                <hr />
-                <MDBRow>
+                                                component="h1"
+                                                level="inherit"
+                                                fontSize="1.25em"
+                                                mb="0.25em"
+                                            />
+                                        </MDBCardText>
+                                    </MDBCol>
+                                </MDBRow>
+                                <hr />
+                                <MDBRow>
                   <MDBCol sm="3" className="card-text-center">
                     <MDBCardText>Email</MDBCardText>
                   </MDBCol>

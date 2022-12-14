@@ -1,20 +1,23 @@
 import * as React from "react";
 import {Card, Button, CardActions, CardContent, IconButton, Stack} from "@mui/material";
-import ImageIcon from "@mui/icons-material/Image";
 import {EditableTypography} from "./EditableTypography";
 import {MuiDateRangePicker} from "./RangeDatePicker";
+import ImageIcon from "@mui/icons-material/Image";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import EuroIcon from "@mui/icons-material/Euro";
 import Scheduler from './Scheduler'
 import authContext from "../context/AuthContext";
 import {getInfoUser} from "../actions/UserFunctions";
 import CustomCardMedia from './CustomCardMedia'
+import {useLocation} from "react-router-dom";
+import {conferenceCRUDHandler} from "../actions/ConferenceFunctions";
+import {createFile} from "../actions/OtherFunctions";
 
 
 export default class Conference extends React.Component {
     static contextType = authContext
     // canEdit - can create/delete/update a conference
-    // canDelete - *update* and *delete* buttons are displayed
+    // newConf - creating a new conference, co it's not possible to delete one
     // conferenceCRUDHandler - (type, conference), type in ['create', 'update', 'fetch', 'delete'].
     // callBackOnCreate - close a window/do something else
     // callBackOnDelete - close a window/remove the element
@@ -23,204 +26,221 @@ export default class Conference extends React.Component {
         super(props);
 
         this.state = {
-            conference:
-            {
-                    'name': 'Default Name',
-                    'brief': '',
-                    'slug': 'DefaultName',
-                    'date_from': '',
-                    'date_to': '',
-                    'address': '',
-                    'price': '',
-                    'image': '/media/static/conf_default.jpg',
-                    'visitors': {},
-                    'organization': this.props.owner
-                }
+            conference: JSON.parse(JSON.stringify({
+                'name': 'Default Name',
+                'brief': '',
+                'slug': 'DefaultName',
+                'date_from': '',
+                'date_to': '',
+                'address': '',
+                'price': '',
+                'visitors': [],
+                'organization': this.props.owner
+            })),
+            loaded: false,
+            token: null
         }
         this.handleDataChange = this._handleDataChange.bind(this)
         this.handleDataValidation = this._handleDataValidation.bind(this)
         this.createConference = this._createConference.bind(this)
+        this.updateConference = this._updateConference.bind(this)
         this.deleteConference = this._deleteConference.bind(this)
     }
 
     _handleDataChange(key, newValue) {
+        console.log(key, newValue)
+        let var1 = this.state.conference?.name
+
         this.setState({
-                conference: {
-                    ...this.state.conference,
-                    [key]: newValue
-                }
+            conference: {
+                ...this.state.conference,
+                [key]: newValue,
+                ['slug']: var1.replaceAll(" ", "")
             }
-        )
+        })
     }
 
     _handleDataValidation = (newName) => {
-        return /^[A-Za-z][A-Za-z0-9\s_\-]+$/.test(newName)
+        return true
     }
 
     _deleteConference() {
-        this.props.conferenceCRUDHandler("delete", this.state)
-        if (this.props.callBackOnDelete) {
-            this.props.callBackOnDelete()
-        }
+        conferenceCRUDHandler("delete", this.state.conference.slug, this.state.token, this.state.conference, null)
+        this.props.callBackOnDelete()
+    }
+
+    _updateConference() {
+        conferenceCRUDHandler("update", this.state.conference.slug, this.state.token, this.state.conference, null)
     }
 
     _createConference() {
-        this.props.conferenceCRUDHandler("create", this.state)
-        if (this.props.callBackOnCreate) {
-            this.props.callBackOnCreate()
-        }
+        conferenceCRUDHandler("create", this.state.conference.slug, this.state.token, this.state.conference, null)
+        this.props.callBackOnCreate()
     }
 
     componentDidMount() {
         let {user, authTokens} = this.context
-        let token = String("Bearer " + String(authTokens.access))
-        this.props.conferenceCRUDHandler("fetch", this.state.conference.slug, token, this.state.conference)
-        console.log(this.props.canEdit, this.props.canDelete)
+        let token = "Bearer " + authTokens?.access
+
+        this.setState({token: token})
+
+        if (this.props.newConf === false) {
+            conferenceCRUDHandler("fetch_one", this.props.slug, token, this.state.conference, null)
+            .then((confinfo) => {
+                this.setState({conference: confinfo})
+            })
+            .then(() => {
+                this.setState({loaded: true})
+            })
+        }
+        else {
+            this.setState({loaded: true})
+        }
     }
 
     render() {
+        const imageEdit = this.props.canEdit && (
+            <React.Fragment>
+                <input
+                    accept="image/*"
+                    style={{display: "none"}}
+                    id="icon-button-photo"
+                    // onChange={(v) => handleDataChange("image", v)}
+                    type="file"
+                />
+
+                <label htmlFor="icon-button-photo">
+                    <IconButton
+                        style={{
+                            position: "relative",
+                            transform: "translate(0, -120px)",
+                            background: "rgba(255,255,255,0.85)"
+                        }}
+                        color="inherit"
+                        component="span">
+                        <ImageIcon/>
+                    </IconButton>
+                </label>
+
+            </React.Fragment>
+        )
+
+        const cardActions = this.props.canEdit && (
+            <CardActions>
+                {!this.props.newConf ? (
+                    <Stack direction={"row"} justifyContent={"flex-between"}>
+                        <Button size="small" color={"error"}
+                                onClick={this.deleteConference}
+                        >
+                            Delete
+                        </Button>
+                        <Button size="small"
+                                onClick={this.updateConference}
+                        >
+                            Update
+                        </Button>
+                    </Stack>
+                ) : (
+                    <Button size="small" color={"success"}
+                            onClick={this.createConference}
+                    >
+                        Create
+                    </Button>
+                )}
+            </CardActions>
+        )
+
         return (
+            this.state.loaded && (
             <Card>
                 <CustomCardMedia
-                    src={this.state.conference.image}
+                    src={"http://localhost:8000/media/static/conf_default.jpg"}
                 />
                 <CardContent>
 
-                    {this.props.canEdit && (
-                        <React.Fragment>
-                            <input
-                                accept="image/*"
-                                style={{display: "none"}}
-                                id="icon-button-photo"
-                                // onChange={(v) => handleDataChange("image", v)}
-                                type="file"
-                            />
+                    {imageEdit}
 
-                            <label htmlFor="icon-button-photo">
-                                <IconButton
-                                    style={{
-                                        position: "relative",
-                                        transform: "translate(0, -120px)",
-                                        background: "rgba(255,255,255,0.85)"
-                                    }}
-                                    color="inherit"
-                                    component="span">
-                                    <ImageIcon/>
-                                </IconButton>
-                            </label>
-
-                        </React.Fragment>
-                    )}
-
-
-                    {/*name */}
-                    <EditableTypography
-                        canEdit={this.props.canEdit}
-                        variant="h1"
-                        initialValue={this.state.conference.name}
-                        onValidate={this.handleDataValidation}
-                        onSave={(v) => this.handleDataChange("name", v)}
-                        label="Conference Name"
-
-                        level="inherit"
-                        fontSize="1.25em"
-                        mb="0.25em"
-                    >
-                        {this.state.conference.name}
-                    </EditableTypography>
-
-                    {/*brief description*/}
-                    <EditableTypography
-                        canEdit={this.props.canEdit}
-                        variant="h4"
-                        initialValue={this.state.conference.brief}
-                        onValidate={this.handleDataValidation}
-                        onSave={(v) => this.handleDataChange("brief", v)}
-                        label="Brief description of the conference"
-                        color="text.secondary"
-                    >
-                        {this.state.conference.brief}
-                    </EditableTypography>
-
-                    {/*date from - date to*/}
-                    <MuiDateRangePicker
-                        canEdit={this.props.canEdit}
-                        fromValueHandler={(newFrom) => this.handleDataChange("date_from", newFrom)}
-                        toValueHandler={(newTo) => this.handleDataChange("date_to", newTo)}
-                        fromValue={this.state.conference.date_from}
-                        toValue={this.state.conference.date_to}
-                    />
-
-                    {/*/!* address*!/*/}
-                    <Stack direction={'row'}>
-                        <LocationOnIcon sx={{mt: 1, mb: 1}}>
-                        </LocationOnIcon>
+                        {/*name */}
                         <EditableTypography
                             canEdit={this.props.canEdit}
-                            variant="h2"
-                            initialValue={this.state.conference.address}
+                            variant="h1"
+                            initialValue={(this.state.conference || {}).name}
                             onValidate={this.handleDataValidation}
-                            onSave={(v) => this.handleDataChange("address", v)}
-                            label="Address"
-                        >
-                            {this.state.conference.address}
-                        </EditableTypography>
-                    </Stack>
+                            onSave={(v) => this.handleDataChange("name", v)}
+                            label="Conference Name"
 
-                    {/*/!* price*!/*/}
-                    <Stack direction={'row'}>
-                        <EuroIcon sx={{mt: 1, mb: 1}}/>
+                            level="inherit"
+                            fontSize="1.25em"
+                            mb="0.25em"
+                        >
+                            {(this.state.conference || {}).name}
+                        </EditableTypography>
+
+                        {/*brief description*/}
                         <EditableTypography
                             canEdit={this.props.canEdit}
                             variant="h4"
-                            component="h4"
-                            initialValue={this.state.conference.price}
+                            initialValue={(this.state.conference || {}).brief}
                             onValidate={this.handleDataValidation}
-                            onSave={(v) => this.handleDataChange("price", v)}
-                            label="Price"
+                            onSave={(v) => this.handleDataChange("brief", v)}
+                            label="Brief description of the conference"
+                            color="text.secondary"
                         >
-                            {this.state.conference.price}
+                            {(this.state.conference || {}).brief}
                         </EditableTypography>
-                    </Stack>
 
-                    {/*<Scheduler />*/}
+                        {/*date from - date to*/}
+                        <MuiDateRangePicker
+                            canEdit={this.props.canEdit}
+                            fromValueHandler={(newFrom) => this.handleDataChange("date_from", newFrom)}
+                            toValueHandler={(newTo) => this.handleDataChange("date_to", newTo)}
+                            fromValue={(this.state.conference || {}).date_from}
+                            toValue={(this.state.conference || {}).date_to}
+                        />
 
-                </CardContent>
+                        {/*/!* address*!/*/}
+                        <Stack direction={'row'}>
+                            <LocationOnIcon sx={{mt: 1, mb: 1}}>
+                            </LocationOnIcon>
+                            <EditableTypography
+                                canEdit={this.props.canEdit}
+                                variant="h2"
+                                initialValue={(this.state.conference || {}).address}
+                                onValidate={this.handleDataValidation}
+                                onSave={(v) => this.handleDataChange("address", v)}
+                                label="address"
+                            >
+                                {(this.state.conference.conf || {}).address}
+                            </EditableTypography>
+                        </Stack>
 
-                {this.props.canEdit &&
-                    <CardActions>
-                        {this.props.canDelete && (
-                            <>
-                                <Button size="small" color={"error"}
-                                        onClick={() => {
-                                            let {user, authTokens} = this.context
-                                            let token = String("Bearer " + String(authTokens.access))
-                                            this.props.conferenceCRUDHandler("delete", this.state.conference.slug, token, this.state.conference)
-                                        }
-                                    }
-                                >
-                                    Delete
-                                </Button>
-                                <Button size="small"
-                                        onClick={() => {
-                                            let {user, authTokens} = this.context
-                                            let token = String("Bearer " + String(authTokens.access))
-                                            this.props.conferenceCRUDHandler("update", this.state.conference.slug, token, this.state.conference)
-                                        }
-                                    }
-                                >
-                                    Update
-                                </Button>
-                            </>
-                        )}
-                        {!this.props.canDelete && <Button size="small" color={"success"}
-                                          onClick={this.createConference}
-                        >
-                            Create
-                        </Button>}
-                    </CardActions>
-                }
-            </Card>
+                        {/*/!* price*!/*/}
+                        <Stack direction={'row'}>
+                            <EuroIcon sx={{mt: 1, mb: 1}}/>
+                            <EditableTypography
+                                canEdit={this.props.canEdit}
+                                variant="h4"
+                                component="h4"
+                                initialValue={(this.state.conference || {}).price}
+                                onValidate={this.handleDataValidation}
+                                onSave={(v) => this.handleDataChange("price", v)}
+                                label="price"
+                            >
+                                {(this.state.conference || {}).price}
+                            </EditableTypography>
+                        </Stack>
+
+                        <Scheduler
+                            conference={this.state.conference.slug}
+                            canEdit={this.props.canEdit}
+                        />
+
+                    </CardContent>
+
+                    {cardActions}
+
+                </Card>
+            )
         )
     }
 }
