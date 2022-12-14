@@ -13,14 +13,20 @@ export const MuiCard = (props) => {
 
     const [open, setOpen] = React.useState(false)
     let [manipulate, setManipulate] = React.useState(false)
+    let [inbucket, changeStateBucket] = React.useState(false)
     let navigate = useNavigate()
+
+    const addToBucket = (conf) => {
+        changeStateBucket(!inbucket)
+        console.log(conf)
+    }
 
 
     useEffect(() => {
         if (props.user?.user?.username === conference_j?.organization?.user?.username) {
             setManipulate(true)
         }
-    }, [])
+    }, [inbucket, ])
 
     return (
         <React.Fragment>
@@ -50,13 +56,15 @@ export const MuiCard = (props) => {
                         {props.user.user.is_researcher &&
                             <Button
                             size="small"
-                            //     onClick={() => {
-                            //         navigate('/conferences' + "?conf="+conference_j.slug)
-                            //         setOpen(true)
-                            //     }
-                            // }
+                                onClick={() => {
+                                    addToBucket(conference_j)
+                                    //navigate('/conferences' + "?conf="+conference_j.slug)
+                                    //setOpen(true)
+                                }
+                            }
                         >
-                            Add to bucket
+                                {!inbucket && "Add to bucket"}
+                                {inbucket && "Rm from bucket"}
                         </Button>}
                     </CardActions>
                 </Card>
