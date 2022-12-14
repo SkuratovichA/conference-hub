@@ -11,6 +11,7 @@ import {getInfoUser} from "../actions/UserFunctions";
 import CustomCardMedia from './CustomCardMedia'
 import {useLocation} from "react-router-dom";
 import {conferenceCRUDHandler} from "../actions/ConferenceFunctions";
+import {createFile} from "../actions/OtherFunctions";
 
 
 export default class Conference extends React.Component {
@@ -26,14 +27,13 @@ export default class Conference extends React.Component {
 
         this.state = {
             conference: JSON.parse(JSON.stringify({
-                'name': 'Default Name',
+                'name': 'DefaultName',
                 'brief': '',
                 'slug': 'DefaultName',
                 'date_from': '',
                 'date_to': '',
                 'address': '',
                 'price': '',
-                'image': '/media/static/conf_default.jpg',
                 'visitors': [],
                 'organization': this.props.owner
             })),
@@ -48,21 +48,16 @@ export default class Conference extends React.Component {
     }
 
     _handleDataChange(key, newValue) {
+        console.log(key, newValue)
+        let var1 = this.state.conference?.name
+
         this.setState({
             conference: {
                 ...this.state.conference,
-                [key]: newValue
+                [key]: newValue,
+                ['slug']: var1.replace(/\s+/, "")
             }
         })
-
-        if (key === 'name') {
-            this.setState({
-                conference: {
-                    ...this.state.conference,
-                    'slug': newValue.replace(/\s+/, "")
-                }
-            })
-        }
     }
 
     _handleDataValidation = (newName) => {
@@ -70,17 +65,17 @@ export default class Conference extends React.Component {
     }
 
     _deleteConference() {
-        conferenceCRUDHandler("delete", this.state.conference.slug, this.state.token, this.state.conference)
+        conferenceCRUDHandler("delete", this.state.conference.slug, this.state.token, this.state.conference, null)
         this.props.callBackOnDelete()
     }
 
     _updateConference() {
-        conferenceCRUDHandler("update", this.state.conference.slug, this.state.token, this.state.conference)
+        conferenceCRUDHandler("update", this.state.conference.slug, this.state.token, this.state.conference, null)
     }
 
     _createConference() {
-        console.log('new conf', this.state.conference)
-        conferenceCRUDHandler("create", this.state.conference.slug, this.state.token, this.state.conference)
+        console.log(this.state.conference, 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+        conferenceCRUDHandler("create", this.state.conference.slug, this.state.token, this.state.conference, null)
         this.props.callBackOnCreate()
     }
 
@@ -91,7 +86,7 @@ export default class Conference extends React.Component {
         this.setState({token: token})
 
         if (this.props.newConf === false) {
-            conferenceCRUDHandler("fetch_one", this.props.slug, token, this.state.conference)
+            conferenceCRUDHandler("fetch_one", this.props.slug, token, this.state.conference, null)
             .then((confinfo) => {
                 this.setState({conference: confinfo})
             })
@@ -155,7 +150,7 @@ export default class Conference extends React.Component {
                 ) : (
                     <Button size="small" color={"success"}
                             onClick={() => {
-                                    this._createConference()
+                                    this.createConference()
                                     alert('Conference created!')
                                 }}
                     >
@@ -169,7 +164,7 @@ export default class Conference extends React.Component {
             this.state.loaded && (
             <Card>
                 <CustomCardMedia
-                    src={"http://localhost:8000" + (this.state.conference || {}).image}
+                    src={"http://localhost:8000/media/static/conf_default.jpg"}
                 />
                 <CardContent>
 

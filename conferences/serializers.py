@@ -62,13 +62,9 @@ class ConferenceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = conf_models.ConferenceModel
-        fields = ['name', 'brief', 'slug', 'date_from', 'date_to', 'address', 'price', 'image',
+        fields = ['name', 'brief', 'slug', 'date_from', 'date_to', 'address', 'price',
                   'visitors', 'organization']
-        extra_kwargs = {
-            'image': {
-                'validators': []
-            }
-        }
+
 
 class ConferenceSerializerSlug(serializers.HyperlinkedModelSerializer):
     visitors = ResearcherInfoSerializer(many=True)
@@ -76,14 +72,9 @@ class ConferenceSerializerSlug(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = conf_models.ConferenceModel
-        fields = ['name', 'brief', 'slug', 'date_from', 'date_to', 'address', 'price', 'image',
+        fields = ['name', 'brief', 'slug', 'date_from', 'date_to', 'address', 'price',
                   'visitors', 'organization']
         extra_field_kwargs = {'url': {'lookup_field': 'slug'}}
-        extra_kwargs = {
-            'image': {
-                'validators': []
-            }
-        }
 
 
 # class ConferenceUserSerializer(serializers.ModelSerializer):

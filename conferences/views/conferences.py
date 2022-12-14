@@ -16,6 +16,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import FileUploadParser
 from rest_framework import status
+from datetime import date
 
 
 import logging
@@ -80,22 +81,33 @@ class ConferenceOrganizationManipulateAPi(APIView):
         return Response(status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
-        # ConferenceModel.objects.create(request.data['data'])
-
+        logger.debug(request.data)
         request.data['data']['date_from'] = (request.data['data']['date_from']).split('T', 1)[0]
         request.data['data']['date_to'] = (request.data['data']['date_to']).split('T', 1)[0]
+
+        org = u_models.OrganizationModel.objects.get(user__username=request.data['data']['organization']['user']['username'])
+
+        object1 = conf_models.ConferenceModel(date_to=date.today(), date_from=date.today(), organization=org,
+                                              price=request.data['data']['price'], address=request.data['data']['address'],
+                                              name=request.data['data']['name'], slug=request.data['data']['slug'],
+                                              brief=request.data['data']['brief'])
+
+        object1.save()
+
         # request.data['data']['image'] =
         # name_org = request.data['data']['organization']['user']['username']
         # print(name_org)
         # del request.data['data']['organization']
 
-        serializer = sers.ConferenceSerializer(data=request.data['data'])
-        if serializer.is_valid():
-            serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
+        # serializer = sers.ConferenceSerializer(data=request.data['data'])
+        # if serializer.is_valid():
+        #     serializer.save()
+        #     return Response(status=status.HTTP_201_CREATED)
+        #
+        # print(serializer.errors)
+        #return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
-        print(serializer.errors)
-        return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+        return Response(status=status.HTTP_201_CREATED)
 
 
 

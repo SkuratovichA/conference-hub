@@ -29,7 +29,7 @@ export const MuiCard = (props) => {
                     <CardActionArea
                         onClick={props.conferenceOnClick}
                     >
-                        <CustomCardMedia src={'http://localhost:8000' + conference_j.image}/>
+                        <CustomCardMedia src={'http://localhost:8000/media/static/conf_default.jpg'}/>
                         <CardContent>
                             <Typography gutterBottom variant="h5" component={'div'}>{conference_j.name}</Typography>
                             <Typography variant="body2" color="text.secondary">{conference_j.brief}</Typography>
