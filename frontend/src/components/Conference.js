@@ -1,8 +1,8 @@
 import * as React from "react";
 import {Card, Button, CardActions, CardContent, IconButton, Stack} from "@mui/material";
-import ImageIcon from "@mui/icons-material/Image";
 import {EditableTypography} from "./EditableTypography";
 import {MuiDateRangePicker} from "./RangeDatePicker";
+import ImageIcon from "@mui/icons-material/Image";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import EuroIcon from "@mui/icons-material/Euro";
 import Scheduler from './Scheduler'
@@ -234,6 +234,7 @@ export default class Conference extends React.Component {
                         </Stack>
 
                         <Scheduler
+                            conference={this.state.conference.slug}
                             canEdit={this.props.canEdit}
                         />
 

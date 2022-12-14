@@ -27,28 +27,32 @@ import {
     FormControl,
     Button,
     Paper,
-    Stack
+    Stack,
+    IconButton
 } from '@mui/material'
 import {MoneyFieldInputProps} from './MoneyFieldInputProps'
 import {getUsers} from '../actions/UserFunctions'
+import ClearIcon from '@mui/icons-material/Clear'
 
 
-const meetings = [
+let events = [
     {
         id: 1,
+        brief: "description",
         name: 'Lecture One',
         type: "lecture",
         location: "somewhere",
-        lecturer: 'Leslie Alexander',
+        participants: ['Leslie Alexander'],
         imageUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
         startDatetime: '2022-05-11T13:00',
         endDatetime: '2022-05-11T14:30',
     },
     {
         id: 2,
+        brief: "description",
         name: 'Ukranian Fascists',
         type: "lecture",
-        lecturer: 'Vladimir Putin',
+        participants: ['Vladimir Putin'],
         location: "somewhere",
         imageUrl: 'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
         startDatetime: '2022-12-13T15:00',
@@ -56,9 +60,10 @@ const meetings = [
     },
     {
         id: 6,
+        brief: "description",
         name: 'How to be a sexy pretty boy',
         type: "lecture",
-        lecturer: 'Shchapaniak Andrei',
+        participants: ['Shchapaniak Andrei'],
         location: "somewhere",
         imageUrl: 'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
         startDatetime: '2022-12-13T15:00',
@@ -66,10 +71,11 @@ const meetings = [
     },
     {
         id: 7,
+        brief: "description",
         name: 'one more',
         type: "lecture",
         location: "somewhere",
-        lecturer: 'Shchapaniak Andrei',
+        participants: ['Shchapaniak Andrei'],
         imageUrl: 'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
         startDatetime: '2022-12-13T15:00',
         endDatetime: '2022-12-13T15:30',
@@ -77,10 +83,11 @@ const meetings = [
 
     {
         id: 8,
+        brief: "description",
         name: 'Skuratovich Aliaksandr',
         type: "lunch",
         location: "somewhere",
-        lecturer: 'Shchapaniak Andrei',
+        participants: ['Shchapaniak Andrei'],
         imageUrl: 'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
         startDatetime: '2022-12-13T15:00',
         endDatetime: '2022-12-13T15:30',
@@ -89,10 +96,11 @@ const meetings = [
     },
     {
         id: 9,
+        brief: "description",
         name: 'Skuratovich Aliaksandr',
         type: "lunch",
         location: "somewhere",
-        lecturer: 'aaa',
+        participants: ['aaa'],
         imageUrl:
             'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
         startDatetime: '2022-12-13T15:00',
@@ -102,10 +110,11 @@ const meetings = [
     },
     {
         id: 10,
+        brief: "description",
         name: 'Skuratovich Aliaksandr',
         type: "poster",
         location: "somewhere",
-        lecturer: 'aaa',
+        participants: ['aaa'],
         imageUrl:
             'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
         startDatetime: '2022-12-13T15:00',
@@ -113,12 +122,34 @@ const meetings = [
     },
 ]
 
+function manageEvents(action, conference, event) {
+    // first stage of testing. Just add & delete & modify an event
+    switch (action) {
+        case "create":
+            let new_pk = Math.max(...events.map((it) => it.id)) + 1
+            event["id"] = new_pk
+            console.log('adding: ', event)
+            events.push(event)
+            console.log(events)
+            break;
+        case "delete":
+            break;
+        case "edit":
+            break;
+        case "fetch":
+            return events
+            break;
+    }
+}
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
-export default function Scheduler() {
+export default function Scheduler({
+                                      conference,
+                                      canEdit,
+                                  }) {
     const eventTypes = {
         "lecture": 0,
         "poster": 1,
@@ -134,7 +165,8 @@ export default function Scheduler() {
     // used in create event form
     const [creatingEvent, setCreatingEvent] = useState(false)
     const [researchers, setResearchers] = useState([])
-    const [newEventValues, setNewEventValues] = useState({
+
+    let defaultEventState = ({
         name: "",
         type: "",
         participants: [],
@@ -142,7 +174,9 @@ export default function Scheduler() {
         start: "",
         end: "",
         price: 0,
+        modified: false
     })
+    const [newEventValues, setNewEventValues] = useState(defaultEventState)
 
     const [loading, setLoading] = useState(true)
 
@@ -182,7 +216,7 @@ export default function Scheduler() {
         setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
     }
 
-    let selectedDayEvents = meetings.filter((meeting) =>
+    let selectedDayEvents = manageEvents("fetch", null, null).filter((meeting) =>
         isSameDay(parseISO(meeting.startDatetime), selectedDay)
     )
 
@@ -191,18 +225,30 @@ export default function Scheduler() {
             setCreatingEvent(true)
             return
         }
-
-        alert("create a confecence!")
-        console.log(
-            'new event values:', newEventValues
-        )
+        let _date = format(selectedDay, 'yyyy-MM-dd')
+        let new_event = {
+            name: newEventValues.name,
+            type: newEventValues.type,
+            location: "somewhere",
+            participants:
+                researchers
+                    .filter((res) => newEventValues.participants.includes(res.repr))
+                    .map((it) => it.username),
+            imageUrl: // TODO: make it possible to also add an image to an event?
+                'https://source.unsplash.com/random',
+            startDatetime: _date + "T" + newEventValues.start,
+            endDatetime: _date + "T" + newEventValues.end,
+        }
         setCreatingEvent(false)
+        setNewEventValues(defaultEventState)
+        manageEvents("create", null, new_event)
     }
 
     const newEventHandleChanges = (event) => {
         setNewEventValues({
             ...newEventValues,
-            [event.target.name]: event.target.value
+            [event.target.name]: event.target.value,
+            modified: true
         })
     }
 
@@ -228,7 +274,7 @@ export default function Scheduler() {
                         onChange={newEventHandleChanges}
                         name="name"
 
-                        error={newEventValues.name === ""}
+                        error={newEventValues.modified && newEventValues.name === ""}
                     />
                     <FormControl sx={{minWidth: "30%", float: "right"}}>
                         <InputLabel htmlFor="event-create-type-select">Type</InputLabel>
@@ -241,7 +287,7 @@ export default function Scheduler() {
                             variant={variant}
                             onChange={newEventHandleChanges}
                             name="type"
-                            error={newEventValues.type === ""}
+                            error={newEventValues.modified && newEventValues.type === ""}
                         >
                             <MenuItem value={"poster"}>poster session</MenuItem>
                             <MenuItem value={"lecture"}>lecture</MenuItem>
@@ -303,7 +349,7 @@ export default function Scheduler() {
                         onChange={newEventHandleChanges}
                         name="start"
 
-                        error={newEventValues.start >= newEventValues.end}
+                        error={newEventValues.modified && newEventValues.start >= newEventValues.end}
                     />
                     <TextField
                         style={{width: "100%"}}
@@ -318,7 +364,7 @@ export default function Scheduler() {
                         onChange={newEventHandleChanges}
                         name="end"
 
-                        error={newEventValues.start >= newEventValues.end}
+                        error={newEventValues.modified && newEventValues.start >= newEventValues.end}
                     />
                 </Stack>
                 {newEventValues.type === "lunch" && (
@@ -416,7 +462,7 @@ export default function Scheduler() {
                                     </button>
 
                                     <div className="w-1 h-1 mx-auto mt-1">
-                                        {meetings.some((meeting) =>
+                                        {manageEvents("fetch", null, null).some((meeting) =>
                                             isSameDay(parseISO(meeting.startDatetime), day)
                                         ) && (
                                             <div className="w-1 h-1 rounded-full bg-sky-500"></div>
@@ -470,7 +516,7 @@ export default function Scheduler() {
                                 </Button>
                             </>
                         ) : (
-                            <Stack justyfyContent={"centre"}>
+                            <Stack>
                                 <Button
                                     onClick={() => setCreatingEvent(true)}
                                 >
@@ -503,55 +549,52 @@ function Event({meeting}) {
 
     return (
         <li
+            onDoubleClick={(e) => console.log(e)}
             style={{background: backgrounds[meeting.type]}}
-            className="flex items-center px-4 py-2 space-x-4 group rounded-xl focus-within:bg-gray-100 hover:opacity-30"
+            className="flex items-center px-4 py-2 space-x-4 group rounded-xl focus-within:bg-gray-100 hover:opacity-36"
         >
-            <img
-                src={meeting.imageUrl}
-                alt=""
-                className="flex-none w-10 h-10 rounded-full"
-            />
+                    <img
+                        src={meeting.imageUrl}
+                        alt=""
+                        className="flex-none w-10 h-10 rounded-full"
+                    />
 
-            <div className="flex-auto">
+                    <div className="flex-auto">
+                        <Stack direction={"row"} sx={{justifyContent: "space-between"}}>
+                            {getProp(meeting, "name", "font-semibold text-gray-900")}
+                            {getProp(meeting, "type", "text-gray-400 ")}
+                        </Stack>
 
-                <Stack direction={"row"} sx={{"justify-content": "space-between"}}>
-                    {getProp(meeting, "name", "font-semibold text-gray-900")}
-                    {getProp(meeting, "type", "text-gray-400 ")}
-                </Stack>
+                        <p className="mt-0.5">
+                            <time dateTime={meeting.startDatetime}>{format(startDateTime, 'h:mm a')}</time>
+                            {' '}-{' '}
+                            <time dateTime={meeting.endDatetime}>{format(endDateTime, 'h:mm a')}</time>
+                        </p>
 
-                <p className="mt-0.5">
-                    <time dateTime={meeting.startDatetime}>{format(startDateTime, 'h:mm a')}</time>
-                    {' '}-{' '}
-                    <time dateTime={meeting.endDatetime}>{format(endDateTime, 'h:mm a')}</time>
-                </p>
-
-                <Stack direction="row" sx={{"justify-content": "space-between"}}>
-                    {getProp(meeting, "location", "text-gray-500")}
-                    {getProp(meeting, "price", "text-gray-400")}
-                </Stack>
-            </div>
-
+                        <Stack direction="row" sx={{justifyContent: "space-between"}}>
+                            {getProp(meeting, "location", "text-gray-500")}
+                            {getProp(meeting, "price", "text-gray-400")}
+                        </Stack>
+                    </div>
 
             {/*<Menu*/}
             {/*  as="div"*/}
-            {/*  className="relative opacity-0 focus-within:opacity-100 group-hover:opacity-100"*/}
+            {/*  className="relative"*/}
             {/*>*/}
             {/*  <div>*/}
-            {/*    <Menu.Button className="-m-2 flex items-center rounded-full p-1.5 text-gray-500 hover:text-gray-600">*/}
-            {/*      <span className="sr-only">Open options</span>*/}
-            {/*      <DotsVerticalIcon className="w-6 h-6" aria-hidden="true" />*/}
+            {/*    <Menu.Button className="text-gray-500 ">*/}
             {/*    </Menu.Button>*/}
             {/*  </div>*/}
 
-            {/*  <Transition*/}
-            {/*    as={Fragment}*/}
-            {/*    enter="transition ease-out duration-100"*/}
-            {/*    enterFrom="transform opacity-0 scale-95"*/}
-            {/*    enterTo="transform opacity-100 scale-100"*/}
-            {/*    leave="transition ease-in duration-75"*/}
-            {/*    leaveFrom="transform opacity-100 scale-100"*/}
-            {/*    leaveTo="transform opacity-0 scale-95"*/}
-            {/*  >*/}
+            {/*<Transition*/}
+            {/*  as={Fragment}*/}
+            {/*  enter="transition ease-out duration-100"*/}
+            {/*  enterFrom="transform opacity-0 scale-95"*/}
+            {/*  enterTo="transform opacity-100 scale-100"*/}
+            {/*  leave="transition ease-in duration-75"*/}
+            {/*  leaveFrom="transform opacity-100 scale-100"*/}
+            {/*  leaveTo="transform opacity-0 scale-95"*/}
+            {/*>*/}
             {/*    <Menu.Items className="absolute right-0 z-10 mt-2 origin-top-right bg-white rounded-md shadow-lg w-36 ring-1 ring-black ring-opacity-5 focus:outline-none">*/}
             {/*      <div className="py-1">*/}
             {/*        <Menu.Item>*/}
@@ -583,7 +626,6 @@ function Event({meeting}) {
             {/*      </div>*/}
             {/*    </Menu.Items>*/}
             {/*  </Transition>*/}
-            {/*  */}
             {/*</Menu>*/}
 
         </li>
