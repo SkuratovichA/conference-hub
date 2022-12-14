@@ -10,7 +10,6 @@ import authContext from "../context/AuthContext";
 import {conferenceCRUDHandler} from "../actions/ConferenceFunctions"
 import {ContentSection} from './ContentSection'
 import {getInfoUser, getToken} from "../actions/UserFunctions";
-import ProfilePageResearcher from "./ProfilePageResearcher";
 import {useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 
@@ -116,7 +115,6 @@ const ConferenceSearch = ( props ) => {
                     <Grid xs={12} sm={12} md={confXS} xl={confXS} lg={confXS}>
                         {conferenceGrid}
                     </Grid>
-                    {/**/}
                 </Grid>
             </ContentSection>
         </>

@@ -1,5 +1,5 @@
+import {useEffect, Fragment, useState} from 'react'
 import './styles/Scheduler.css'
-
 import {Menu, Transition} from '@headlessui/react'
 import {DotsVerticalIcon} from '@heroicons/react/outline'
 import {ChevronLeftIcon, ChevronRightIcon} from '@heroicons/react/solid'
@@ -17,7 +17,6 @@ import {
     parseISO,
     startOfToday,
 } from 'date-fns'
-import {Fragment, useState} from 'react'
 import {
     Autocomplete,
     Chip,
@@ -30,15 +29,9 @@ import {
     Paper,
     Stack
 } from '@mui/material'
-import {MuiDateRangePicker} from "./RangeDatePicker.js"
+import {MoneyFieldInputProps} from './MoneyFieldInputProps'
+import {getUsers} from '../actions/UserFunctions'
 
-
-const usersDemo = [
-    {"name": "Sasha", "last_name": "Skuratovich"},
-    {"name": "Masha", "last_name": "Muratovich"},
-    {"name": "Pasha", "last_name": "Puratovich"},
-    {"name": "Dasha", "last_name": "Duratovich"},
-]
 
 const meetings = [
     {
@@ -108,7 +101,7 @@ const meetings = [
         menu: "suka",
     },
     {
-        id: 9,
+        id: 10,
         name: 'Skuratovich Aliaksandr',
         type: "poster",
         location: "somewhere",
@@ -120,15 +113,19 @@ const meetings = [
     },
 ]
 
-function getUsers() {
-    return usersDemo
-}
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
 export default function Scheduler() {
+    const eventTypes = {
+        "lecture": 0,
+        "poster": 1,
+        "lunch": 2
+    }
+    const variant = "standard" // outline
+
     let today = startOfToday()
     let [selectedDay, setSelectedDay] = useState(today)
     let [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'))
@@ -136,7 +133,39 @@ export default function Scheduler() {
 
     // used in create event form
     const [creatingEvent, setCreatingEvent] = useState(false)
-    const [eventType, setEventType] = useState(null)
+    const [researchers, setResearchers] = useState([])
+    const [newEventValues, setNewEventValues] = useState({
+        name: "",
+        type: "",
+        participants: [],
+        brief: "",
+        start: "",
+        end: "",
+        price: 0,
+    })
+
+    const [loading, setLoading] = useState(true)
+
+    useEffect(
+        () => {
+            setLoading(true);
+            getUsers("researchers")
+                .then((r) => {
+                        let repr = (user) => (user.user.name + " " + user.last_name + " - " + user.user.email)
+                        setResearchers(r.map((user) => ({
+                            "email": user.user.email,
+                            "username": user.user.username,
+                            "repr": repr(user)
+                        })))
+                    }
+                )
+            setLoading(false)
+        },
+        []
+    )
+    if (loading) {
+        return <></>
+    }
 
     let days = eachDayOfInterval({
         start: firstDayCurrentMonth,
@@ -157,78 +186,158 @@ export default function Scheduler() {
         isSameDay(parseISO(meeting.startDatetime), selectedDay)
     )
 
+    const handleEventCreate = () => {
+        if (creatingEvent === false) {
+            setCreatingEvent(true)
+            return
+        }
+
+        alert("create a confecence!")
+        console.log(
+            'new event values:', newEventValues
+        )
+        setCreatingEvent(false)
+    }
+
+    const newEventHandleChanges = (event) => {
+        setNewEventValues({
+            ...newEventValues,
+            [event.target.name]: event.target.value
+        })
+    }
+
+    const canCreateEvent = () => {
+        return (
+            newEventValues.name !== "" &&
+            newEventValues.type !== "" &&
+            (newEventValues.start < newEventValues.end) &&
+            newEventValues.price >= 0
+        )
+    }
+
     const createEventForm = () => (
-        <form>
-            <Stack direction={"row"} spacing={1}>
-                <TextField
-                    id={"event-name"}
-                    // style={{ width: "200px", margin: "5px" }}
-                    className={"m-5px"}
-                    type="text"
-                    label="Name"
-                    variant="outlined"
-                />
-                <FormControl className={"m-5px"} style={{width: "80px"}} size="small">
-                    <InputLabel id="event-type-select">Type</InputLabel>
-                    <Select
-                        labelId="event-type-select"
-                        id="event-type-select"
-                        value={eventType}
-                        label="Event Type"
-                        onChange={(type) => setEventType(type)}
-                        autoWidth
-                    >
-                        <MenuItem value={"poster"}>poster session</MenuItem>
-                        <MenuItem value={"lecture"}>lecture</MenuItem>
-                        <MenuItem value={"lunch"}>lunch</MenuItem>
-                    </Select>
-                </FormControl>
-            </Stack>
-            <br/>
-            <Autocomplete sx={{background:"transparent", backgroundColor: "none"}}
-                multiple
-                id="tags-filled"
-                options={getUsers().map((user) => (`${user.name} ${user.last_name}`))}
-                freeSolo
-                renderTags={(value, getTagProps) =>
-                    value.map((option, index) => (
-                        <Chip variant="outlined" label={option} {...getTagProps({index})} />
-                    ))
-                }
-                renderInput={(params) => (
+        <div className={"mt-3"}>
+            <Stack direction={"column"} spacing={1.2}>
+                <Stack direction={"row"} spacing={1} justifyContent={"space-between"}>
                     <TextField
-                        sx={{background:"transparent", backgroundColor: "none"}}
-                        {...params}
-                        variant="filled"
-                        label="Lecturers"
-                        placeholder="Lecturers"
+                        sx={{width: "70%"}}
+                        // id={"event-create-name"}
+                        type="text"
+                        label="Name"
+                        variant={variant}
+                        onChange={newEventHandleChanges}
+                        name="name"
+
+                        error={newEventValues.name === ""}
+                    />
+                    <FormControl sx={{minWidth: "30%", float: "right"}}>
+                        <InputLabel htmlFor="event-create-type-select">Type</InputLabel>
+                        <Select
+                            labelId="event-create-type-select"
+                            id="event-create-type-select"
+                            value={newEventValues.type}
+                            label="Event Type"
+                            autoWidth
+                            variant={variant}
+                            onChange={newEventHandleChanges}
+                            name="type"
+                            error={newEventValues.type === ""}
+                        >
+                            <MenuItem value={"poster"}>poster session</MenuItem>
+                            <MenuItem value={"lecture"}>lecture</MenuItem>
+                            <MenuItem value={"lunch"}>lunch</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Stack>
+
+                <TextField
+                    style={{width: "100%"}}
+                    id={"event-create-brief"}
+                    type="text"
+                    label="Brief"
+                    variant={variant}
+                    onChange={newEventHandleChanges}
+                    name="brief"
+                />
+
+                {newEventValues.type !== "lunch" && (
+                    <Autocomplete
+                        multiple
+                        freeSolo
+                        id="event-create-participants"
+                        limitTags={3}
+                        options={researchers.map((it) => it.repr)}
+                        renderTags={(value, getTagProps) =>
+                            value.map((option, index) => {
+                                return <Chip variant={variant}
+                                             label={researchers.filter((it) => it.repr === option)[0].email} {...getTagProps({index})} />
+                            })
+                        }
+                        renderInput={(params) => (
+                            <TextField
+                                variant="standard"
+                                {...params}
+                                label={newEventValues.type === "lecture" ? "Lecturers" : "Participants"}
+                            />
+                        )}
+                        name="participants"
+                        onChange={(e, values) => (
+                            setNewEventValues({...newEventValues, "participants": values})
+                        )}
+
+                        variant={variant}
                     />
                 )}
-            />
-            <br/>
-            <Stack spacing={1} direction={"row"}>
-                <TextField
-                    id={"time_start"}
-                    label={"Start"}
-                    type={"time"}
-                    defaultValue={"13:00"}
-                    InputLabelProps={{shrink: true}}
-                    inputProps={{step: 60 * 15}}
-                    className={""}
-                />
-                <TextField
-                    id={"time_end"}
-                    label={"End"}
-                    type={"time"}
-                    defaultValue={"13:15"}
-                    InputLabelProps={{shrink: true}}
-                    inputProps={{step: 60 * 15}}
-                    className={""}
-                />
-            </Stack>
 
+                <Stack spacing={1} direction={"row"} justifyContent={"space-between"}>
+                    <TextField
+                        style={{width: "100%"}}
+                        id={"event-create-time-start"}
+                        label={"Start"}
+                        type={"time"}
+                        defaultValue={newEventValues.start}
+                        InputLabelProps={{shrink: true}}
+                        inputProps={{step: 60 * 15}}
+
+                        variant={variant}
+                        onChange={newEventHandleChanges}
+                        name="start"
+
+                        error={newEventValues.start >= newEventValues.end}
+                    />
+                    <TextField
+                        style={{width: "100%"}}
+                        id={"event-create-time-end"}
+                        label={"End"}
+                        type={"time"}
+                        defaultValue={newEventValues.end}
+                        InputLabelProps={{shrink: true}}
+                        inputProps={{step: 60 * 15}}
+
+                        variant={variant}
+                        onChange={newEventHandleChanges}
+                        name="end"
+
+                        error={newEventValues.start >= newEventValues.end}
+                    />
+                </Stack>
+                {newEventValues.type === "lunch" && (
+                    <TextField
+                        id={"event-lunch-price"}
+                        label="price"
+                        value={newEventValues.price}
+                        InputProps={{
+                            inputComponent: MoneyFieldInputProps,
+                        }}
+                        variant="standard"
+                        onChange={newEventHandleChanges}
+                        name="price"
+                    />
+                )}
+
+            </Stack>
             <br/>
-        </form>
+        </div>
     )
 
     return (
@@ -342,12 +451,33 @@ export default function Scheduler() {
                             </Paper>
                         )}
 
-                        <Button
-                            sx={{float: "right"}}
-                            onClick={() => setCreatingEvent(!creatingEvent)}
-                        >
-                            ADD EVENT
-                        </Button>
+                        {creatingEvent ? (
+                            <>
+                                <Button
+                                    sx={{float: "left"}}
+                                    onClick={() => setCreatingEvent(false)}
+                                    color={"error"}
+                                >
+                                    CANCEL
+                                </Button>
+
+                                <Button
+                                    sx={{float: "right",}}
+                                    onClick={handleEventCreate}
+                                    disabled={!canCreateEvent()}
+                                >
+                                    ADD EVENT
+                                </Button>
+                            </>
+                        ) : (
+                            <Stack justyfyContent={"centre"}>
+                                <Button
+                                    onClick={() => setCreatingEvent(true)}
+                                >
+                                    ADD EVENT
+                                </Button>
+                            </Stack>
+                        )}
 
                     </section>
 

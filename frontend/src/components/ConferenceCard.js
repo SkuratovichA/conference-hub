@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import {CardActionArea, Box, Card, CardContent, Typography, CardActions, Button} from "@mui/material"
+import {CardActionArea, Box, Card, CardContent, Typography, CardActions, Button, Stack} from "@mui/material"
 import plus from '../plus.png'
 import ConferenceModal from './ConferenceModal'
 import CustomCardMedia from './CustomCardMedia'
@@ -35,17 +35,18 @@ export const MuiCard = (props) => {
                             <Typography variant="body2" color="text.secondary">{conference_j.brief}</Typography>
                         </CardContent>
                     </CardActionArea>
-                    <CardActions>
-                        <Button size="small">{conference_j.price}</Button>
+                    <CardActions >
+                        {/*<Button size="small">{conference_j.price}</Button>*/}
                         <Button
                             size="small"
-                                onClick={() => {
-                                    navigate('/conferences' + "?conf="+conference_j.slug)
-                                    setOpen(true)
-                                }
+                            sx={{marginLeft: "auto"}}
+                            onClick={() => {
+                                navigate('/conferences' + "?conf=" + conference_j.slug)
+                                setOpen(true)
+                            }
                             }
                         >
-                            Show info
+                            PREVIEW
                         </Button>
                     </CardActions>
                 </Card>
@@ -57,7 +58,8 @@ export const MuiCard = (props) => {
                 newConf={false}
                 onClose={() => setOpen(false)}
                 slug={conference_j.slug}
-                canEdit={manipulate}
+                // canEdit={manipulate}
+                canEdit={false}
                 conferenceCRUDHandler={conferenceCRUDHandler}
                 callBackOnDelete={() => setOpen(false)}
             />

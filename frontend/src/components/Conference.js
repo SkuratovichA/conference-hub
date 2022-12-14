@@ -233,7 +233,9 @@ export default class Conference extends React.Component {
                             </EditableTypography>
                         </Stack>
 
-                        <Scheduler/>
+                        <Scheduler
+                            canEdit={this.props.canEdit}
+                        />
 
                     </CardContent>
 

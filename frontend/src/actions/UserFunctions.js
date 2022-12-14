@@ -15,10 +15,11 @@ export const getInfoUser = async (token) => {
     })
 
     let data = await response.json()
-    return response.status >= 200 && response.status <= 299 ? data['infouser'] : {}
+    return response.status >= 200 && response.status <= 299 ? data['infouser'] : null
 }
 
 export const getUsers = async (type) => {
+    // type in [all, researchers, organizations]
      let response = await fetch('http://localhost:8000/users/api/get_users_' + type, {
         method: 'GET',
         headers: {
@@ -27,8 +28,9 @@ export const getUsers = async (type) => {
     })
 
     let data = await response.json()
-    console.log(data['users'])
-    return response.status >= 200 && response.status <= 299 ? data['users'] : {}
+    console.log("users in getUsers: ", data['users'])
+    console.log("response.status", response.status)
+    return response.status >= 200 && response.status <= 299 ? data['users'] : []
 }
 
 export const userCRUDHandler = async (type, dataToUpdate, token) => {

@@ -25,7 +25,6 @@ class App extends Component {
     };
 
     render() {
-        console.log('APP')
         return (
             <Provider store={store}>
                 <BrowserRouter>
@@ -35,18 +34,8 @@ class App extends Component {
                                 <Navbar/>
                             </main>
 
-
                             <Routes>
                                 <Route path="/" element={<UsersList/>} exact/>
-                                <Route path="conf_test" element={
-                                    <Conference
-                                        canEdit
-                                        newConf // remove as soon urls are ready
-                                        conferenceCRUDHandler
-                                    />
-                                }
-                                />
-
                                 <Route path="/login" element={<LogIn/>}/>
                                 <Route
                                     path="/conferences"
