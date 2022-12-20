@@ -22,30 +22,65 @@ import {getStateConfBucket} from "../actions/OtherFunctions";
 
 const Bucket = ( props ) => {
 
-    let [conferences_tickets, changeConfs] = useState([])
+    let [conferences_not_to_buy, deleteFromBuy] = useState([])
+    let [conferences_to_buy, addToBuy] = useState([])
+    let [action, changeAction] = useState(false)
     let [user, changeUserInfo] = useState(null)
     let [loaded, setLoad] = useState(false)
     let {authTokens} = useContext(authContext)
     let token = authTokens?.access ? "Bearer " + authTokens.access : null
     let [totalPrice, changeTotalPrice] = useState(0)
 
+    const wantToBuy = (conf) => {
+        let new_arr_to_buy = conferences_to_buy
+        let new_arr_not_to_buy = conferences_not_to_buy
+
+        for (let conf_obj of new_arr_to_buy) {
+            if (conf_obj.conference.name === conf.name) {
+                let idx = conferences_to_buy.indexOf(conf_obj)
+                new_arr_to_buy.splice(idx, 1)
+                new_arr_not_to_buy.push(conf_obj)
+                break
+            }
+        }
+
+        addToBuy(new_arr_to_buy)
+        deleteFromBuy(new_arr_not_to_buy)
+        changeAction(!action)
+    }
+
+    const dontWantToBuy = (conf) => {
+        let new_arr_to_buy = conferences_to_buy
+        let new_arr_not_to_buy = conferences_not_to_buy
+
+        for (let conf_obj of new_arr_not_to_buy) {
+            if (conf_obj.conference.name === conf.name) {
+                let idx = conferences_not_to_buy.indexOf(conf_obj)
+                new_arr_not_to_buy.splice(idx, 1)
+                new_arr_to_buy.push(conf_obj)
+                break
+            }
+        }
+
+        addToBuy(new_arr_to_buy)
+        deleteFromBuy(new_arr_not_to_buy)
+        changeAction(!action)
+    }
+
 
     useEffect(() => {
-        conferenceCRUDHandler("fetch_all", null, null, null)
-            .then(confs => {
-                changeConfs(confs)
-                return getInfoUser(token)
-            })
-            .then(userinfo => {
-                changeUserInfo(userinfo)
-                setLoad(true)
-            })
-
-        getAllConfsBucket()
-            .then((res) => {
-                console.log(res)
-            })
-    }, [])
+        if (loaded === false) {
+            getAllConfsBucket()
+                .then((res) => {
+                    addToBuy(res)
+                    console.log(res)
+                })
+                .then(userinfo => {
+                    changeUserInfo(userinfo)
+                    setLoad(true)
+                })
+        }
+    }, [action, ])
 
     if (loaded === false) {
         return ""
@@ -60,11 +95,14 @@ const Bucket = ( props ) => {
                 <Grid container justifyContent="center">
                     <Paper style={{maxHeight: "75vh", overflow: 'auto', width: "70%"}}>
                         <List>
-                            {conferences_tickets.map(conference => (
-                                <ListItem alignItems="center" key={conference.name}>
+                            {conferences_to_buy.map(obj => (
+                                <ListItem alignItems="center" key={obj.conference.name}>
                                     <BucketCard
-                                        conf={conference}
+                                        conf={obj.conference}
                                         button={<ShoppingCart />}
+                                        callbackBuy={() => {
+                                            wantToBuy(obj.conference)
+                                        }}
                                     />
                                 </ListItem>
                             ))}
@@ -82,11 +120,14 @@ const Bucket = ( props ) => {
                 <Grid container justifyContent="center">
                     <Paper style={{maxHeight: "75vh", overflow: 'auto', width: "70%"}}>
                         <List>
-                            {conferences_tickets.map(conference => (
-                                <ListItem alignItems="center" key={conference.name}>
+                            {conferences_not_to_buy.map(obj => (
+                                <ListItem alignItems="center" key={obj.conference.name}>
                                     <BucketCard
-                                        conf={conference}
+                                        conf={obj.conference}
                                         button={<Delete />}
+                                        callbackBuy={() => {
+                                            dontWantToBuy(obj.conference)
+                                        }}
                                     />
                                 </ListItem>
                             ))}

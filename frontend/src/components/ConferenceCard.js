@@ -9,6 +9,7 @@ import {useNavigate} from "react-router-dom";
 import {conferenceCRUDHandler} from "../actions/ConferenceFunctions";
 import {getStateConfBucket} from "../actions/OtherFunctions";
 import {getToken} from "../actions/UserFunctions";
+import {addRemoveBucket} from "../actions/OtherFunctions";
 
 
 // TODO: populate cards with data
@@ -18,13 +19,32 @@ export const MuiCard = (props) => {
     const [open, setOpen] = React.useState(false)
     let [manipulate, setManipulate] = React.useState(false)
     let [inbucket, changeStateBucket] = React.useState(false)
+    let [status, changeStatus] = React.useState('Default')
+    let [loaded, setLoaded] = React.useState(false)
     let navigate = useNavigate()
     let token = getToken()
 
     const addToBucket = (conf) => {
         changeStateBucket(!inbucket)
-        console.log(conf)
     }
+
+    useEffect(() => {
+        if (status === 'Default') {
+            return;
+        }
+
+        let method = inbucket === true ? 'POST' : 'DELETE';
+        addRemoveBucket(method, conference_j.slug, token)
+            .then((res) => {
+                console.log(res)
+                return getStateConfBucket(conference_j.slug, token)
+            })
+            .then((status_ret) => {
+                changeStatus(status_ret)
+            })
+
+        console.log('status was changed')
+    }, [inbucket])
 
     useEffect(() => {
         if (props.user?.user?.username === conference_j?.organization?.user?.username) {
@@ -33,9 +53,20 @@ export const MuiCard = (props) => {
 
         getStateConfBucket(conference_j.slug, token)
             .then((res) => {
-                console.log("res === ", res.length)
+                console.log("res === ", res)
+                changeStatus(res)
+                // changeStatus()
+                // let method = inbucket === true ? 'POST' : 'DELETE';
+                //addToBucket(method, conference_j.name, token)
             })
-    }, [inbucket, ])
+            .then(() => {
+                setLoaded(true)
+            })
+    }, [])
+
+    if (loaded === false) {
+        return "";
+    }
 
     return (
         <React.Fragment>
@@ -73,8 +104,7 @@ export const MuiCard = (props) => {
                                 }
                             }
                         >
-                                {!inbucket && "Add to bucket"}
-                                {inbucket && "Remove from bucket"}
+                                {status}
                         </Button>}
                     </CardActions>
                 </Card>
