@@ -20,8 +20,8 @@ class PurchaseSerializerSlug(serializers.HyperlinkedModelSerializer):
 
 
 class PurchaseSerializer(serializers.ModelSerializer):
-    researcher = ResearcherInfoSerializer
-    conference = ConferenceSerializer
+    researcher = ResearcherInfoSerializer(many=False)
+    conference = ConferenceSerializer(many=False)
 
     class Meta:
         model = ch_models.PurchasesModel

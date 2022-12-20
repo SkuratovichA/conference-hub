@@ -25,6 +25,7 @@ const BucketCard = (props) => {
         variant="plain"
         color="neutral"
         size="sm"
+        onClick={props.callbackBuy}
         sx={{ position: 'absolute', top: '0.5rem', right: '0.5rem' }}
       >
           {props.button}

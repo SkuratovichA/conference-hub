@@ -31,7 +31,7 @@ export const getAllConfsBucket = async () => {
     })
 
     let data = await response.json()
-    return response.status >= 200 && response.status <= 299 ? data : {}
+    return response.status >= 200 && response.status <= 299 ? data['in_bucket'] : {}
 }
 
 export const getStateConfBucket = async (nameconf, token) => {
@@ -44,6 +44,24 @@ export const getStateConfBucket = async (nameconf, token) => {
         // body: JSON.stringify({
         //     data: dataToUpdate,
         // }),
+    })
+
+    let data = await response.json()
+    let res = 'Add to bucket'
+    if (Object.keys(data).length !== 0) {
+        res = 'Remove from bucket'
+    }
+
+    return response.status >= 200 && response.status <= 299 ? res : null
+}
+
+export const addRemoveBucket = async (method, nameconf, token) => {
+    let response = await fetch('http://localhost:8000/ch/api/change_capacity_bucket/' + nameconf, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token,
+        },
     })
 
     let data = await response.json()
