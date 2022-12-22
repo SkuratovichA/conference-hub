@@ -15,7 +15,7 @@ import { List } from '@mui/material';
 import ListItem from '@mui/material/ListItem';
 import { Button } from '@mui/material';
 import {getAllConfsBucket} from "../actions/OtherFunctions";
-import {getStateConfBucket} from "../actions/OtherFunctions";
+import {buyConfs} from "../actions/OtherFunctions";
 
 /* eslint-disable no-useless-escape */
 /* eslint-disable no-unexpected-multiline */
@@ -31,6 +31,20 @@ const Bucket = ( props ) => {
     let token = authTokens?.access ? "Bearer " + authTokens.access : null
     let [totalPrice, changeTotalPrice] = useState(0)
 
+    const buySelectedConfs = () => {
+        buyConfs(conferences_not_to_buy, token)
+            .then((res) => {
+                console.log(res, 'aaaaaa res')
+                if (res >= 200 && res <= 299) {
+                    deleteFromBuy([])
+                    changeTotalPrice(0)
+                }
+                else {
+                    alert('You do not have enough money.')
+                }
+            })
+    }
+
     const wantToBuy = (conf) => {
         let new_arr_to_buy = conferences_to_buy
         let new_arr_not_to_buy = conferences_not_to_buy
@@ -40,6 +54,7 @@ const Bucket = ( props ) => {
                 let idx = conferences_to_buy.indexOf(conf_obj)
                 new_arr_to_buy.splice(idx, 1)
                 new_arr_not_to_buy.push(conf_obj)
+                changeTotalPrice(totalPrice + parseInt(conf_obj.conference.price))
                 break
             }
         }
@@ -58,6 +73,7 @@ const Bucket = ( props ) => {
                 let idx = conferences_not_to_buy.indexOf(conf_obj)
                 new_arr_not_to_buy.splice(idx, 1)
                 new_arr_to_buy.push(conf_obj)
+                changeTotalPrice(totalPrice - parseInt(conf_obj.conference.price))
                 break
             }
         }
@@ -134,7 +150,10 @@ const Bucket = ( props ) => {
                         </List>
                     </Paper>
                 </Grid>
-                <Button variant="contained" color="success" style={{marginTop: '30px'}}>
+                <Button variant="contained" color="success" style={{marginTop: '30px'}}
+                        onClick={() => {
+                            buySelectedConfs()
+                        }}>
                     Buy
                 </Button>
                 <div style={{color: "black"}}>
