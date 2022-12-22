@@ -64,9 +64,7 @@ class PurchaseGetState(APIView):
         state = ch_models.PurchasesModel.objects.filter(Q(conference__name=conf.name) &
                                          Q(researcher__user__username=user.username))
 
-        print(request.user.username)
         if len(state) > 0:
-            print('TTTTTTTTTT')
             res = sers.PurchaseSerializer(state[0]).data
 
         return Response(res, status=status.HTTP_200_OK)
@@ -86,6 +84,41 @@ class PurchaseGetStateConfsUser(APIView):
                 content['in_bucket'].append(sers.PurchaseSerializer(obj).data)
 
         return Response(content, status=status.HTTP_200_OK)
+
+
+class PurchaseBuyConfs(APIView):
+    queryset = ch_models.PurchasesModel
+    serializer_class = sers.PurchaseSerializerSlug
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        user = user_models.ConferenceUserModel.objects.get(username=request.user.username)
+        finish_price = 0
+        for conf in request.data['data']:
+            finish_price += float(conf['price'])
+
+        if finish_price > user.balance.amount:
+            return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+
+        for conf in request.data['data']:
+            conference = conf_models.ConferenceModel.objects.get(name=conf['name'])
+            organization = user_models.ConferenceUserModel.objects.get(username=conf['organization']['user']['username'])
+
+            conference.visitors.add(user.researcher)
+            conference.save()
+
+            user.balance.amount -= decimal.Decimal(conference.price.amount)
+            organization.balance.amount += decimal.Decimal(conference.price.amount)
+
+            pur = ch_models.PurchasesModel.objects.get(
+                Q(researcher__user__username=user.username) & Q(conference__name=conference.name))
+            pur.status = True
+
+            user.save()
+            organization.save()
+            pur.save()
+
+        return Response(status=status.HTTP_200_OK)
 
 
 class PurchasesView(generic.ListView):

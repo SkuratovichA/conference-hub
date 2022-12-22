@@ -67,3 +67,28 @@ export const addRemoveBucket = async (method, nameconf, token) => {
     let data = await response.json()
     return response.status >= 200 && response.status <= 299 ? data : {}
 }
+
+export const buyConfs = async (confs, token) => {
+    if (confs.length === 0) {
+        alert('Choose a conference before buy.')
+        return 200
+    }
+
+    let arr_confs = []
+    for (let obj_var of confs) {
+        arr_confs.push(obj_var.conference)
+    }
+
+    let response = await fetch('http://localhost:8000/ch/api/buy_confs', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token,
+        },
+        body: JSON.stringify({
+            data: arr_confs,
+        }),
+    })
+
+    return response.status
+}
