@@ -33,7 +33,7 @@ class App extends Component {
                             <main className="content">
                                 <Navbar/>
                             </main>
-
+                            <div style={{maxWidth: "1600px", margin: "0 auto"}}>
                             <Routes>
                                 <Route path="/" element={<UsersList/>} exact/>
                                 <Route path="/login" element={<LogIn/>}/>
@@ -52,6 +52,7 @@ class App extends Component {
                                     <Route exact path='/private-page' element={<UsersList/>}/>
                                 </Route>
                             </Routes>
+                                </div>
                         </ContentSection>
                     </AuthProvider>
                 </BrowserRouter>

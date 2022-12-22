@@ -2,7 +2,20 @@
 // author: Shchapaniak Andrei
 
 import * as React from "react";
-import {AvatarGroup, Avatar, Divider, TextField, Typography, Card, Button, CardActions, CardContent, IconButton, Stack} from "@mui/material";
+import { withSnackbar } from 'notistack';
+import {
+    AvatarGroup,
+    Avatar,
+    Divider,
+    TextField,
+    Typography,
+    Card,
+    Button,
+    CardActions,
+    CardContent,
+    IconButton,
+    Stack,
+} from "@mui/material";
 import {EditableTypography} from "./EditableTypography";
 import {MuiDateRangePicker} from "./RangeDatePicker";
 import Scheduler from './Scheduler'
@@ -23,7 +36,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
 
 
-export default class Conference extends React.Component {
+class Conference extends React.Component {
     static contextType = authContext
     // canEdit - can create/delete/update a conference
     // newConf - creating a new conference, co it's not possible to delete one
@@ -35,7 +48,7 @@ export default class Conference extends React.Component {
         super(props);
 
         this.state = {
-            conference: JSON.parse(JSON.stringify({
+            conference: {
                 'name': 'Default Name',
                 'brief': '',
                 'slug': 'DefaultName',
@@ -45,9 +58,9 @@ export default class Conference extends React.Component {
                 'price': '',
                 'visitors': [],
                 'organization': this.props.owner
-            })),
+            },
             loaded: false,
-            token: null
+            token: null,
         }
 
         this.handleDataChange = this._handleDataChange.bind(this)
@@ -82,15 +95,18 @@ export default class Conference extends React.Component {
     _deleteConference() {
         conferenceCRUDHandler("delete", this.state?.conference?.slug, this.state.token, this.state?.conference, null)
         this.props.callBackOnDelete()
+        this.props.enqueueSnackbar('Conference has been deleted', {variant: "success"})
     }
 
     _updateConference() {
         conferenceCRUDHandler("update", this.state?.conference?.slug, this.state.token, this.state?.conference, null)
+        this.props.enqueueSnackbar('Conference has been updated', {variant: "success"})
     }
 
     _createConference() {
         conferenceCRUDHandler("create", this.state?.conference?.slug, this.state?.token, this.state?.conference, null)
         this.props.callBackOnCreate()
+        this.props.enqueueSnackbar('Conference has been created', {variant: "success"})
     }
 
     componentDidMount() {
@@ -141,14 +157,10 @@ export default class Conference extends React.Component {
         <CardActions>
             {!this.props.newConf ? (
                 <Stack direction={"row"} justifyContent={"flex-between"}>
-                    <Button size="small" color={"error"}
-                            onClick={this.deleteConference}
-                    >
+                    <Button size="small" color={"error"} onClick={this.deleteConference}>
                         Delete
                     </Button>
-                    <Button size="small"
-                            onClick={this.updateConference}
-                    >
+                    <Button size="small" onClick={this.updateConference}>
                         Update
                     </Button>
                 </Stack>
@@ -215,14 +227,14 @@ export default class Conference extends React.Component {
             {/*brief*/}
             {this.state?.conference?.brief && (
                 <Stack direction={"row"} spacing={1}>
-                    <HistoryEduIcon size={"small"} />
+                    <HistoryEduIcon size={"small"}/>
                     <Typography color="text.secondary">{this.state?.conference?.brief}</Typography>
                 </Stack>
             )}
 
             {/*date_from - date_to*/}
             <Stack direction={"row"} spacing={1}>
-                <CalendarMonthIcon />
+                <CalendarMonthIcon/>
                 <Typography color="text.secondary">
                     {format(parseISO(this.state?.conference?.date_from), 'MMM dd, yyy')}
                 </Typography>
@@ -273,13 +285,20 @@ export default class Conference extends React.Component {
                 </Stack>
 
                 <AvatarGroup max={4}>
-                   <Avatar alt="Skuratovich Aliaksandr" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" />
-                   <Avatar alt="Shchapaniak Andrei" src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" />
-                   <Avatar alt="Agnes Walker" src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" />
-                   <Avatar alt="Agnes Walker" src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" />
-                   <Avatar alt="Agnes Walker" src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" />
-                   <Avatar alt="Agnes Walker" src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" />
-                   <Avatar alt="Trevor Henderson" src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" />
+                    <Avatar alt="Skuratovich Aliaksandr"
+                            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"/>
+                    <Avatar alt="Shchapaniak Andrei"
+                            src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"/>
+                    <Avatar alt="Agnes Walker"
+                            src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"/>
+                    <Avatar alt="Agnes Walker"
+                            src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"/>
+                    <Avatar alt="Agnes Walker"
+                            src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"/>
+                    <Avatar alt="Agnes Walker"
+                            src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"/>
+                    <Avatar alt="Trevor Henderson"
+                            src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"/>
                 </AvatarGroup>
             </Stack>
         </React.Fragment>
@@ -289,52 +308,57 @@ export default class Conference extends React.Component {
 
         return (
             this.state.loaded && (
-                <Card>
-                    <CustomCardMedia
-                        src={"http://localhost:8000/media/static/conf_default.jpg"}
-                    />
-                    <CardContent>
-
-                        {this.imageEdit()}
-
-                        <EditableTypography
-                            canEdit={this.props.canEdit}
-                            variant="h1"
-                            initialValue={this.state?.conference?.name}
-                            onValidate={this.handleDataValidation}
-                            onSave={(v) => this.handleDataChange("name", v)}
-                            label="Conference Name"
-
-                            level="inherit"
-                            fontSize="3em"
-                            className={"font-semibold"}
-                            // mb="0.25em"
-                        >
-                            {this.state?.conference?.name}
-                        </EditableTypography>
-
-                        <Divider flexItem style={{marginBottom: "10px"}}/>
-
-                        <div className={"row"} style={{justifyContent: "space-between", padding: "0px 24px"}}>
-                            <div className={"col-6"}>
-                                {this.leftSection()}
-                            </div>
-                            <div className={"col-6"}>
-                                {this.rightSection()}
-                            </div>
-                        </div>
-
-                        <Scheduler
-                            conference={this.state.conference.slug}
-                            canEdit={this.props.canEdit}
+                <>
+                    <Card>
+                        <CustomCardMedia
+                            src={"http://localhost:8000/media/static/conf_default.jpg"}
                         />
+                        <CardContent>
 
-                    </CardContent>
+                            {this.imageEdit()}
 
-                    {this.cardActions()}
+                            <EditableTypography
+                                canEdit={this.props.canEdit}
+                                variant="h1"
+                                initialValue={this.state?.conference?.name}
+                                onValidate={this.handleDataValidation}
+                                onSave={(v) => this.handleDataChange("name", v)}
+                                label="Conference Name"
 
-                </Card>
+                                level="inherit"
+                                fontSize="3em"
+                                className={"font-semibold"}
+                                // mb="0.25em"
+                            >
+                                {this.state?.conference?.name}
+                            </EditableTypography>
+
+                            <Divider flexItem style={{marginBottom: "10px"}}/>
+
+                            <div className={"row"} style={{justifyContent: "space-between", padding: "0px 24px"}}>
+                                <div className={"col-6"}>
+                                    {this.leftSection()}
+                                </div>
+                                <div className={"col-6"}>
+                                    {this.rightSection()}
+                                </div>
+                            </div>
+
+                            <Scheduler
+                                conference={this.state.conference.slug}
+                                canEdit={this.props.canEdit}
+                            />
+
+                        </CardContent>
+
+                        {this.cardActions()}
+
+                    </Card>
+                </>
             )
         )
     }
 }
+
+
+export default withSnackbar(Conference)
