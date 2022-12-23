@@ -33,24 +33,29 @@ const Navbar = () => {
                 <Stack direction={"row"} justifyContent={"between"}>
                     {user ? (
                         <Stack direction="row" spacing={2}>
-                            <IconButton aria-label="profile">
-                                <PersonIcon fontSize={"medium"} onClick={
-                                () => {navigate("/users/"+user.username)} }/>
+                            <IconButton
+                                aria-label="profile"
+                                onClick={() => {navigate("/users/"+user.username)}}
+                            >
+                                <PersonIcon fontSize={"medium"} />
                             </IconButton>
 
-                            <IconButton aria-label="notification">
+                            <IconButton aria-label="notification"
+                                        onClick={() => {navigate(user.username+'/notifications')}}
+                            >
                                 <Badge color="secondary" badgeContent={5}>
-                                  <NotificationsIcon fontSize={"medium"} onClick={
-                                    () => {navigate(user.username+'/notifications')} }/>
+                                  <NotificationsIcon fontSize={"medium"} />
                                 </Badge>
                             </IconButton>
 
 
 
-                            <IconButton>
-                                <Badge color="secondary" badgeContent={2}>
-                                  <ShoppingCartIcon fontSize={"medium"} onClick={
-                                    () => {navigate('/' + user.username + '/bucket')}}/>
+                            <IconButton
+                                aria-label="bucket"
+                                onClick={() => {navigate('/' + user.username + '/bucket')}}
+                            >
+                                <Badge color="secondary" badgeContent={2} >
+                                  <ShoppingCartIcon fontSize={"medium"} />
                                 </Badge>
                             </IconButton>
 
