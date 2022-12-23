@@ -6,8 +6,11 @@ import {AppBar, Toolbar, IconButton, Typography, Stack, Button} from "@mui/mater
 import AccessibleForwardIcon from '@mui/icons-material/AccessibleForward';
 import AuthContext from "../context/AuthContext";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
+import PersonIcon from '@mui/icons-material/Person';
+import Badge from '@mui/material/Badge';
 import {useNavigate} from "react-router-dom";
 import './styles/Bucket.css'
+import NotificationsIcon from "@mui/icons-material/Notifications";
 
 
 const Navbar = () => {
@@ -30,13 +33,28 @@ const Navbar = () => {
                 <Stack direction={"row"} justifyContent={"between"}>
                     {user ? (
                         <Stack direction="row" spacing={2}>
+                            <IconButton aria-label="profile">
+                                <PersonIcon fontSize={"medium"} onClick={
+                                () => {navigate("/users/"+user.username)} }/>
+                            </IconButton>
+
+                            <IconButton aria-label="notification">
+                                <Badge color="secondary" badgeContent={5}>
+                                  <NotificationsIcon fontSize={"medium"} onClick={
+                                    () => {navigate(user.username+'/notifications')} }/>
+                                </Badge>
+                            </IconButton>
+
+
+
+                            <IconButton>
+                                <Badge color="secondary" badgeContent={2}>
+                                  <ShoppingCartIcon fontSize={"medium"} onClick={
+                                    () => {navigate('/' + user.username + '/bucket')}}/>
+                                </Badge>
+                            </IconButton>
+
                             <Button color="inherit" href="/login" onClick={logoutUser}>Log Out</Button>
-                            <Button color="inherit" href={"/users/"+user.username}>View Profile</Button>
-                            <ShoppingCartIcon fontSize={"medium"} onClick={
-                                () => {navigate('/' + user.username + '/bucket')}
-                            }
-                            />
-                            <sup className="bucket-count">2</sup>
                         </Stack>
                     ) : (
                         <Stack direction="row" spacing={2}>
