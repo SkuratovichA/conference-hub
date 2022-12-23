@@ -1,7 +1,7 @@
 // author: Skuratovich Aliaksandr
 
 import React, {useState} from 'react'
-import {Modal, ModalDialog} from '@mui/joy'
+import Dialog from '@mui/material/Dialog';
 import Conference from './Conference'
 import AuthContext from "../context/AuthContext";
 import { useContext, useEffect } from "react";
@@ -28,22 +28,16 @@ export default function ConferenceModal ({
     }, [open, ])
 
     return (
-        <Modal open={open} onClose={onClose}>
-            <ModalDialog
-                aria-labelledby="basic-modal-dialog-title"
-                aria-describedby="basic-modal-dialog-description"
-                sx={{
-                    border: 'none',
-                    maxWidth: '80%',
-                    minWidth: '60%',
-                    borderRadius: 'md',
-                    p: 3,
-                    boxShadow: 'lg',
-                    background: 'transparent',
-                    color: 'rgb(245,245,246)'
-                }}
-            >
-                <Conference
+        <Dialog
+            open={open}
+            onClose={onClose}
+            scroll= 'body'
+            aria-labelledby="scroll-dialog-title"
+            aria-describedby="scroll-dialog-description"
+            fullWidth='true'
+            maxWidth='md'
+            style={{outline:'none'}}
+        ><Conference
                     canEdit={canEdit}
                     newConf={newConf}
                     slug={slug}
@@ -51,7 +45,6 @@ export default function ConferenceModal ({
                     callBackOnCreate={callBackOnCreate}
                     callBackOnDelete={callBackOnDelete}
                 />
-            </ModalDialog>
-        </Modal>
+        </Dialog>
     )
 }
