@@ -75,7 +75,7 @@ export const EditableTypography = (
     )
 
     return (
-        <Box display="flex" alignItems="center" {...containerProps}>
+        <Box display="flex" alignItems="center" {...containerProps} onBlur={()=>setEditing(false) }>
             {(canEdit && editing) && (
                 <>
                     <TextField
