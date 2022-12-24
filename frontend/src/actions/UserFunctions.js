@@ -30,9 +30,20 @@ export const getUsers = async (type) => {
     })
 
     let data = await response.json()
-    console.log("users in getUsers: ", data['users'])
-    console.log("response.status", response.status)
-    return response.status >= 200 && response.status <= 299 ? data['users'] : []
+    let users = data['users']
+    let success = response.status >= 200 && response.status <= 299
+
+    console.log(JSON.stringify(users))
+    console.log(Array.isArray(users))
+    console.log("success: " + success)
+
+
+    if (!success) {
+        console.log("users in getUsers: ", users)
+        console.log("response.status", response.status)
+    }
+
+    return success ? users : []
 }
 
 export const userCRUDHandler = async (type, dataToUpdate, token) => {
