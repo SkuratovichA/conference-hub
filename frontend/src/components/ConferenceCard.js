@@ -35,15 +35,13 @@ export const MuiCard = (props) => {
 
         let method = inbucket === true ? 'POST' : 'DELETE';
         addRemoveBucket(method, conference_j.slug, token)
-            .then((res) => {
-                console.log(res)
-                return getStateConfBucket(conference_j.slug, token)
-            })
-            .then((status_ret) => {
-                changeStatus(status_ret)
-            })
-
-        console.log('status was changed')
+        .then((res) => {
+            console.log(res)
+            return getStateConfBucket(conference_j.slug, token)
+        })
+        .then((status_ret) => {
+            changeStatus(status_ret)
+        })
     }, [inbucket])
 
     useEffect(() => {
@@ -51,17 +49,18 @@ export const MuiCard = (props) => {
             setManipulate(true)
         }
 
-        getStateConfBucket(conference_j.slug, token)
-            .then((res) => {
-                console.log("res === ", res)
-                changeStatus(res)
-                // changeStatus()
-                // let method = inbucket === true ? 'POST' : 'DELETE';
-                //addToBucket(method, conference_j.name, token)
-            })
-            .then(() => {
-                setLoaded(true)
-            })
+        if (props.user?.user?.is_researcher) {
+            getStateConfBucket(conference_j.slug, token)
+                .then((res) => {
+                    changeStatus(res)
+                })
+                .then(() => {
+                    setLoaded(true)
+                })
+        }
+        else {
+            setLoaded(true)
+        }
     }, [])
 
     if (loaded === false) {

@@ -88,8 +88,8 @@ const Bucket = ( props ) => {
         if (loaded === false) {
             getAllConfsBucket()
                 .then((res) => {
-                    addToBuy(res)
-                    console.log(res)
+                    addToBuy(res['in_bucket'])
+                    // console.log(res)
                 })
                 .then(userinfo => {
                     changeUserInfo(userinfo)

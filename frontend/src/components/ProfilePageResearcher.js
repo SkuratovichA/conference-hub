@@ -1,9 +1,9 @@
 // author: Shchapaniak Andrei
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import './styles/Other.css'
 import {EditableTypography} from "./EditableTypography";
-import {setProperty} from "../actions/OtherFunctions"
+import {getAllConfsBucket, setProperty} from "../actions/OtherFunctions"
 /* eslint-disable no-useless-escape */
 /* eslint-disable no-unexpected-multiline */
 import {
@@ -18,6 +18,12 @@ import {
   MDBProgressBar,
 } from 'mdb-react-ui-kit';
 import {userCRUDHandler} from "../actions/UserFunctions";
+import {List, Paper} from "@mui/material";
+import ListItem from "@mui/material/ListItem";
+import BucketCard from "./BucketCard";
+import {ShoppingCart} from "@mui/icons-material";
+import Grid from "@mui/material/Unstable_Grid2";
+import ConfProfileCard from "./ConfProfileCard";
 
 const ProfilePageResearcher = ( props ) => {
 
@@ -46,6 +52,35 @@ const ProfilePageResearcher = ( props ) => {
         else if (key === "login") {
             Object.assign(props.user, setProperty(props.user, 'user.username', new_val))
         }
+
+        userCRUDHandler("update", props.user, props.token)
+    }
+
+    const getLectures = (confs) => {
+        let new_arr = []
+
+        for (let obj_conf of confs) {
+            new_arr.push(obj_conf.conference)
+        }
+
+        changeListLectures(new_arr)
+    }
+
+    let [loaded, setLoad] = useState(false)
+    let [my_lectures, changeListLectures] = useState([])
+
+    useEffect(() => {
+        getAllConfsBucket()
+            .then((res) => {
+                getLectures(res['bought'])
+            })
+            .then(() => {
+                setLoad(true)
+            })
+    }, [])
+
+    if (loaded === false) {
+        return "";
     }
 
     return (
@@ -58,21 +93,12 @@ const ProfilePageResearcher = ( props ) => {
                               src={"http://localhost:8000/media/static/default.png"}
                               alt="avatar"
                               className="rounded-circle"
-                              style={{ width: '250px' }}
+                              style={{ width: '250px', display: 'inline-block' }}
                               fluid
                             />
                             <div className="d-flex justify-content-center mb-2 profile-buttons">
                                 <button type="button" className="btn btn-danger">
                                     Delete profile
-                                </button>
-                                <div className="divider"/>
-                                <button type="button" className="btn btn-info"
-                                    onClick={() => {
-                                        userCRUDHandler("update", props.user, props.token)
-                                    }
-                                }
-                                >
-                                    Save Changes
                                 </button>
                             </div>
                         </MDBCardBody>
@@ -203,8 +229,20 @@ const ProfilePageResearcher = ( props ) => {
             <MDBCol md="4">
               <MDBCard className="mb-4 mb-md-0">
                 <MDBCardBody>
-                  <MDBCardText className="mb-4">My conferences</MDBCardText>
-                  <MDBCardText className="mb-1" style={{ fontSize: '.77rem' }}>My conferences</MDBCardText>
+                  <MDBCardText className="mb-4" style={{display: 'inline-block', justifyContent: 'center'}}>My conferences</MDBCardText>
+                    <Grid container justifyContent="center">
+                        <Paper style={{maxHeight: "40vh", overflow: 'auto', width: "100%"}}>
+                            <List>
+                                {my_lectures.map(obj => (
+                                    <ListItem alignItems="center" key={obj.name}>
+                                        <ConfProfileCard
+                                            conf={obj}
+                                        />
+                                    </ListItem>
+                                ))}
+                            </List>
+                        </Paper>
+                    </Grid>
                 </MDBCardBody>
               </MDBCard>
             </MDBCol>
@@ -213,7 +251,7 @@ const ProfilePageResearcher = ( props ) => {
               <MDBCard className="mb-4 mb-md-0">
                 <MDBCardBody>
                   <MDBCardText className="mb-4">My lectures</MDBCardText>
-                  <MDBCardText className="mb-1" style={{ fontSize: '.77rem' }}>My lectures</MDBCardText>
+                  <MDBCardText className="mb-1" style={{ fontSize: '.77rem' }}>{ my_lectures[0].name }</MDBCardText>
                 </MDBCardBody>
               </MDBCard>
             </MDBCol>
