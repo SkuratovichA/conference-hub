@@ -59,7 +59,7 @@ class Base64ImageField(serializers.ImageField):
         return extension
 
 class ConferenceSerializer(serializers.ModelSerializer):
-    visitors = ResearcherInfoSerializer(many=True)
+    visitors = ConferenceUserSerializer(many=True)
     organization = OrganizationInfoSerializer(many=False)
 
     class Meta:
@@ -69,7 +69,7 @@ class ConferenceSerializer(serializers.ModelSerializer):
 
 
 class ConferenceSerializerSlug(serializers.HyperlinkedModelSerializer):
-    visitors = ResearcherInfoSerializer(many=True)
+    visitors = ConferenceUserSerializer(many=True)
     organization = OrganizationInfoSerializer(many=False)
 
     class Meta:

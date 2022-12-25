@@ -78,10 +78,12 @@ class PurchaseGetStateConfsUser(APIView):
         researcher = user_models.ResearcherModel.objects.filter(user__username=request.user.username)
         bucket_objects = ch_models.PurchasesModel.objects.all()
 
-        content = {'in_bucket': []}
+        content = {'in_bucket': [], 'bought': []}
         for obj in bucket_objects:
-            if obj.status == False:
+            if not obj.status:
                 content['in_bucket'].append(sers.PurchaseSerializer(obj).data)
+            elif obj.status:
+                content['bought'].append(sers.PurchaseSerializer(obj).data)
 
         return Response(content, status=status.HTTP_200_OK)
 
@@ -104,7 +106,7 @@ class PurchaseBuyConfs(APIView):
             conference = conf_models.ConferenceModel.objects.get(name=conf['name'])
             organization = user_models.ConferenceUserModel.objects.get(username=conf['organization']['user']['username'])
 
-            conference.visitors.add(user.researcher)
+            conference.visitors.add(user)
             conference.save()
 
             user.balance.amount -= decimal.Decimal(conference.price.amount)

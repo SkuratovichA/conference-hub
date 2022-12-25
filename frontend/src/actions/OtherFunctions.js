@@ -31,7 +31,7 @@ export const getAllConfsBucket = async () => {
     })
 
     let data = await response.json()
-    return response.status >= 200 && response.status <= 299 ? data['in_bucket'] : {}
+    return response.status >= 200 && response.status <= 299 ? data : {}
 }
 
 export const getStateConfBucket = async (nameconf, token) => {
