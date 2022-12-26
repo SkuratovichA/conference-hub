@@ -1,7 +1,7 @@
 // author: Skuratovich Aliaksandr
 // author: Shchapaniak Andrei
 
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import {AppBar, Toolbar, IconButton, Typography, Stack, Button} from "@mui/material";
 import AccessibleForwardIcon from '@mui/icons-material/AccessibleForward';
 import AuthContext from "../context/AuthContext";
@@ -12,7 +12,24 @@ import './styles/Bucket.css'
 
 const Navbar = () => {
     let {user, logoutUser} = useContext(AuthContext)
+    //let [countBucket, setCountBucket] = useState(0)
+    //let [newBucket, updateBucket] = useState(false)
+    //let [loaded, setLoaded] = useState(false)
     let navigate = useNavigate()
+
+    // const incBucket = () => {
+    //     setCountBucket(countBucket + 1)
+    //     updateBucket(!newBucket)
+    // }
+    //
+    // const decBucket = () => {
+    //     setCountBucket(countBucket - 1)
+    //     updateBucket(!newBucket)
+    // }
+    //
+    // useContext(() => {
+    //
+    //}, [newBucket, ])
 
     return (
         <AppBar position="static">
@@ -32,11 +49,12 @@ const Navbar = () => {
                         <Stack direction="row" spacing={2}>
                             <Button color="inherit" href="/login" onClick={logoutUser}>Log Out</Button>
                             <Button color="inherit" href={"/users/"+user.username}>View Profile</Button>
-                            <ShoppingCartIcon fontSize={"medium"} onClick={
-                                () => {navigate('/' + user.username + '/bucket')}
-                            }
-                            />
-                            <sup className="bucket-count">2</sup>
+                            <IconButton onClick={
+                                    () => {navigate('/' + user.username + '/bucket')}}
+                            >
+                                <ShoppingCartIcon fontSize={"medium"} style={{ color: 'white' }} />
+                                {/*<sup className="bucket-count">2</sup>*/}
+                            </IconButton>
                         </Stack>
                     ) : (
                         <Stack direction="row" spacing={2}>

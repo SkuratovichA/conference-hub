@@ -251,7 +251,6 @@ const ProfilePageResearcher = ( props ) => {
               <MDBCard className="mb-4 mb-md-0">
                 <MDBCardBody>
                   <MDBCardText className="mb-4">My lectures</MDBCardText>
-                  <MDBCardText className="mb-1" style={{ fontSize: '.77rem' }}>{ my_lectures[0].name }</MDBCardText>
                 </MDBCardBody>
               </MDBCard>
             </MDBCol>
