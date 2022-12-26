@@ -49,8 +49,15 @@ export const getStateConfBucket = async (nameconf, token) => {
     let data = await response.json()
     let res = 'Add to bucket'
     if (Object.keys(data).length !== 0) {
-        res = 'Remove from bucket'
+        if (data.status === false) {
+             res = 'Remove from bucket'
+        }
+        else {
+            res = 'Participate'
+        }
     }
+
+    console.log(data)
 
     return response.status >= 200 && response.status <= 299 ? res : null
 }

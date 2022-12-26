@@ -18,7 +18,8 @@ export const MuiCard = (props) => {
 
     const [open, setOpen] = React.useState(false)
     let [manipulate, setManipulate] = React.useState(false)
-    let [inbucket, changeStateBucket] = React.useState(false)
+    let [inbucket, changeStateBucket] = React.useState(null)
+    let [actionWithConf, changeAction] = React.useState(false)
     let [status, changeStatus] = React.useState('Default')
     let [loaded, setLoaded] = React.useState(false)
     let navigate = useNavigate()
@@ -26,6 +27,7 @@ export const MuiCard = (props) => {
 
     const addToBucket = (conf) => {
         changeStateBucket(!inbucket)
+        changeAction(!actionWithConf)
     }
 
     useEffect(() => {
@@ -36,13 +38,12 @@ export const MuiCard = (props) => {
         let method = inbucket === true ? 'POST' : 'DELETE';
         addRemoveBucket(method, conference_j.slug, token)
         .then((res) => {
-            console.log(res)
             return getStateConfBucket(conference_j.slug, token)
         })
         .then((status_ret) => {
             changeStatus(status_ret)
         })
-    }, [inbucket])
+    }, [actionWithConf, ])
 
     useEffect(() => {
         if (props.user?.user?.username === conference_j?.organization?.user?.username) {
@@ -52,6 +53,12 @@ export const MuiCard = (props) => {
         if (props.user?.user?.is_researcher) {
             getStateConfBucket(conference_j.slug, token)
                 .then((res) => {
+                    if (res === 'Remove from bucket') {
+                        changeStateBucket(true)
+                    }
+                    else {
+                        changeStateBucket(false)
+                    }
                     changeStatus(res)
                 })
                 .then(() => {
@@ -94,17 +101,32 @@ export const MuiCard = (props) => {
                             PREVIEW
                         </Button>
                         {props.user?.user?.is_researcher &&
+                            status === 'Add to bucket' &&
                             <Button
-                            size="small"
-                                onClick={() => {
-                                    addToBucket(conference_j)
-                                    //navigate('/conferences' + "?conf="+conference_j.slug)
-                                    //setOpen(true)
-                                }
-                            }
-                        >
+                                size="small"
+                                onClick={() => { addToBucket(conference_j) }}
+                            >
                                 {status}
-                        </Button>}
+                            </Button>
+                        }
+                        {props.user?.user?.is_researcher &&
+                            status === 'Remove from bucket' &&
+                            <Button
+                                size="small"
+                                style={{ color: 'red' }}
+                                onClick={() => { addToBucket(conference_j) }}
+                            >
+                                {status}
+                            </Button>
+                        }
+                        {props.user?.user?.is_researcher &&
+                            status === 'Participate' &&
+                            <Typography
+                                style={{ color: 'green', marginLeft: '20px', fontSize: '13px' }}
+                            >
+                                PARTICIPATE
+                            </Typography>
+                        }
                     </CardActions>
                 </Card>
             </Box>
