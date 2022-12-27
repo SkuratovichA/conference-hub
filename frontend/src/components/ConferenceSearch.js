@@ -3,7 +3,7 @@
 
 import React, {Component, useContext, useState} from "react";
 import {ConferenceGrid} from './ConferenceGrid'
-import {Box, Typography, Stack} from "@mui/material"
+import {Box, Paper, Typography, Stack} from "@mui/material"
 import Grid from '@mui/material/Unstable_Grid2'
 import {Button} from '@mui/material'
 import Conference from './Conference'
@@ -78,7 +78,7 @@ const ConferenceSearch = ( props ) => {
     return (
         <>
             <ContentSection
-                margin={"1% 2% 1% 2%"}
+                // margin={"0 auto"}
                 padding={"2% 2% 2% 2%"}
                 // justifyContent={"space-between"}
             >
@@ -91,14 +91,21 @@ const ConferenceSearch = ( props ) => {
                     CLICK ME
                 </Button>
 
-                <Grid container xs={12} sm={12} md={12} xl={12} lg={12} spacing={4}>
+                <Grid
+                    container xs={12} sm={12} md={12} xl={12} lg={12} spacing={4}
+                    style={{margin: "0 auto"}}
+                >
                     <Grid xs={10}>
                         <Typography variant="h2" align="left">Conferences</Typography>
                     </Grid>
 
 
                     {activeConference &&
-                        <Grid container xs={12} sm={12} md={8} xl={8} lg={8}>
+                        <Grid
+                            container
+                            xs={12} sm={12} md={8} xl={8} lg={8}
+                            style={{ justifyContent: "center"}}
+                        >
                             <Box style={{maxHeight: '100vh', 'overflowY': 'scroll', 'width': '90%'}}>
                                 <Conference
                                     canEdit={manipulate}
@@ -115,7 +122,9 @@ const ConferenceSearch = ( props ) => {
                         </Grid>
                     }
 
-                    <Grid xs={12} sm={12} md={confXS} xl={confXS} lg={confXS}>
+                    <Grid
+                        xs={12} sm={12} md={confXS} xl={confXS} lg={confXS}
+                    >
                         {conferenceGrid}
                     </Grid>
                 </Grid>
