@@ -123,7 +123,6 @@ class Conference extends React.Component {
         let token = "Bearer " + authTokens?.access
 
         this.setState({token: token})
-        console.log('I AM IN CONFERENCE')
 
         if (this.props.newConf === false) {
             conferenceCRUDHandler("fetch_one", this.props.slug, token, this.state?.conference, null)

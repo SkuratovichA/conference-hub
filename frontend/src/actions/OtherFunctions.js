@@ -75,6 +75,16 @@ export const addRemoveBucket = async (method, nameconf, token) => {
     return response.status >= 200 && response.status <= 299 ? data : {}
 }
 
+export const userRefundMoney = async (conf_slug, token) => {
+    let response = await fetch('http://localhost:8000/ch/api/refund_money/' + conf_slug, {
+        method: "DELETE",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token,
+        },
+    })
+}
+
 export const buyConfs = async (confs, token) => {
     if (confs.length === 0) {
         alert('Choose a conference before buy.')

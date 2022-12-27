@@ -13,6 +13,7 @@ const Profile = () => {
     let [user, SetUserInfo] = useState({})
     let [loaded, setLoaded] = useState(false)
     let [canManipulate, changeManipulate] = useState(true)
+    let [renderAgain, changeRenderAgain] = useState(false)
     let token = String("Bearer " + String(authTokens.access))
     let navigate = useNavigate()
 
@@ -24,7 +25,7 @@ const Profile = () => {
             .then(() => {
                 setLoaded(true)
             })
-    }, [])
+    }, [renderAgain, ])
 
 
     if ("/users/" + user.user?.username !== window.location.pathname) {
@@ -42,6 +43,10 @@ const Profile = () => {
                 user={user}
                 canManipulate={canManipulate}
                 token={token}
+                callbackRender={() => {
+                    console.log("AAAAAAAAAAAAAAAAAAAAA")
+                    changeRenderAgain(!renderAgain)
+                }}
             />
         )
     } else {
