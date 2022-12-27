@@ -70,5 +70,16 @@ export const conferenceCRUDHandler = async (type, _conference, token, dataToUpda
 
             data = await response.json()
             return response.status >= 200 && response.status <= 299 ? data : {}
+        case "getVisitors":
+            return []
+        case "deleteEvent":
+            return true || false
+        case "getEvents":
+            return []
+
+        case "updateEvent":
+            return []
+        case "addEvent":
+            return true || false
     }
 }

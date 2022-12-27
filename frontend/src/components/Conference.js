@@ -57,17 +57,23 @@ class Conference extends React.Component {
                 'address': '',
                 'price': '',
                 'visitors': [],
-                'organization': this.props.owner
+                'organization': this.props.owner,
+                'events': [],
             },
+            user: '',
             loaded: false,
             token: null,
         }
 
+        console.log('organization: ', this.state.conference.organization)
+
         this.handleDataChange = this._handleDataChange.bind(this)
         this.handleDataValidation = this._handleDataValidation.bind(this)
+
         this.createConference = this._createConference.bind(this)
         this.updateConference = this._updateConference.bind(this)
         this.deleteConference = this._deleteConference.bind(this)
+
         this.imageEdit = this._imageEdit.bind(this)
         this.cardActions = this._cardActions.bind(this)
         this.leftSectionEditable = this._leftSectionEditable.bind(this)
@@ -110,7 +116,10 @@ class Conference extends React.Component {
     }
 
     componentDidMount() {
-        let {user, authTokens} = this.context
+        let {user, authTokens} = this.context  // todo: delete this line and see if it works, because it is moved to the constructor
+
+        this.setState({...this.state, user: user?.username})
+
         let token = "Bearer " + authTokens?.access
 
         this.setState({token: token})
@@ -271,34 +280,33 @@ class Conference extends React.Component {
     _rightSection = () => (
         <React.Fragment>
             <Stack direction={"column"} spacing={2}>
-                <Stack
-                    spacing={2}
-                    direction={"row"}
-                    style={{padding: '4px', "background": 'rgba(182,182,182,0.62)', borderRadius: '8px'}}
+
+                <Button
+                    style={{background: 'rgba(217,223,231,0.62)', borderRadius: '8px'}}
+                    href={"/users/" + this.state.conference.organization.user.username}
                 >
-                    <Avatar
-                        alt="VUT"
-                        src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                    />
-                    <Typography color={"white"}>Vysoke Uceni Technicke V Brne</Typography>
-                    {/*<Typography>{this.state?.conference?.user?.name}</Typography>*/}
-                </Stack>
+                    <Stack
+                        spacing={2}
+                        direction={"row"}
+                        style={{margin: "4px"}}
+                    >
+                        <Avatar
+                            alt={this.state.conference.organization.user.username}
+                            style={{height: "40%", margin: "auto 0"}}
+                            src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        />
+                        <Stack direction={"column"}>
+                            <Typography color={"primary.main"}>{this.state.conference.organization.user.name}</Typography>
+                            <Typography variant={"body1"} color={"text.secondary"}>{this.state.conference.organization.user.email}</Typography>
+                            <Typography variant={"body1"} color={"text.secondary"}>{this.state.conference.organization.user.city}, {this.state.conference.organization.user.country}</Typography>
+                        </Stack>
+                    </Stack>
+
+                </Button>
 
                 <AvatarGroup max={4}>
                     <Avatar alt="Skuratovich Aliaksandr"
                             src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"/>
-                    <Avatar alt="Shchapaniak Andrei"
-                            src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"/>
-                    <Avatar alt="Agnes Walker"
-                            src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"/>
-                    <Avatar alt="Agnes Walker"
-                            src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"/>
-                    <Avatar alt="Agnes Walker"
-                            src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"/>
-                    <Avatar alt="Agnes Walker"
-                            src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"/>
-                    <Avatar alt="Trevor Henderson"
-                            src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"/>
                 </AvatarGroup>
             </Stack>
         </React.Fragment>
@@ -309,7 +317,7 @@ class Conference extends React.Component {
         return (
             this.state.loaded && (
                 <>
-                    <Card>
+                    <Card >
                         <CustomCardMedia
                             src={"http://localhost:8000/media/static/conf_default.jpg"}
                         />
