@@ -18,6 +18,7 @@ import {useNavigate} from "react-router-dom";
 import Conference from "./Conference";
 import {Modal, ModalDialog} from '@mui/joy'
 import {addRemoveBucket} from "../actions/OtherFunctions";
+import { useSnackbar } from 'notistack';
 
 /* eslint-disable no-useless-escape */
 /* eslint-disable no-unexpected-multiline */
@@ -34,6 +35,7 @@ const Bucket = ( props ) => {
     let [totalPrice, changeTotalPrice] = useState(0)
     let [isOpen, funcOpen] = useState(false)
     let [isOpenBuyWindow, changeBuyWindow] = useState(false)
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     let [detailSlug, changeSlug] = useState(null)
     let navigate = useNavigate()
 
@@ -73,6 +75,8 @@ const Bucket = ( props ) => {
                 addToBuy(new_arr_to_buy)
                 changeAction(!action)
             }))
+
+        enqueueSnackbar('The conference has been deleted from the bucket.', {variant: "info"});
     }
 
     const buySelectedConfs = () => {
@@ -81,9 +85,10 @@ const Bucket = ( props ) => {
                 if (res >= 200 && res <= 299) {
                     deleteFromBuy([])
                     changeTotalPrice(0)
+                    enqueueSnackbar('Conferences were successfully purchased.', {variant: "success"});
                 }
                 else {
-                    alert('You do not have enough money.')
+                    enqueueSnackbar('You do not have enough money.', {variant: "error"});
                 }
             })
     }
@@ -218,7 +223,9 @@ const Bucket = ( props ) => {
                             </Paper>
                         </Grid>
                         <Button variant="contained" color="success" style={{marginTop: '30px'}}
-                            onClick={() => {changeBuyWindow(true)}}
+                            onClick={() => {
+                                changeBuyWindow(true)
+                            }}
                         >
                             Buy
                         </Button>
@@ -273,7 +280,8 @@ const Bucket = ( props ) => {
                             p: 3,
                             boxShadow: 'lg',
                             background: 'transparent',
-                            color: 'rgb(245,245,246)'
+                            color: 'rgb(245,245,246)',
+                            top:' 5%',
                         }}
                     >
                         <div className="PopUp">

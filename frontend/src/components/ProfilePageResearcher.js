@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react';
 import './styles/Other.css'
 import {EditableTypography} from "./EditableTypography";
-import {getAllConfsBucket, setProperty} from "../actions/OtherFunctions"
+import {buyConfs, getAllConfsBucket, setProperty} from "../actions/OtherFunctions"
 /* eslint-disable no-useless-escape */
 /* eslint-disable no-unexpected-multiline */
 import {
@@ -14,21 +14,47 @@ import {
   MDBCardText,
   MDBCardBody,
   MDBCardImage,
-  MDBProgress,
-  MDBProgressBar,
 } from 'mdb-react-ui-kit';
 import {userCRUDHandler} from "../actions/UserFunctions";
 import {List, Paper} from "@mui/material";
 import ListItem from "@mui/material/ListItem";
-import BucketCard from "./BucketCard";
-import {ShoppingCart} from "@mui/icons-material";
 import Grid from "@mui/material/Unstable_Grid2";
 import ConfProfileCard from "./ConfProfileCard";
+import {Modal, ModalDialog} from "@mui/joy";
+import Conference from "./Conference";
+import './styles/Other.css'
+import { useSnackbar } from 'notistack';
+import {userRefundMoney} from "../actions/OtherFunctions";
+
+function getColor(colors_arr) {
+    let x = Math.floor((Math.random() * 2) + 1);
+    return colors_arr[x - 1]
+}
 
 const ProfilePageResearcher = ( props ) => {
+    let [detailSlug, changeSlug] = useState(null)
+    let [isOpen, funcOpen] = useState(false)
+    let [isOpenRefundWindow, changeRefundWindow] = useState(false)
+    let [moneyWereRefunded, refundMoneyChange] = useState(false)
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+    let colors = [
+        [13, 14, 150, 0.15],
+        [240, 14, 50, 0.1]
+    ]
 
     const handleGroupNameValidation = (newName) => {
         return true
+    }
+
+    const refundMoney = () => {
+        userRefundMoney(detailSlug, props.token)
+            .then(() => {
+                console.log('RABOYA+TET')
+                enqueueSnackbar('The money were refunded.', {variant: "success"});
+                props.callbackRender()
+                //refundMoneyChange(!moneyWereRefunded)
+            })
     }
 
     const handleGroupNameChange = (key, new_val) => {
@@ -54,6 +80,16 @@ const ProfilePageResearcher = ( props ) => {
         }
 
         userCRUDHandler("update", props.user, props.token)
+    }
+
+    const showMoreInfo = (conf_slug) => {
+        changeSlug(conf_slug)
+        funcOpen(true)
+    }
+
+    const modalRefund = (conf_slug) => {
+        changeSlug(conf_slug)
+        changeRefundWindow(true)
     }
 
     const getLectures = (confs) => {
@@ -229,7 +265,7 @@ const ProfilePageResearcher = ( props ) => {
             <MDBCol md="4">
               <MDBCard className="mb-4 mb-md-0">
                 <MDBCardBody>
-                  <MDBCardText className="mb-4" style={{display: 'inline-block', justifyContent: 'center'}}>My conferences</MDBCardText>
+                  <MDBCardText className="mb-4" style={{display: 'inline-block', justifyContent: 'center', alignItems: 'center'}}>My conferences</MDBCardText>
                     <Grid container justifyContent="center">
                         <Paper style={{maxHeight: "40vh", overflow: 'auto', width: "100%"}}>
                             <List>
@@ -237,6 +273,13 @@ const ProfilePageResearcher = ( props ) => {
                                     <ListItem alignItems="center" key={obj.name}>
                                         <ConfProfileCard
                                             conf={obj}
+                                            callbackDetail={() => {
+                                                showMoreInfo(obj.slug)
+                                            }}
+                                            color={getColor(colors)}
+                                            callbackRefundModalDialog={() => {
+                                                modalRefund(obj.slug)
+                                            }}
                                         />
                                     </ListItem>
                                 ))}
@@ -265,6 +308,78 @@ const ProfilePageResearcher = ( props ) => {
             </MDBCol>
           </MDBRow>
       </MDBContainer>
+
+    {
+        isOpen
+            &&
+        <Modal open={isOpen} onClose={() => { funcOpen(false) }}>
+            <ModalDialog
+                aria-labelledby="basic-modal-dialog-title"
+                aria-describedby="basic-modal-dialog-description"
+                sx={{
+                    border: 'none',
+                    maxWidth: '80%',
+                    minWidth: '60%',
+                    borderRadius: 'md',
+                    p: 3,
+                    boxShadow: 'lg',
+                    background: 'transparent',
+                    color: 'rgb(245,245,246)'
+                }}
+            >
+                <Conference
+                    canEdit={false}
+                    newConf={false}
+                    slug={detailSlug}
+                    owner={props.user}
+                    callBackOnCreate={null}
+                    callBackOnDelete={null}
+                />
+            </ModalDialog>
+        </Modal>
+    }
+
+    {
+        isOpenRefundWindow
+            &&
+        <Modal open={isOpenRefundWindow} onClose={() => { changeRefundWindow(false) }}>
+            <ModalDialog
+                aria-labelledby="basic-modal-dialog-title"
+                aria-describedby="basic-modal-dialog-description"
+                sx={{
+                    border: 'none',
+                    maxWidth: '80%',
+                    minWidth: '60%',
+                    borderRadius: 'md',
+                    p: 3,
+                    boxShadow: 'lg',
+                    background: 'transparent',
+                    color: 'rgb(245,245,246)',
+                    top: '5%',
+                }}
+            >
+                <div className="PopUp">
+                    <div className="pu-content-container">
+                        {/*<img className="pu-img" src={bone} alt="bone" />*/}
+                        <h3>Do you want to refund money for the selected conference?</h3>
+                    </div>
+                    <div className="pu-button-container">
+                        <button type="button" className="btn btn-success"
+                            onClick={() => { refundMoney(); changeRefundWindow(false) }}
+                        >
+                            Yes
+                        </button>
+                        <button type="button" className="btn btn-danger"
+                            onClick={() => { changeRefundWindow(false) }}
+                        >
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </ModalDialog>
+        </Modal>
+    }
+
     </section>
   );
 }

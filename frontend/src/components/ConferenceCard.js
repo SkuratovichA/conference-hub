@@ -2,7 +2,6 @@
 
 import React, {useEffect} from "react";
 import {CardActionArea, Box, Card, CardContent, Typography, CardActions, Button, Stack} from "@mui/material"
-import plus from '../plus.png'
 import ConferenceModal from './ConferenceModal'
 import CustomCardMedia from './CustomCardMedia'
 import {useNavigate} from "react-router-dom";
@@ -10,6 +9,7 @@ import {conferenceCRUDHandler} from "../actions/ConferenceFunctions";
 import {getStateConfBucket} from "../actions/OtherFunctions";
 import {getToken} from "../actions/UserFunctions";
 import {addRemoveBucket} from "../actions/OtherFunctions";
+import { useSnackbar } from 'notistack';
 
 
 // TODO: populate cards with data
@@ -24,6 +24,7 @@ export const MuiCard = (props) => {
     let [loaded, setLoaded] = React.useState(false)
     let navigate = useNavigate()
     let token = getToken()
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
     const addToBucket = (conf) => {
         changeStateBucket(!inbucket)
@@ -104,7 +105,10 @@ export const MuiCard = (props) => {
                             status === 'Add to bucket' &&
                             <Button
                                 size="small"
-                                onClick={() => { addToBucket(conference_j) }}
+                                onClick={() => {
+                                    addToBucket(conference_j)
+                                    enqueueSnackbar('The conference has been added to the bucket.', {variant: "success"});
+                                }}
                             >
                                 {status}
                             </Button>
@@ -114,7 +118,10 @@ export const MuiCard = (props) => {
                             <Button
                                 size="small"
                                 style={{ color: 'red' }}
-                                onClick={() => { addToBucket(conference_j) }}
+                                onClick={() => {
+                                    addToBucket(conference_j)
+                                    enqueueSnackbar('The conference has been deleted from the bucket.', {variant: "info"});
+                                }}
                             >
                                 {status}
                             </Button>

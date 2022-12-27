@@ -26,6 +26,30 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
+class PurchaseRefundMoney(APIView):
+    queryset = ch_models.PurchasesModel
+    serializer_class = sers.PurchaseSerializerSlug
+    lookup_field = 'slug'
+    permission_classes = (IsAuthenticated,)
+
+    def delete(self, request, *args, **kwargs):
+        conf = conf_models.ConferenceModel.objects.get(slug=kwargs['slug'])
+        organization = conf.organization
+        user = user_models.ConferenceUserModel.objects.get(username=request.user.username)
+
+        user.balance.amount += decimal.Decimal(conf.price.amount)
+        organization.user.balance.amount -= decimal.Decimal(conf.price.amount)
+
+        pur = ch_models.PurchasesModel.objects.get(
+            Q(researcher__user__username=user.username) & Q(conference__name=conf.name))
+        pur.delete()
+
+        user.save()
+        organization.save()
+
+        return Response(status=status.HTTP_200_OK)
+
 class PurchaseManipulateBucket(APIView):
     queryset = ch_models.PurchasesModel
     serializer_class = sers.PurchaseSerializerSlug
