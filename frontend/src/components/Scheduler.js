@@ -150,6 +150,19 @@ export default function Scheduler({
         "poster": 1,
         "lunch": 2
     }
+    let defaultEventState = ({
+        id: null, // just for compatibility
+        name: "",
+        type: "",
+        participants: [],
+        startDatetime: null,
+        endDatetime: null,
+        brief: "",
+        start: "12:00",
+        end: "12:45",
+        price: 0,
+        modified: false
+    })
     const variant = "standard" // outline
 
     let today = startOfToday()
@@ -159,22 +172,8 @@ export default function Scheduler({
 
     // states: [viewingEvents, viewingEvent, creatingEvent]
     const [rightSideState, setRightSideState] = useState('viewingEvents')
-    const [activeEvent, setActiveEvent] = useState(null)
-
-    const [researchers, setResearchers] = useState([])
-
-    let defaultEventState = ({
-        name: "",
-        type: "",
-        participants: [],
-        brief: "",
-        start: "",
-        end: "",
-        price: 0,
-        modified: false
-    })
     const [newEventValues, setNewEventValues] = useState(defaultEventState)
-
+    const [researchers, setResearchers] = useState([])
     const [loading, setLoading] = useState(true)
 
     useEffect(
@@ -217,7 +216,7 @@ export default function Scheduler({
         isSameDay(parseISO(event.startDatetime), selectedDay)
     )
 
-    const handleEventCreate = () => {
+    const manipulateEvent = (optionalAction) => {
         switch (rightSideState) {
 
             case "creatingEvent":
@@ -239,29 +238,25 @@ export default function Scheduler({
                 break
 
             case "viewingEvent":
+                switch (optionalAction) {
+                    case "delete":
+                        alert("delete event")
+                        setRightSideState('viewingEvents')
+                        setNewEventValues(defaultEventState)
+                        break
+                    case "update":
+                        alert("update event")
+                        break
+                    default:
+                        return
+                }
                 break
 
             case "viewingEvents":
                 setRightSideState("creatingEvent")
                 break
         }
-    }
 
-    const newEventHandleChanges = (event) => {
-        setNewEventValues({
-            ...newEventValues,
-            [event.target.name]: event.target.value,
-            modified: true
-        })
-    }
-
-    const canCreateEvent = () => {
-        return (
-            newEventValues.name !== "" &&
-            newEventValues.type !== "" &&
-            (newEventValues.start < newEventValues.end) &&
-            newEventValues.price >= 0
-        )
     }
 
     // UseCase: When send invite to each user from a user list when creating a conference
@@ -393,131 +388,177 @@ export default function Scheduler({
         </div>
     )
 
+    const newEventHandleChanges = (event) => {
+        setNewEventValues({
+            ...newEventValues,
+            [event.target.name]: event.target.value,
+            modified: true
+        })
+    }
 
-    const createEventForm = () => (
-        <div className={"mt-3"}>
-            <Stack direction={"column"} spacing={1.2}>
-                <Stack direction={"row"} spacing={1} justifyContent={"space-between"}>
-                    <TextField
-                        sx={{width: "70%"}}
-                        // id={"event-create-name"}
-                        type="text"
-                        label="Name"
-                        variant={variant}
-                        onChange={newEventHandleChanges}
-                        name="name"
+    const canCreateEvent = () => {
+        return (
+            newEventValues.name !== "" &&
+            newEventValues.type !== "" &&
+            (newEventValues.start < newEventValues.end) &&
+            newEventValues.price >= 0
+        )
+    }
 
-                        error={newEventValues.modified && newEventValues.name === ""}
-                    />
-                    <FormControl sx={{minWidth: "30%", float: "right"}}>
-                        <InputLabel htmlFor="event-create-type-select">Type</InputLabel>
-                        <Select
-                            labelId="event-create-type-select"
-                            id="event-create-type-select"
-                            value={newEventValues.type}
-                            label="Event Type"
-                            autoWidth
+    const createEventForm = () => {
+        return (
+            <div className={"mt-3"}>
+                <Stack direction={"column"} spacing={1.2}>
+                    {/*Name, type*/}
+                    <Stack direction={"row"} spacing={1} justifyContent={"space-between"}>
+                        {/*Name*/}
+                        <TextField
+                            sx={{width: "70%"}}
+                            type="text"
+                            label="Name"
                             variant={variant}
                             onChange={newEventHandleChanges}
-                            name="type"
-                            error={newEventValues.modified && newEventValues.type === ""}
-                        >
-                            <MenuItem value={"poster"}>poster session</MenuItem>
-                            <MenuItem value={"lecture"}>lecture</MenuItem>
-                            <MenuItem value={"lunch"}>lunch</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Stack>
+                            name="name"
+                            error={newEventValues.modified && newEventValues.name === ""}
+                            value={newEventValues.name}
+                        />
 
-                <TextField
-                    style={{width: "100%"}}
-                    id={"event-create-brief"}
-                    type="text"
-                    label="Brief"
-                    variant={variant}
-                    onChange={newEventHandleChanges}
-                    name="brief"
-                />
-
-                {newEventValues.type !== "lunch" && (
-                    <Autocomplete
-                        multiple
-                        freeSolo
-                        id="event-create-participants"
-                        limitTags={3}
-                        options={researchers.map((it) => it.repr)}
-                        renderTags={(value, getTagProps) =>
-                            value.map((option, index) => {
-                                return <Chip variant={variant}
-                                             label={researchers.filter((it) => it.repr === option)[0].email} {...getTagProps({index})} />
-                            })
-                        }
-                        renderInput={(params) => (
-                            <TextField
-                                variant="standard"
-                                {...params}
-                                label={newEventValues.type === "lecture" ? "Lecturers" : "Participants"}
-                            />
+                        {/*Type*/}
+                        {newEventValues?.id !== null ? (
+                            <p className="text-gray-400">{newEventValues.type}</p>
+                        ) : (
+                            <FormControl sx={{minWidth: "30%", float: "right"}}>
+                                <InputLabel htmlFor="event-create-type-select">Type</InputLabel>
+                                <Select
+                                    value={newEventValues.type}
+                                    labelId="event-create-type-select"
+                                    id="event-create-type-select"
+                                    label="Event Type"
+                                    autoWidth
+                                    variant={variant}
+                                    onChange={newEventHandleChanges}
+                                    name="type"
+                                    error={newEventValues.modified && newEventValues.type === ""}
+                                >
+                                    <MenuItem value={"poster"}>poster session</MenuItem>
+                                    <MenuItem value={"lecture"}>lecture</MenuItem>
+                                    <MenuItem value={"lunch"}>lunch</MenuItem>
+                                </Select>
+                            </FormControl>
                         )}
-                        name="participants"
-                        onChange={(e, values) => (
-                            setNewEventValues({...newEventValues, "participants": values})
-                        )}
+                    </Stack>
 
-                        variant={variant}
-                    />
-                )}
-
-                <Stack spacing={1} direction={"row"} justifyContent={"space-between"}>
+                    {/*Brief*/}
                     <TextField
+                        value={newEventValues.brief}
                         style={{width: "100%"}}
-                        id={"event-create-time-start"}
-                        label={"Start"}
-                        type={"time"}
-                        defaultValue={newEventValues.start}
-                        InputLabelProps={{shrink: true}}
-                        inputProps={{step: 60 * 15}}
-
+                        // id={"event-create-brief"}
+                        type="text"
+                        label="Brief"
                         variant={variant}
                         onChange={newEventHandleChanges}
-                        name="start"
-
-                        error={newEventValues.modified && newEventValues.start >= newEventValues.end}
+                        name="brief"
                     />
-                    <TextField
-                        style={{width: "100%"}}
-                        id={"event-create-time-end"}
-                        label={"End"}
-                        type={"time"}
-                        defaultValue={newEventValues.end}
-                        InputLabelProps={{shrink: true}}
-                        inputProps={{step: 60 * 15}}
 
-                        variant={variant}
-                        onChange={newEventHandleChanges}
-                        name="end"
+                    {/*Participants*/}
+                    {newEventValues?.id === null && newEventValues.type !== "lunch" && (
+                        <Autocomplete
+                            multiple
+                            freeSolo
+                            id="event-create-participants"
+                            limitTags={3}
+                            options={researchers.map((it) => it.repr)}
+                            renderTags={(value, getTagProps) =>
+                                value.map((option, index) => {
+                                    return <Chip variant={variant}
+                                                 label={researchers.filter((it) => it.repr === option)[0].email} {...getTagProps({index})} />
+                                })
+                            }
+                            renderInput={(params) => (
+                                <TextField
+                                    variant="standard"
+                                    {...params}
+                                    label={newEventValues.type === "lecture" ? "Lecturers" : "Participants"}
+                                />
+                            )}
+                            name="participants"
+                            onChange={(e, values) => (
+                                setNewEventValues({...newEventValues, "participants": values})
+                            )}
 
-                        error={newEventValues.modified && newEventValues.start >= newEventValues.end}
-                    />
+                            variant={variant}
+                        />
+                    )}
+
+                    {/*Start time - end time*/}
+                    <Stack spacing={1} direction={"row"} justifyContent={"space-between"}>
+                        <TextField
+                            style={{width: "100%"}}
+                            id={"event-create-time-start"}
+                            label={"Start"}
+                            type={"time"}
+                            // defaultValue={format(parseISO(newEventValues.endDatetime), 'h:mm')}
+                            value={
+                                newEventValues?.id !== null ? format(parseISO(newEventValues.startDatetime), 'HH:mm') : ''
+                            }
+                            InputLabelProps={{shrink: true}}
+                            inputProps={{step: 60 * 15}}
+                            variant={variant}
+                            onChange={newEventHandleChanges}
+                            name="start"
+
+                            error={
+                                newEventValues?.id !== null ? (
+                                    newEventValues.endDatetime > newEventValues.startTime
+                                ) : (
+                                    newEventValues.modified && newEventValues.start >= newEventValues.end)
+                            }
+                        />
+                        <TextField
+                            style={{width: "100%"}}
+                            id={"event-create-time-end"}
+                            label={"End"}
+                            type={"time"}
+                            // defaultValue={format(parseISO(newEventValues.endDatetime), 'h:mm')}
+                            value={
+                                newEventValues?.id !== null ? format(parseISO(newEventValues.endDatetime), 'HH:mm') : ''
+                            }
+                            InputLabelProps={{shrink: true}}
+                            inputProps={{step: 60 * 15}}
+
+                            variant={variant}
+                            onChange={newEventHandleChanges}
+                            name="end"
+
+                            error={
+                                newEventValues?.id !== null ? (
+                                    newEventValues.endDatetime > newEventValues.startTime
+                                ) : (
+                                    newEventValues.modified && newEventValues.start >= newEventValues.end)
+                            }
+                        />
+                    </Stack>
+
+                    {/*Price*/}
+                    {newEventValues.type === "lunch" && (
+                        <TextField
+                            id={"event-lunch-price"}
+                            label="price"
+                            value={newEventValues.price}
+                            InputProps={{
+                                inputComponent: MoneyFieldInputProps,
+                            }}
+                            variant="standard"
+                            onChange={newEventHandleChanges}
+                            name="price"
+                        />
+                    )}
+
                 </Stack>
-                {newEventValues.type === "lunch" && (
-                    <TextField
-                        id={"event-lunch-price"}
-                        label="price"
-                        value={newEventValues.price}
-                        InputProps={{
-                            inputComponent: MoneyFieldInputProps,
-                        }}
-                        variant="standard"
-                        onChange={newEventHandleChanges}
-                        name="price"
-                    />
-                )}
-
-            </Stack>
-            <br/>
-        </div>
-    )
+                <br/>
+            </div>
+        )
+    }
 
     const rightSide = () => {
 
@@ -537,25 +578,23 @@ export default function Scheduler({
                         {headerPart("Create event for")}
                         {createEventForm()}
 
-                        {canEdit && (
-                            <>
-                                <Button
-                                    sx={{float: "left"}}
-                                    onClick={() => setRightSideState("viewingEvents")}
-                                    color={"error"}
-                                >
-                                    CANCEL
-                                </Button>
-                                <Button
-                                    sx={{float: "right",}}
-                                    onClick={handleEventCreate}
-                                    disabled={!canCreateEvent()}
-                                >
-                                    ADD EVENT
-                                </Button>
-                            </>
-                        )}
-
+                        <Button
+                            sx={{float: "left"}}
+                            onClick={() => {
+                                setRightSideState("viewingEvents");
+                                setNewEventValues(defaultEventState)
+                            }}
+                            color={"error"}
+                        >
+                            CANCEL
+                        </Button>
+                        <Button
+                            sx={{float: "right",}}
+                            onClick={() => manipulateEvent()}
+                            disabled={!canCreateEvent()}
+                        >
+                            ADD EVENT
+                        </Button>
                     </>
                 )
             case "viewingEvents":
@@ -569,7 +608,7 @@ export default function Scheduler({
                                     <EventListItem
                                         onClick={() => {
                                             setRightSideState("viewingEvent");
-                                            setActiveEvent(event)
+                                            setNewEventValues({...event, modified: false, start: null, end: null})
                                         }}
                                         event={event}
                                         key={event.id}
@@ -595,12 +634,36 @@ export default function Scheduler({
             case "viewingEvent":
                 return (
                     <Stack direction={"column"} spacing={1.2}>
-                        <Event event={activeEvent} eventForm={createEventForm}/>
+                        {canEdit ? (
+                            <Stack direction={"column"}>
+                                {createEventForm()}
+                                <Stack direction={"row"} justifyContent={"space-between"}>
+                                    <Button
+                                        color={"error"}
+                                        xs={{float: "left"}}
+                                        onClick={() => manipulateEvent("delete")}
+                                    >
+                                        DELETE
+                                    </Button>
+                                    <Button
+                                        xs={{float: "right"}}
+                                        onClick={() => manipulateEvent("update")}
+                                    >
+                                        UPDATE
+                                    </Button>
+                                </Stack>
+                            </Stack>
+                        ) : (
+                            <Event
+                                event={newEventValues}
+                            />
+                        )}
                         <Button
                             sx={{float: "left"}}
                             onClick={() => {
-                                setActiveEvent(null);
+                                manipulateEvent()
                                 setRightSideState("viewingEvents")
+                                setNewEventValues(defaultEventState)
                             }}
                         >
                             BACK
@@ -626,8 +689,7 @@ export default function Scheduler({
     )
 }
 
-function Event({event, eventForm}) {
-    const [state, setState] = useState("viewing")
+function Event({event}) {
 
     const viewingEvent = () => (
         <>
@@ -663,24 +725,10 @@ function Event({event, eventForm}) {
 
                 </Stack>
             </Paper>
-
-            <Stack justifyContent={"right"}>
-                <Button xs={{float: "right"}} onClick={() => setState("editing")}>EDIT</Button>
-            </Stack>
         </>
     )
 
-    const editingEvent = () => (
-        <Stack direction={"column"}>
-
-            <Stack direction={"row"} justifyContent={"space-between"}>
-                <Button color={"error"} xs={{float: "left"}}>DELETE</Button>
-                <Button xs={{float: "right"}} onClick={() => setState("viewing")}>SAVE</Button>
-            </Stack>
-        </Stack>
-    )
-
-    return <div style={{width: "100%"}}> {{"viewing": viewingEvent, "editing": editingEvent}[state]()} </div>
+    return <div style={{width: "100%"}}> {viewingEvent()} </div>
 }
 
 function EventListItem({event, onClick}) {
@@ -706,7 +754,7 @@ function EventListItem({event, onClick}) {
             <div className="flex-auto">
                 <Stack direction={"row"} sx={{justifyContent: "space-between"}}>
                     {getProp(event, "name", "font-semibold text-gray-900")}
-                    {getProp(event, "type", "text-gray-400 ")}
+                    {getProp(event, "type", "text-gray-400")}
                 </Stack>
 
                 <p className="mt-0.5">
