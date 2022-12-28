@@ -35,18 +35,18 @@ class PurchaseRefundMoney(APIView):
 
     def delete(self, request, *args, **kwargs):
         conf = conf_models.ConferenceModel.objects.get(slug=kwargs['slug'])
-        organization = conf.organization
+        organization = user_models.ConferenceUserModel.objects.get(username=conf.organization.user.username)
         user = user_models.ConferenceUserModel.objects.get(username=request.user.username)
 
         user.balance.amount += decimal.Decimal(conf.price.amount)
-        organization.user.balance.amount -= decimal.Decimal(conf.price.amount)
+        organization.balance.amount -= decimal.Decimal(conf.price.amount)
+
+        user.save()
+        organization.save()
 
         pur = ch_models.PurchasesModel.objects.get(
             Q(researcher__user__username=user.username) & Q(conference__name=conf.name))
         pur.delete()
-
-        user.save()
-        organization.save()
 
         return Response(status=status.HTTP_200_OK)
 
