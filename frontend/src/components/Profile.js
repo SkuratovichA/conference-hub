@@ -9,8 +9,8 @@ import {getInfoUser, getToken} from "../actions/UserFunctions";
 import {useNavigate} from "react-router-dom";
 
 const Profile = () => {
-    let {authTokens} = useContext(AuthContext)
-    let [user, SetUserInfo] = useState({})
+    let {user, authTokens} = useContext(AuthContext)
+    let [userFull, SetUserInfo] = useState({})
     let [loaded, setLoaded] = useState(false)
     let [canManipulate, changeManipulate] = useState(true)
     let token = String("Bearer " + String(authTokens.access))
@@ -19,19 +19,15 @@ const Profile = () => {
     useEffect(() => {
         getInfoUser(token)
             .then((data) => {
-                console.log('GET INFO USER', data)
                 SetUserInfo(data)
             })
             .then(() => {
+                // if ("/users/" + user.username !== window.location.pathname) {
+                //     navigate('/')
+                // }
                 setLoaded(true)
             })
     }, [])
-
-
-    if ("/users/" + user.user?.username !== window.location.pathname) {
-        navigate('/')
-        return ""
-    }
 
     if (loaded === false) {
         return ""
@@ -40,7 +36,7 @@ const Profile = () => {
     if (user.user?.is_researcher === true) {
         return (
             <ProfilePageResearcher
-                user={user}
+                user={userFull}
                 canManipulate={canManipulate}
                 token={token}
             />
@@ -48,7 +44,7 @@ const Profile = () => {
     } else {
         return (
             <ProfilePageOrganization
-                user={user}
+                user={userFull}
                 canManipulate={canManipulate}
                 token={token}
             />

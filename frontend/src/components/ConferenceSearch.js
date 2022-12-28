@@ -28,6 +28,8 @@ const ConferenceSearch = ( props ) => {
     let [manipulate, setManipulate] = useState(false)
 
     const updateActiveConference = (conferenceName) => {
+        console.log('UAUAUAUAU', conferenceName)
+
         if (conferenceName !== null) {
             conferenceCRUDHandler("fetch_one", conferenceName, null, null)
                 .then(resp => {
@@ -57,6 +59,8 @@ const ConferenceSearch = ( props ) => {
         .catch(err => {
             console.error(err)
         })
+
+        console.log('active conf = ', activeConference)
 
     }, [activeConference, ])
 
@@ -115,8 +119,8 @@ const ConferenceSearch = ( props ) => {
                                     slug={activeConference}
                                     callBackOnDelete={() => {
                                         setAC(null)
-                                    }
-                                }
+                                    }}
+                                    key={activeConference}
                                 />
                             </Box>
                         </Grid>

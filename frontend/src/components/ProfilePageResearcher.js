@@ -160,10 +160,8 @@ const ProfilePageResearcher = ( props ) => {
                                         <MDBCardText>Full Name</MDBCardText>
                                     </MDBCol>
                                     <MDBCol sm="9">
-                                        <MDBCardText className="text-muted">
                                             <EditableTypography
                                                 canEdit={true}
-                                                variant="h1"
                                                 initialValue={(props.user || {}).last_name + " " + ((props.user || {}).user || {}).name}
                                                 onValidate={handleGroupNameValidation}
                                                 onSave={(v) => handleGroupNameChange("fullname", v)}
@@ -173,8 +171,8 @@ const ProfilePageResearcher = ( props ) => {
                                                 level="inherit"
                                                 fontSize="1.25em"
                                                 mb="0.25em"
+                                                className="text-muted"
                                             />
-                                        </MDBCardText>
                                     </MDBCol>
                                 </MDBRow>
                                 <hr />
@@ -183,10 +181,8 @@ const ProfilePageResearcher = ( props ) => {
                     <MDBCardText>Email</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
-                    <MDBCardText className="text-muted">
                       <EditableTypography
                         canEdit={true}
-                        variant="h1"
                         initialValue={((props.user || {}).user || {}).email}
                         onValidate={handleGroupNameValidation}
                         onSave={(v) => handleGroupNameChange("email", v)}
@@ -196,8 +192,8 @@ const ProfilePageResearcher = ( props ) => {
                         level="inherit"
                         fontSize="1.25em"
                         mb="0.25em"
+                        className="text-muted"
                       />
-                    </MDBCardText>
                   </MDBCol>
                 </MDBRow>
                 <hr />
@@ -206,10 +202,8 @@ const ProfilePageResearcher = ( props ) => {
                     <MDBCardText>Login</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
-                    <MDBCardText className="text-muted">
                       <EditableTypography
                         canEdit={true}
-                        variant="h1"
                         initialValue={((props.user || {}).user || {}).username}
                         onValidate={handleGroupNameValidation}
                         onSave={(v) => handleGroupNameChange("login", v)}
@@ -219,8 +213,8 @@ const ProfilePageResearcher = ( props ) => {
                         level="inherit"
                         fontSize="1.25em"
                         mb="0.25em"
+                        className="text-muted"
                       />
-                    </MDBCardText>
                   </MDBCol>
                 </MDBRow>
                 <hr />
@@ -229,7 +223,6 @@ const ProfilePageResearcher = ( props ) => {
                     <MDBCardText>Balance</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
-                    <MDBCardText className="text-muted">
                       <EditableTypography
                         canEdit={false}
                         initialValue={newBalance + " $"}
@@ -241,8 +234,8 @@ const ProfilePageResearcher = ( props ) => {
                         level="inherit"
                         fontSize="1.25em"
                         mb="0.25em"
+                        className="text-muted"
                       />
-                    </MDBCardText>
                   </MDBCol>
                 </MDBRow>
                 <hr />
@@ -251,10 +244,8 @@ const ProfilePageResearcher = ( props ) => {
                     <MDBCardText>Address</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
-                    <MDBCardText className="text-muted">
                       <EditableTypography
                         canEdit={true}
-                        variant="h1"
                         initialValue={((props.user || {}).user || {}).city + ", " + ((props.user || {}).user || {}).country}
                         onValidate={handleGroupNameValidation}
                         onSave={(v) => handleGroupNameChange("address", v)}
@@ -264,8 +255,8 @@ const ProfilePageResearcher = ( props ) => {
                         level="inherit"
                         fontSize="1.25em"
                         mb="0.25em"
+                        className="text-muted"
                       />
-                    </MDBCardText>
                   </MDBCol>
                 </MDBRow>
               </MDBCardBody>

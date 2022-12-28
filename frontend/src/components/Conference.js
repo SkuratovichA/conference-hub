@@ -125,6 +125,7 @@ class Conference extends React.Component {
         this.setState({token: token})
 
         if (this.props.newConf === false) {
+            console.log('FETH ONE ====', this.props.slug)
             conferenceCRUDHandler("fetch_one", this.props.slug, token, this.state?.conference, null)
                 .then((confinfo) => {
                     this.setState({conference: confinfo})

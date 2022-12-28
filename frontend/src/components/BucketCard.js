@@ -8,10 +8,6 @@ import Card from '@mui/joy/Card';
 import IconButton from '@mui/joy/IconButton';
 import Typography from '@mui/joy/Typography';
 import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
-import BookmarkAdd from '@mui/icons-material/BookmarkAddOutlined';
-import {Delete} from "@mui/icons-material";
-import {useState} from "react";
-import Conference from "./Conference";
 
 const BucketCard = (props) => {
 
@@ -38,8 +34,8 @@ const BucketCard = (props) => {
           <CancelPresentationIcon />
       </IconButton>
 
-        <Typography level="h2" fontSize="md" sx={{ mb: 0.5, marginTop: '30px' }}>
-          <b>{props.conf.name}</b>
+        <Typography level="h2" fontSize="md" sx={{ mb: 0.5, marginTop: '30px', fontSize: "20px" }}>
+          <b>{props.conf.name.length <= 30 ? props.conf.name: (props.conf.name.substr(0, 30) + "...")}</b>
       </Typography>
       <Typography level="body2">
           <b>From</b> {props.conf.date_from} <b>To</b> {props.conf.date_to}
