@@ -26,6 +26,30 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
+class PurchaseRefundMoney(APIView):
+    queryset = ch_models.PurchasesModel
+    serializer_class = sers.PurchaseSerializerSlug
+    lookup_field = 'slug'
+    permission_classes = (IsAuthenticated,)
+
+    def delete(self, request, *args, **kwargs):
+        conf = conf_models.ConferenceModel.objects.get(slug=kwargs['slug'])
+        organization = user_models.ConferenceUserModel.objects.get(username=conf.organization.user.username)
+        user = user_models.ConferenceUserModel.objects.get(username=request.user.username)
+
+        user.balance.amount += decimal.Decimal(conf.price.amount)
+        organization.balance.amount -= decimal.Decimal(conf.price.amount)
+
+        user.save()
+        organization.save()
+
+        pur = ch_models.PurchasesModel.objects.get(
+            Q(researcher__user__username=user.username) & Q(conference__name=conf.name))
+        pur.delete()
+
+        return Response(status=status.HTTP_200_OK)
+
 class PurchaseManipulateBucket(APIView):
     queryset = ch_models.PurchasesModel
     serializer_class = sers.PurchaseSerializerSlug
@@ -35,10 +59,10 @@ class PurchaseManipulateBucket(APIView):
     def post(self, request, *args, **kwargs):
         conf = conf_models.ConferenceModel.objects.get(slug=kwargs['slug'])
         user = user_models.ConferenceUserModel.objects.get(username=request.user.username)
-        state = ch_models.PurchasesModel(researcher=user.researcher, conference=conf, state=False)
+        state = ch_models.PurchasesModel(researcher=user.researcher, conference=conf, status=False)
         state.save()
 
-        return Response(status=status.HTTP_200_OK)
+        return Response({'action': 'add'}, status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
         conf = conf_models.ConferenceModel.objects.get(slug=kwargs['slug'])
@@ -49,7 +73,7 @@ class PurchaseManipulateBucket(APIView):
         if len(state) > 0:
             state[0].delete()
 
-        return Response(status=status.HTTP_200_OK)
+        return Response({'action': 'delete'}, status=status.HTTP_200_OK)
 
 class PurchaseGetState(APIView):
     queryset = ch_models.PurchasesModel
@@ -63,6 +87,7 @@ class PurchaseGetState(APIView):
         user = user_models.ConferenceUserModel.objects.get(username=request.user.username)
         state = ch_models.PurchasesModel.objects.filter(Q(conference__name=conf.name) &
                                          Q(researcher__user__username=user.username))
+
         if len(state) > 0:
             res = sers.PurchaseSerializer(state[0]).data
 
@@ -74,16 +99,52 @@ class PurchaseGetStateConfsUser(APIView):
     serializer_class = sers.PurchaseSerializer
 
     def get(self, request, *args, **kwargs):
-        print('AAAAAAA')
         researcher = user_models.ResearcherModel.objects.filter(user__username=request.user.username)
-        print(len(researcher))
         bucket_objects = ch_models.PurchasesModel.objects.all()
 
-        content = {'in_bucket': [], 'bought': [], 'other': []}
-        # for obj in bucket_objects:
-        #     if researcher
+        content = {'in_bucket': [], 'bought': []}
+        for obj in bucket_objects:
+            if not obj.status:
+                content['in_bucket'].append(sers.PurchaseSerializer(obj).data)
+            elif obj.status:
+                content['bought'].append(sers.PurchaseSerializer(obj).data)
 
         return Response(content, status=status.HTTP_200_OK)
+
+
+class PurchaseBuyConfs(APIView):
+    queryset = ch_models.PurchasesModel
+    serializer_class = sers.PurchaseSerializerSlug
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        user = user_models.ConferenceUserModel.objects.get(username=request.user.username)
+        finish_price = 0
+        for conf in request.data['data']:
+            finish_price += float(conf['price'])
+
+        if finish_price > user.balance.amount:
+            return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+
+        for conf in request.data['data']:
+            conference = conf_models.ConferenceModel.objects.get(name=conf['name'])
+            organization = user_models.ConferenceUserModel.objects.get(username=conf['organization']['user']['username'])
+
+            conference.visitors.add(user)
+            conference.save()
+
+            user.balance.amount -= decimal.Decimal(conference.price.amount)
+            organization.balance.amount += decimal.Decimal(conference.price.amount)
+
+            pur = ch_models.PurchasesModel.objects.get(
+                Q(researcher__user__username=user.username) & Q(conference__name=conference.name))
+            pur.status = True
+
+            user.save()
+            organization.save()
+            pur.save()
+
+        return Response(status=status.HTTP_200_OK)
 
 
 class PurchasesView(generic.ListView):

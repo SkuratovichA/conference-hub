@@ -12,6 +12,7 @@ export const EditableTypography = (
         initialValue,
         onSave,
         onValidate,
+        label,
         textFieldProps,
         iconButtonProps,
         containerProps,
@@ -47,6 +48,10 @@ export const EditableTypography = (
 
 
     const getHelperText = React.useCallback(() => {
+        if (label === 'Balance') {
+            setValue(initialValue)
+        }
+
         if (!isValid) return 'Invalid'
         return ''
     }, [isValid, value, initialValue])

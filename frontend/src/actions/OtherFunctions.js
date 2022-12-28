@@ -47,5 +47,65 @@ export const getStateConfBucket = async (nameconf, token) => {
     })
 
     let data = await response.json()
+    let res = 'Add to bucket'
+    if (Object.keys(data).length !== 0) {
+        if (data.status === false) {
+             res = 'Remove from bucket'
+        }
+        else {
+            res = 'Participate'
+        }
+    }
+
+    console.log(data)
+
+    return response.status >= 200 && response.status <= 299 ? res : null
+}
+
+export const addRemoveBucket = async (method, nameconf, token) => {
+    let response = await fetch('http://localhost:8000/ch/api/change_capacity_bucket/' + nameconf, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token,
+        },
+    })
+
+    let data = await response.json()
     return response.status >= 200 && response.status <= 299 ? data : {}
+}
+
+export const userRefundMoney = async (conf_slug, token) => {
+    let response = await fetch('http://localhost:8000/ch/api/refund_money/' + conf_slug, {
+        method: "DELETE",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token,
+        },
+    })
+}
+
+export const buyConfs = async (confs, token) => {
+    if (confs.length === 0) {
+        alert('Choose a conference before buy.')
+        return 200
+    }
+
+    let arr_confs = []
+    for (let obj_var of confs) {
+        arr_confs.push(obj_var.conference)
+    }
+
+    let response = await fetch('http://localhost:8000/ch/api/buy_confs', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token,
+        },
+        body: JSON.stringify({
+            data: arr_confs,
+        }),
+    })
+
+    return response.status
 }

@@ -12,3 +12,33 @@
     margin-top: 7px !important;
     justify-content: center;
 }
+
+.during-popup{
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
+}
+
+.PopUp{
+    position: absolute;
+    left: 25%;
+    top: 20%;
+    width: 50%;
+
+    border: 1px solid #011627;
+    border-radius: 1em;
+    box-shadow: -2px 5px 5px #4EA7FF;
+
+    background-color: #FDFFFC;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color: #011627;
+}
+
+.pu-button-container {
+    justify-content: space-evenly;
+    display: flex;
+    width: 100%;
+    margin-top: 30px;
+}

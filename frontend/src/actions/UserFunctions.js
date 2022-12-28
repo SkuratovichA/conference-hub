@@ -50,5 +50,5 @@ export const userCRUDHandler = async (type, dataToUpdate, token) => {
 
 export const getToken = () => {
     let {authTokens} = useContext(AuthContext)
-    return "Bearer " + authTokens.access
+    return authTokens ? "Bearer " + authTokens.access : null
 }

@@ -7,28 +7,39 @@ import Button from '@mui/joy/Button';
 import Card from '@mui/joy/Card';
 import IconButton from '@mui/joy/IconButton';
 import Typography from '@mui/joy/Typography';
-import BookmarkAdd from '@mui/icons-material/BookmarkAddOutlined';
-import {Delete} from "@mui/icons-material";
+import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
 
 const BucketCard = (props) => {
 
   return (
     <Card variant="outlined" sx={{ width: 520 }}>
-      <Typography level="h2" fontSize="md" sx={{ mb: 0.5 }}>
-          <b>{props.conf.name}</b>
-      </Typography>
-      <Typography level="body2">
-          <b>From</b> {props.conf.date_from} <b>To</b> {props.conf.date_to}
-      </Typography>
       <IconButton
         aria-label="bookmark Bahamas Islands"
         variant="plain"
         color="neutral"
         size="sm"
+        onClick={props.callbackBuy}
         sx={{ position: 'absolute', top: '0.5rem', right: '0.5rem' }}
       >
           {props.button}
       </IconButton>
+        <IconButton
+        aria-label="bookmark Bahamas Islands"
+        variant="plain"
+        color="neutral"
+        size="sm"
+        onClick={props.callbackDeleteFromBucket}
+        sx={{ position: 'absolute', top: '0.5rem', left: '0.5rem' }}
+      >
+          <CancelPresentationIcon />
+      </IconButton>
+
+        <Typography level="h2" fontSize="md" sx={{ mb: 0.5, marginTop: '30px', fontSize: "20px" }}>
+          <b>{props.conf.name.length <= 30 ? props.conf.name: (props.conf.name.substr(0, 30) + "...")}</b>
+      </Typography>
+      <Typography level="body2">
+          <b>From</b> {props.conf.date_from} <b>To</b> {props.conf.date_to}
+      </Typography>
       <AspectRatio minHeight="120px" maxHeight="200px" sx={{ my: 2 }}>
         <img
           src={"http://localhost:8000/media/static/conf_default.jpg"}
@@ -49,6 +60,7 @@ const BucketCard = (props) => {
           color="primary"
           aria-label="Explore Bahamas Islands"
           sx={{ ml: 'auto', fontWeight: 600 }}
+          onClick={props.callbackDetail}
         >
           Details
         </Button>
