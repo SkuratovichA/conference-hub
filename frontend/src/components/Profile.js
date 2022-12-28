@@ -33,7 +33,7 @@ const Profile = () => {
         return ""
     }
 
-    if (user.user?.is_researcher === true) {
+    if (userFull.user?.is_researcher === true) {
         return (
             <ProfilePageResearcher
                 user={userFull}
