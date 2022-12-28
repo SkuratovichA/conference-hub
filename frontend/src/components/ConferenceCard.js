@@ -80,7 +80,10 @@ export const MuiCard = (props) => {
             <Box width="280px">
                 <Card>
                     <CardActionArea
-                        onClick={props.conferenceOnClick}
+                        onClick={() => {
+                            console.log('CLICK CLICK');
+                            props.conferenceOnClick()
+                        }}
                     >
                         <CustomCardMedia src={'http://localhost:8000/media/static/conf_default.jpg'}/>
                         <CardContent>
