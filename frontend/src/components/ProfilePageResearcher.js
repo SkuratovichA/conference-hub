@@ -16,7 +16,7 @@ import {
   MDBCardImage,
 } from 'mdb-react-ui-kit';
 import {userCRUDHandler} from "../actions/UserFunctions";
-import {List, Paper} from "@mui/material";
+import {List, Paper, Typography} from "@mui/material";
 import ListItem from "@mui/material/ListItem";
 import Grid from "@mui/material/Unstable_Grid2";
 import ConfProfileCard from "./ConfProfileCard";
@@ -26,9 +26,18 @@ import './styles/Other.css'
 import { useSnackbar } from 'notistack';
 import {userRefundMoney} from "../actions/OtherFunctions";
 
-function getColor(colors_arr) {
-    let x = Math.floor((Math.random() * 2) + 1);
-    return colors_arr[x - 1]
+function getHash(s) {
+  var h = 0, l = s.length, i = 0;
+  if ( l > 0 )
+    while (i < l)
+      h = (h << 5) - h + s.charCodeAt(i++) | 0;
+  return h;
+};
+
+function getColor(colors_arr, slug_conf) {
+    let num = getHash(slug_conf)
+    num = num > 0 ? num : num * -1
+    return colors_arr[num % 2]
 }
 
 const ProfilePageResearcher = ( props ) => {
@@ -37,6 +46,8 @@ const ProfilePageResearcher = ( props ) => {
     let [isOpenRefundWindow, changeRefundWindow] = useState(false)
     let [moneyWereRefunded, refundMoneyChange] = useState(false)
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+    let [newBalance, changeBalance] = useState(props.user?.user?.balance)
+    let [tmpConfPrice, changeTmpConfPrice] = useState(0)
 
     let colors = [
         [13, 14, 150, 0.15],
@@ -50,10 +61,12 @@ const ProfilePageResearcher = ( props ) => {
     const refundMoney = () => {
         userRefundMoney(detailSlug, props.token)
             .then(() => {
-                console.log('RABOYA+TET')
                 enqueueSnackbar('The money were refunded.', {variant: "success"});
-                props.callbackRender()
-                //refundMoneyChange(!moneyWereRefunded)
+                let new_var = (parseFloat(newBalance) + parseFloat(tmpConfPrice)).toFixed(2);
+                changeBalance(new_var)
+            })
+            .then(() => {
+                refundMoneyChange(!moneyWereRefunded)
             })
     }
 
@@ -113,7 +126,7 @@ const ProfilePageResearcher = ( props ) => {
             .then(() => {
                 setLoad(true)
             })
-    }, [])
+    }, [moneyWereRefunded, ])
 
     if (loaded === false) {
         return "";
@@ -219,8 +232,7 @@ const ProfilePageResearcher = ( props ) => {
                     <MDBCardText className="text-muted">
                       <EditableTypography
                         canEdit={false}
-                        variant="h1"
-                        initialValue={((props.user || {}).user || {}).balance + " $"}
+                        initialValue={newBalance + " $"}
                         onValidate={handleGroupNameValidation}
                         onSave={(v) => handleGroupNameChange("balance", v)}
                         label="Balance"
@@ -276,8 +288,9 @@ const ProfilePageResearcher = ( props ) => {
                                             callbackDetail={() => {
                                                 showMoreInfo(obj.slug)
                                             }}
-                                            color={getColor(colors)}
+                                            color={getColor(colors, obj.slug)}
                                             callbackRefundModalDialog={() => {
+                                                changeTmpConfPrice(obj.price)
                                                 modalRefund(obj.slug)
                                             }}
                                         />
