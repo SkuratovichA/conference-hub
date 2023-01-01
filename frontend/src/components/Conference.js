@@ -187,15 +187,6 @@ class Conference extends React.Component {
 
     _leftSectionEditable = () => (
         <Stack direction={"column"} spacing={1.2}>
-            {/*brief*/}
-            <TextField
-                label={"Brief"}
-                size="small"
-                variant={"standard"}
-                value={this.state?.conference?.brief}
-                onChange={(v) => this.handleDataChange("brief", v.target.value)}
-            />
-
             {/*date_from - date_to*/}
             <MuiDateRangePicker
                 canEdit={this.props.canEdit}
@@ -211,7 +202,7 @@ class Conference extends React.Component {
             <Stack sx={{width: "100%"}} spacing={1} direction={"row"} justifyContent="space-between">
 
                 <TextField
-                    label="address"
+                    label="Address"
                     value={this.state?.conference?.address}
                     variant="standard"
                     onChange={(v) => this.handleDataChange("address", v.target.value)}
@@ -219,7 +210,7 @@ class Conference extends React.Component {
                 />
 
                 <TextField
-                    label="price"
+                    label="Price"
                     value={this.state?.conference?.price || 0}
                     InputProps={{
                         inputComponent: MoneyFieldInputProps,
@@ -228,7 +219,16 @@ class Conference extends React.Component {
                     onChange={(v) => this.handleDataChange("price", v.target.value)}
                     name="price"
                 />
+
             </Stack>
+            {/*brief*/}
+                <TextField
+                    label={"Brief"}
+                    size="small"
+                    variant={"standard"}
+                    value={this.state?.conference?.brief}
+                    onChange={(v) => this.handleDataChange("brief", v.target.value)}
+                />
         </Stack>
     )
 
@@ -335,7 +335,7 @@ class Conference extends React.Component {
                                 label="Conference Name"
 
                                 level="inherit"
-                                fontSize="3em"
+                                // fontSize="3em"
                                 className={"font-semibold"}
                                 // mb="0.25em"
                             >
