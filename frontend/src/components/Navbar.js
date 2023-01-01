@@ -2,7 +2,7 @@
 // author: Shchapaniak Andrei
 
 import React, {useContext, useState, useEffect} from "react";
-import {AppBar, Toolbar, IconButton, Typography, Stack, Button} from "@mui/material";
+import {AppBar, Toolbar, IconButton, Typography, Stack, Button, Drawer} from "@mui/material";
 import AccessibleForwardIcon from '@mui/icons-material/AccessibleForward';
 import AuthContext from "../context/AuthContext";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
@@ -11,7 +11,8 @@ import Badge from '@mui/material/Badge';
 import {useNavigate} from "react-router-dom";
 import './styles/Bucket.css'
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import {getInfoUser} from "../actions/UserFunctions";
+import {getInfoUser, getToken} from "../actions/UserFunctions";
+import UsersNotifications from "./UsersNotifications";
 
 let navbarState = false
 let countBucketGlobal = 2
@@ -36,7 +37,7 @@ const Navbar = () => {
     //let [loaded, setLoaded] = useState(false)
     let [userInfo, SetUserInfo] = useState({})
     let navigate = useNavigate()
-    let token = authTokens === null ? null : "Bearer " + authTokens?.access
+    let token = getToken()
     //let [navbarState, updateNavbar] = useState(false)
 
 
@@ -46,7 +47,7 @@ const Navbar = () => {
                 SetUserInfo(data)
             })
     }, [navbarState, ])
-
+    const[drawer, setDrawer ] = useState(false);
     //
     // const decBucket = () => {
     //     setCountBucket(countBucket - 1)
@@ -58,7 +59,8 @@ const Navbar = () => {
     //}, [newBucket, ])
 
     return (
-        <AppBar position="static">
+        <div>
+            <AppBar position="sticky">
             <Toolbar>
                 <IconButton href={"/"}>
                     <AccessibleForwardIcon size="large" edge="start" color="inherit" aria-label="logo">
@@ -81,7 +83,7 @@ const Navbar = () => {
                             </IconButton>
 
                             <IconButton aria-label="notification"
-                                        onClick={() => {navigate(user.username+'/notifications')}}
+                                        onClick={() => setDrawer(true)}
                             >
                                 <Badge color="secondary" badgeContent={5}>
                                   <NotificationsIcon fontSize={"medium"} />
@@ -113,6 +115,19 @@ const Navbar = () => {
                 </Stack>
             </Toolbar>
         </AppBar>
+            <Drawer
+              anchor="left"
+              open={drawer}
+              onClose={() => setDrawer(false)}
+              PaperProps={{
+                sx: { width: "50%" },
+              }}
+            >
+
+              <UsersNotifications/>
+            </Drawer>
+        </div>
+
     )
 }
 
