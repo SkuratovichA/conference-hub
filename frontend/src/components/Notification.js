@@ -43,6 +43,28 @@ export const NotificationItem = ({invite}) => {
     );
 };
 
+export const MemberItem = ({member}) => {
+    return (
+        <Paper sx={{ width: "100%", fullWidth: true }} elevation={3}>
+             <Grid container>
+                 <Grid item md={10} px={2} py={2}>
+
+                      <Typography gutterBottom variant="h5">
+                          {member.res_name} {member.res_surname}
+                      </Typography>
+                      <Typography variant="body1" color="text.primary">
+                          Status: {member.approved ? "Approved" : member.rejected? "Rejected" : "Pending"}
+                      </Typography>
+                     <Typography variant="body2"  color="text.secondary">
+                        Membership request send on: {member.date_sent}
+                     </Typography>
+
+                 </Grid>
+             </Grid>
+        </Paper>
+    )
+}
+
 let date_format = {
     month: "short",
     day: "2-digit",

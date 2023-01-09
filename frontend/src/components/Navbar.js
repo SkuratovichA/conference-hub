@@ -16,6 +16,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import FestivalIcon from '@mui/icons-material/Festival';
 import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 import UsersNotifications from "./UsersNotifications";
+import OrganizationMembers from "./OrganizationMembers";
 
 let navbarState = false
 let countBucketGlobal = 2
@@ -49,17 +50,22 @@ const Navbar = () => {
     let [invite_num, setInvNum] = useState(0)
 
     useEffect(() => {
-    getInvitesInfo(token)
+      if (user){
+        getInvitesInfo(token)
         .then(response => {
             setInvites(response);
-            setInvNum(response.organizations.length+response.conferences.length)
+            if (!user.is_organization){
+              setInvNum(response.organizations.length+response.conferences.length)
+            }
             console.log(response);
           }
         )
         .catch(error => {
             alert(error)
         })
-    }, []);
+      }
+
+    }, [user]);
 
     useEffect(() => {
         getInfoUser(token)
@@ -168,8 +174,11 @@ const Navbar = () => {
               }}
             >
                 <InviteContext.Provider value={invites}>
-
-              <UsersNotifications/>
+                {user["is_organization"] === true ? (
+                    <OrganizationMembers/>
+                ) : (
+                    <UsersNotifications/>
+                )}
                 </InviteContext.Provider>
             </Drawer>)}
         </div>
