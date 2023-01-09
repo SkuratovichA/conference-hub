@@ -1,7 +1,8 @@
 // author: Skuratovich Aliaksandr
 // author: Shchapaniak Andrei
+// author: Dziyana Khrystsiuk
 
-import React, { useContext, useEffect, useState} from "react";
+import React, {createContext, useContext, useEffect, useState} from "react";
 import {AppBar, Toolbar, IconButton, Typography, Stack, Button, Drawer} from "@mui/material";
 import AuthContext from "../context/AuthContext";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
@@ -10,7 +11,7 @@ import Badge from '@mui/material/Badge';
 import {useNavigate} from "react-router-dom";
 import './styles/Bucket.css'
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import {getInfoUser, getToken} from "../actions/UserFunctions";
+import {getInfoUser, getToken, getInvitesInfo} from "../actions/UserFunctions";
 import GroupIcon from '@mui/icons-material/Group';
 import FestivalIcon from '@mui/icons-material/Festival';
 import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
@@ -32,6 +33,8 @@ export const changeNavbarLogin = () => {
 //     Navbar()
 // }
 
+export const InviteContext = createContext()
+
 const Navbar = () => {
     let {user, logoutUser, authTokens} = useContext(AuthContext)
     //let [countBucket, setCountBucket] = useState(0)
@@ -41,7 +44,22 @@ const Navbar = () => {
     let navigate = useNavigate()
     let token = getToken()
     //let [navbarState, updateNavbar] = useState(false)
+    const[drawer, setDrawer ] = useState(false);
+    let [invites, setInvites] = useState([])
+    let [invite_num, setInvNum] = useState(0)
 
+    useEffect(() => {
+    getInvitesInfo(token)
+        .then(response => {
+            setInvites(response);
+            setInvNum(response.organizations.length+response.conferences.length)
+            console.log(response);
+          }
+        )
+        .catch(error => {
+            alert(error)
+        })
+    }, []);
 
     useEffect(() => {
         getInfoUser(token)
@@ -49,7 +67,6 @@ const Navbar = () => {
                 SetUserInfo(data)
             })
     }, [navbarState, ])
-    const[drawer, setDrawer ] = useState(false);
     //
     // const decBucket = () => {
     //     setCountBucket(countBucket - 1)
@@ -93,7 +110,7 @@ const Navbar = () => {
                     <IconButton aria-label="notification"
                         onClick={() => setDrawer(true)}
                 >
-                    <Badge color="secondary" badgeContent={5}>
+                    <Badge color="secondary" badgeContent={invite_num}>
                       <NotificationsIcon fontSize={"medium"} />
                     </Badge>
                 </IconButton>
@@ -142,7 +159,7 @@ const Navbar = () => {
                 </Stack>
             </Toolbar>
         </AppBar>
-            <Drawer
+            {user && (<Drawer
               anchor="left"
               open={drawer}
               onClose={() => setDrawer(false)}
@@ -150,9 +167,11 @@ const Navbar = () => {
                 sx: { width: "50%" },
               }}
             >
+                <InviteContext.Provider value={invites}>
 
               <UsersNotifications/>
-            </Drawer>
+                </InviteContext.Provider>
+            </Drawer>)}
         </div>
 
     )
