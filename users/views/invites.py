@@ -2,6 +2,11 @@
 
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.contrib.auth.mixins import LoginRequiredMixin
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+from users import serializers as sers
+from rest_framework.response import Response
+from rest_framework import status
 from users import models as users_models
 from django.urls import reverse_lazy
 from django.shortcuts import render
@@ -12,6 +17,41 @@ import json
 import logging
 
 logger = logging.getLogger(__name__)
+
+
+def serialize_organization_context(request):
+    members = users_models.OrganizationEmployeeModel.objects.filter(
+        organization__user=request.user,) or []
+    logger.debug(f'organization members: {members}')
+    result = []
+    for mem in members:
+        result.append(sers.MembershipInviteSerializer(mem).data)
+    return result
+
+
+def serialize_researcher_context(request):
+    self_username = request.user.username
+    organizations = users_models.OrganizationEmployeeModel.objects.filter(
+                researcher__user__username=self_username,) or []
+    conferences = []
+    result = {'organizations': [], 'conferences': []}
+    for org in organizations:
+        result["organizations"].append(sers.MembershipInviteSerializer(org).data)
+    return result
+
+
+class InviteAPIView(APIView):
+    queryset = users_models.OrganizationEmployeeModel
+    serializer_class = sers.MembershipInviteSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        content = {}
+        if request.user.is_researcher:
+            content = serialize_researcher_context(request)
+        elif request.user.is_organization:
+            content = serialize_organization_context(request)
+        return Response(content, status=status.HTTP_200_OK)
 
 
 class InviteView(LoginRequiredMixin, generic.ListView):

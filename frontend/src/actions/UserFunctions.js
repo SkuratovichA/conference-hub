@@ -3,6 +3,24 @@
 import {useContext, useState} from "react";
 import AuthContext from "../context/AuthContext";
 
+export const getInvitesInfo = async (token) => {
+    // type in [all, researchers, organizations]
+     let response = await fetch('http://localhost:8000/users/api/get_invite_context', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': token,
+        },
+    })
+
+    let data = await response.json()
+    let success = response.status >= 200 && response.status <= 299
+
+    // console.log(JSON.stringify(data))
+    // console.log("success: " + success)
+
+    return success ? data : []
+}
 export const getInfoUser = async (token) => {
     if (token === null) {
         return {}

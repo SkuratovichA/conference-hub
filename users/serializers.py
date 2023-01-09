@@ -14,6 +14,16 @@ logger = logging.getLogger(__name__)
 #         model = u_models.ProfileModel
 #         fields = ['image']
 
+class MembershipInviteSerializer(serializers.ModelSerializer):
+
+    org_name = serializers.CharField(source='organization.user.name')
+    res_name = serializers.CharField(source='researcher.user.name')
+    res_surname = serializers.CharField(source='researcher.last_name')
+
+    class Meta:
+        model = u_models.OrganizationEmployeeModel
+        fields = ['approved', 'rejected', 'brief', 'date_sent', 'org_name', 'res_name', 'res_surname']
+
 
 class ConferenceUserSerializer(serializers.ModelSerializer):
     # profile = ProfileUserSerializer(many=False)
