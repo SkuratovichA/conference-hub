@@ -46,40 +46,30 @@ const ProfilePageOrganization = ( props ) => {
         else if (key === "login") {
             Object.assign(props.user, setProperty(props.user, 'user.username', new_val))
         }
+
+        userCRUDHandler("update", props.user, props.token)
     }
 
     return (
         <section style={{ backgroundColor: '#eee' }}>
       <MDBContainer className="py-5">
         <MDBRow>
-          <MDBCol lg="4">
-              <MDBCardBody className="text-center">
-                <MDBCardImage
-                  src={"http://localhost:8000/media/static/default.png"}
-                  alt="avatar"
-                  className="rounded-circle"
-                  style={{ width: '250px' }}
-                  fluid />
-                <div className="d-flex justify-content-center mb-2 profile-buttons">
-                    <button type="button" className="btn btn-danger" onClick={() => {
-                        console.log("Delete profile")
-                    }
-                    }>Delete profile</button>
-                    <div className="divider"/>
-                    <button type="button" className="btn btn-info"
-                        onClick={() => {
-                            userCRUDHandler("update", props.user, props?.token)
-                                .then(() => {
-                                    alert('Changes saved!')
-                                })
-                        }
-                    }
-                    >
-                        Save Changes
-                    </button>
-                </div>
-              </MDBCardBody>
-          </MDBCol>
+            <MDBCol lg="4">
+                <MDBCardBody className="text-center">
+                    <MDBCardImage
+                      src={"http://localhost:8000/media/static/default.png"}
+                      alt="avatar"
+                      className="rounded-circle"
+                      style={{ width: '250px', display: 'inline-block' }}
+                      fluid
+                    />
+                    <div className="d-flex justify-content-center mb-2 profile-buttons">
+                        <button type="button" className="btn btn-danger">
+                            Delete profile
+                        </button>
+                    </div>
+                </MDBCardBody>
+            </MDBCol>
 
           <MDBCol lg="8">
             <MDBCard className="mb-4">
@@ -208,10 +198,6 @@ const ProfilePageOrganization = ( props ) => {
               <MDBCard className="mb-4 mb-md-0">
                 <MDBCardBody>
                   <MDBCardText className="mb-4">Conferences</MDBCardText>
-                  <MDBCardText className="mb-1" style={{ fontSize: '.77rem' }}>Web Design</MDBCardText>
-                  <MDBProgress className="rounded">
-                    <MDBProgressBar width={80} valuemin={0} valuemax={100} />
-                  </MDBProgress>
                 </MDBCardBody>
               </MDBCard>
             </MDBCol>
@@ -220,10 +206,6 @@ const ProfilePageOrganization = ( props ) => {
               <MDBCard className="mb-4 mb-md-0">
                 <MDBCardBody>
                   <MDBCardText className="mb-4">Members</MDBCardText>
-                  <MDBCardText className="mb-1" style={{ fontSize: '.77rem' }}>Web Design</MDBCardText>
-                  <MDBProgress className="rounded">
-                    <MDBProgressBar width={80} valuemin={0} valuemax={100} />
-                  </MDBProgress>
                 </MDBCardBody>
               </MDBCard>
             </MDBCol>

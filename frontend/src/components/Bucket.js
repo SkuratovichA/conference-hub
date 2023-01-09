@@ -19,6 +19,7 @@ import Conference from "./Conference";
 import {Modal, ModalDialog} from '@mui/joy'
 import {addRemoveBucket} from "../actions/OtherFunctions";
 import { useSnackbar } from 'notistack';
+import {changeBucketCount} from "./Navbar";
 
 /* eslint-disable no-useless-escape */
 /* eslint-disable no-unexpected-multiline */
@@ -153,7 +154,7 @@ const Bucket = ( props ) => {
     return (
         <section style={{ backgroundColor: '#eee' }}>
             <div className="my-div">
-                <div className="colorful-head-bucket">
+                <div className="colorful-head-bucket centred">
                     Your Bucket
                 </div>
                 {
@@ -167,6 +168,7 @@ const Bucket = ( props ) => {
                                         <BucketCard
                                             conf={obj.conference}
                                             button={<ShoppingCart />}
+                                            textButton="Move to the buy section"
                                             callbackBuy={() => {
                                                 wantToBuy(obj.conference)
                                             }}
@@ -192,7 +194,7 @@ const Bucket = ( props ) => {
                 </Button>
             </div>
             <div className="my-div">
-                <div className="colorful-head-buy">
+                <div className="colorful-head-buy centred">
                     Buy Tickets
                 </div>
                 {
@@ -207,6 +209,7 @@ const Bucket = ( props ) => {
                                             <BucketCard
                                                 conf={obj.conference}
                                                 button={<Delete />}
+                                                textButton="Move to the bucket section"
                                                 callbackBuy={() => {
                                                     dontWantToBuy(obj.conference)
                                                 }}
