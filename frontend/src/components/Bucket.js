@@ -19,6 +19,7 @@ import Conference from "./Conference";
 import {Modal, ModalDialog} from '@mui/joy'
 import {addRemoveBucket} from "../actions/OtherFunctions";
 import { useSnackbar } from 'notistack';
+import {changeBucketCount} from "./Navbar";
 
 /* eslint-disable no-useless-escape */
 /* eslint-disable no-unexpected-multiline */
@@ -167,6 +168,7 @@ const Bucket = ( props ) => {
                                         <BucketCard
                                             conf={obj.conference}
                                             button={<ShoppingCart />}
+                                            textButton="Move to the buy section"
                                             callbackBuy={() => {
                                                 wantToBuy(obj.conference)
                                             }}
@@ -207,6 +209,7 @@ const Bucket = ( props ) => {
                                             <BucketCard
                                                 conf={obj.conference}
                                                 button={<Delete />}
+                                                textButton="Move to the bucket section"
                                                 callbackBuy={() => {
                                                     dontWantToBuy(obj.conference)
                                                 }}

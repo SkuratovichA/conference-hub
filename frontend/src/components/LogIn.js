@@ -10,7 +10,7 @@ const LogIn = () => {
 
     return (
         <div id="loginform">
-            <form onSubmit={loginUser}>
+            <form onSubmit={loginUser} style={{ marginBottom: "25px" }}>
                 <FormHeader title="Login"/>
                 <FormInput description="Username or Email"
                            placeholder="Username or Email"
@@ -41,10 +41,11 @@ const FormButton = props => (
 );
 
 const FormInput = props => (
-    <div className="row-login">
+    <div className="row-login" style={{ alignItems: 'center', justifyContent: 'center' }}>
         <label>{props.description}</label>
         <input type={props.type} placeholder={props.placeholder}
-               name={props.input} id={props.id} required
+               name={props.input} id={props.id}
+               required
         />
     </div>
 );

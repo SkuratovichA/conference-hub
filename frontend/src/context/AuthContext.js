@@ -4,6 +4,8 @@ import React, { createContext, useState, useEffect } from "react";
 import jwt_decode from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import {getInfoUser} from "../actions/UserFunctions";
+import {changeNavbarLogin} from "../components/Navbar";
+import Navbar from '../components/Navbar'
 
 const AuthContext = createContext()
 
@@ -32,6 +34,7 @@ export const AuthProvider = ({children}) => {
             setUser(jwt_decode(data.access))
             localStorage.setItem('authTokens', JSON.stringify(data))
             navigate('/')
+            changeNavbarLogin()
         }
         else {
             alert("Incorrect password or username. Try again.")

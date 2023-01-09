@@ -1,7 +1,7 @@
 // author: Skuratovich Aliaksandr
 // author: Shchapaniak Andrei
 
-import React, {useContext, useState} from "react";
+import React, {useContext, useState, useEffect} from "react";
 import {AppBar, Toolbar, IconButton, Typography, Stack, Button} from "@mui/material";
 import AccessibleForwardIcon from '@mui/icons-material/AccessibleForward';
 import AuthContext from "../context/AuthContext";
@@ -11,19 +11,42 @@ import Badge from '@mui/material/Badge';
 import {useNavigate} from "react-router-dom";
 import './styles/Bucket.css'
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import {getInfoUser} from "../actions/UserFunctions";
 
+let navbarState = false
+let countBucketGlobal = 2
+
+export const changeNavbarLogin = () => {
+    navbarState = !navbarState
+}
+
+// export const changeBucketCount = (value) => {
+//     countBucketGlobal += value
+//     navbarState = !navbarState
+//     let el = document.getElementsByClassName('count-bucket')
+//     el.setAttribute('badgeContent', countBucketGlobal)
+//     console.log(countBucketGlobal)
+//     Navbar()
+// }
 
 const Navbar = () => {
-    let {user, logoutUser} = useContext(AuthContext)
+    let {user, logoutUser, authTokens} = useContext(AuthContext)
     //let [countBucket, setCountBucket] = useState(0)
     //let [newBucket, updateBucket] = useState(false)
     //let [loaded, setLoaded] = useState(false)
+    let [userInfo, SetUserInfo] = useState({})
     let navigate = useNavigate()
+    let token = authTokens === null ? null : "Bearer " + authTokens?.access
+    //let [navbarState, updateNavbar] = useState(false)
 
-    // const incBucket = () => {
-    //     setCountBucket(countBucket + 1)
-    //     updateBucket(!newBucket)
-    // }
+
+    useEffect(() => {
+        getInfoUser(token)
+            .then((data) => {
+                SetUserInfo(data)
+            })
+    }, [navbarState, ])
+
     //
     // const decBucket = () => {
     //     setCountBucket(countBucket - 1)
@@ -66,15 +89,18 @@ const Navbar = () => {
                             </IconButton>
 
 
-
-                            <IconButton
-                                aria-label="bucket"
-                                onClick={() => {navigate('/' + user.username + '/bucket')}}
-                            >
-                                <Badge color="secondary" badgeContent={2} >
-                                  <ShoppingCartIcon fontSize={"medium"} />
-                                </Badge>
-                            </IconButton>
+                            {
+                                userInfo?.user?.is_researcher
+                                    &&
+                                <IconButton
+                                    aria-label="bucket"
+                                    onClick={() => {navigate('/' + user.username + '/bucket')}}
+                                >
+                                    <Badge className={'bucket-count'} color="secondary" badgeContent={0} >
+                                      <ShoppingCartIcon fontSize={"medium"} />
+                                    </Badge>
+                                </IconButton>
+                            }
 
                             <Button color="inherit" href="/login" onClick={logoutUser}>Log Out</Button>
                         </Stack>
