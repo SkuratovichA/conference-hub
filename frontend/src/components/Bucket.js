@@ -154,7 +154,7 @@ const Bucket = ( props ) => {
     return (
         <section style={{ backgroundColor: '#eee' }}>
             <div className="my-div">
-                <div className="colorful-head-bucket">
+                <div className="colorful-head-bucket centred">
                     Your Bucket
                 </div>
                 {
@@ -194,7 +194,7 @@ const Bucket = ( props ) => {
                 </Button>
             </div>
             <div className="my-div">
-                <div className="colorful-head-buy">
+                <div className="colorful-head-buy centred">
                     Buy Tickets
                 </div>
                 {

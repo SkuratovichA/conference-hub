@@ -2,7 +2,9 @@
     margin-left: 0 !important;
     margin-top: 5px !important;
 }
-
+.centred {
+    margin: 0 10% 0 10%
+}
 .my-vline {
     position:fixed;
     left:50%;
