@@ -39,6 +39,7 @@ class EventModel(models.Model):
     event_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=250)
     date_time = models.DateTimeField('Starts at')
+    date_time_end = models.DateTimeField('Ends at')
     duration = models.DurationField()
     location = models.CharField(max_length=250)
     description = models.CharField(max_length=5000, null=True)

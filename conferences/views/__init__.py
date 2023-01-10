@@ -5,14 +5,17 @@ from .conferences import (
     DeleteConferenceView,
     ConferenceInfoView,
     ConferencesListView,
-    ConferenceGetAllAPi,
-    ConferenceOrganizationManipulateAPi,
-    ConferenceGetOneAPi
+    ConferenceGetAllAPI,
+    ConferenceOrganizationManipulateAPI,
+    ConferenceGetOneAPI,
+    ConferenceGetEventsAPI,
+    ConferenceCreateEventAPI,
+    ConferenceDeleteEventAPI,
 )
 from .events import (
     EventInfoView,
     CreateEventView,
     EditEventView,
     DeleteEventView,
-    UserEventsView
+    UserEventsView,
 )

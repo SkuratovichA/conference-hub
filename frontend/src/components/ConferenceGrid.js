@@ -15,7 +15,9 @@ export const ConferenceGrid = (
         conferences,
         user,
         tightLeft,
-        conferenceOnClick
+        conferenceOnClick,
+        updateKostyl,
+        setUpdateKostyl
     }) => {
 
     let gridProps = {
@@ -35,6 +37,8 @@ export const ConferenceGrid = (
                             <Card>
                                 <CreateConferenceDialog
                                     user={user}
+                                    updateKostyl={updateKostyl}
+                                    setUpdateKostyl={setUpdateKostyl}
                                 />
                             </Card>
                         </Box>
@@ -50,7 +54,6 @@ export const ConferenceGrid = (
                         </Grid>
                     )
                 )}
-
             </Grid>
         </Box>
     )

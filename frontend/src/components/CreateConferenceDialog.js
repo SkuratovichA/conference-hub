@@ -10,7 +10,9 @@ import plus from '../plus.png'
 import {useParams, useLocation, useNavigate} from "react-router-dom";
 
 export default function CreateConferenceDialog({
-    user
+    user,
+    updateKostyl,
+    setUpdateKostyl
 }) {
     const [open, setOpen] = React.useState(false)
     let navigate = useNavigate()
@@ -39,10 +41,10 @@ export default function CreateConferenceDialog({
                     user={user}
                     open={open}
                     slug={null}
-                    onClose={() => setOpen(false)}
+                    onClose={() => { setOpen(false); setUpdateKostyl(!updateKostyl) }}
                     canEdit={true}
                     newConf={true}
-                    callBackOnCreate={() => setOpen(false)}
+                    callBackOnCreate={() => {setOpen(false) ; setUpdateKostyl(!updateKostyl)}}
             />
         </React.Fragment>
     );

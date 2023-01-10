@@ -2,7 +2,7 @@
 // author: Shchapaniak Andrei
 
 import * as React from "react";
-import { withSnackbar } from 'notistack';
+import {withSnackbar} from 'notistack';
 import {
     AvatarGroup,
     Avatar,
@@ -36,114 +36,80 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
 
 
-class Conference extends React.Component {
-    static contextType = authContext
-    // canEdit - can create/delete/update a conference
-    // newConf - creating a new conference, co it's not possible to delete one
-    // conferenceCRUDHandler - (type, conference), type in ['create', 'update', 'fetch', 'delete'].
-    // callBackOnCreate - close a window/do something else
-    // callBackOnDelete - close a window/remove the element
-    // slug - close a window/remove the element
-    constructor(props) {
-        super(props);
+function Conference(props) {
+    let {authTokens} = React.useContext(authContext)
+    let token = authTokens?.access ? "Bearer " + authTokens.access : null
 
-        this.state = {
+    const [state, setState] = React.useState({
+        conference: {
+            'name': 'Default Name',
+            'brief': '',
+            'slug': props.slug,
+            'date_from': '',
+            'date_to': '',
+            'address': '',
+            'price': '',
+            'visitors': [],
+            'organization': props.owner,
+            'events': [],
+        },
+        conferenceSlugName: props.slug,
+        user: '',
+        loaded: false,
+        token: token,
+    })
+    const [updateKostyl, setUpdateKostyl] = React.useState(false)
+    React.useEffect(
+        () => {
+            if (props.newConf === false) {
+                setState({...state, loaded: false})
+                conferenceCRUDHandler("fetch_one", state.conferenceSlugName, state.token, null, null)
+                    .then((conf) => {
+                        console.log('backend returns this:', conf)
+                        setState({...state, ['conference']: conf, conferenceSlugName: conf.slug,  loaded: true})
+                    })
+            } else { // newConf = True
+                setState({...state, loaded: true})
+            }
+        },
+        []
+    )
+
+    const handleDataChange = (key, newValue) => {
+        let slug = state.conference.name.replaceAll(" ", "_")
+        setState({
+            ...state,
             conference: {
-                'name': 'Default Name',
-                'brief': '',
-                'slug': 'DefaultName',
-                'date_from': '',
-                'date_to': '',
-                'address': '',
-                'price': '',
-                'visitors': [],
-                'organization': this.props.owner,
-                'events': [],
-            },
-            user: '',
-            loaded: false,
-            token: null,
-        }
-
-        console.log('organization: ', this.state.conference.organization)
-
-        this.handleDataChange = this._handleDataChange.bind(this)
-        this.handleDataValidation = this._handleDataValidation.bind(this)
-
-        this.createConference = this._createConference.bind(this)
-        this.updateConference = this._updateConference.bind(this)
-        this.deleteConference = this._deleteConference.bind(this)
-
-        this.imageEdit = this._imageEdit.bind(this)
-        this.cardActions = this._cardActions.bind(this)
-        this.leftSectionEditable = this._leftSectionEditable.bind(this)
-        this.leftSectionStatic = this._leftSectionStatic.bind(this)
-        this.leftSection = this._leftSection.bind(this)
-        this.rightSection = this._rightSection.bind(this)
-    }
-
-    _handleDataChange(key, newValue) {
-        let var1 = this.state?.conference?.name
-
-        this.setState({
-            conference: {
-                ...this.state?.conference,
+                ...state.conference,
                 [key]: newValue,
-                ['slug']: var1.replaceAll(" ", "")
+                ['slug']: slug,
             }
         })
     }
 
-    _handleDataValidation = (newName) => {
-        return true
+    const deleteConference = () => {
+        conferenceCRUDHandler("delete", state.conferenceSlugName, state.token, state?.conference, null)
+        props.callBackOnDelete()
+        props.enqueueSnackbar('Conference has been deleted', {variant: "success"})
     }
 
-    _deleteConference() {
-        conferenceCRUDHandler("delete", this.state?.conference?.slug, this.state.token, this.state?.conference, null)
-        this.props.callBackOnDelete()
-        this.props.enqueueSnackbar('Conference has been deleted', {variant: "success"})
+    const updateConference = () => {
+        conferenceCRUDHandler("update", state.conferenceSlugName, state.token, state?.conference, null)
+        props.enqueueSnackbar('Conference has been updated', {variant: "success"})
     }
 
-    _updateConference() {
-        conferenceCRUDHandler("update", this.state?.conference?.slug, this.state.token, this.state?.conference, null)
-        this.props.enqueueSnackbar('Conference has been updated', {variant: "success"})
+    const createConference = () => {
+        conferenceCRUDHandler("create", state.conferenceSlugName, state?.token, state?.conference, null)
+        props.enqueueSnackbar('Conference has been created', {variant: "success"})
+        props.callBackOnCreate()
     }
 
-    _createConference() {
-        conferenceCRUDHandler("create", this.state?.conference?.slug, this.state?.token, this.state?.conference, null)
-        this.props.callBackOnCreate()
-        this.props.enqueueSnackbar('Conference has been created', {variant: "success"})
-    }
-
-    componentDidMount() {
-        let {user, authTokens} = this.context  // todo: delete this line and see if it works, because it is moved to the constructor
-
-        this.setState({...this.state, user: user?.username})
-
-        let token = "Bearer " + authTokens?.access
-
-        this.setState({token: token})
-
-        if (this.props.newConf === false) {
-            conferenceCRUDHandler("fetch_one", this.props.slug, token, this.state?.conference, null)
-                .then((confinfo) => {
-                    this.setState({conference: confinfo})
-                })
-                .then(() => {
-                    this.setState({loaded: true})
-                })
-        } else {
-            this.setState({loaded: true})
-        }
-    }
-
-    _imageEdit = () => (this.props.canEdit && (
+    const imageEdit = () => (props.canEdit && (
         <React.Fragment>
             <input
                 accept="image/*"
                 style={{display: "none"}}
                 id="icon-button-photo"
-                // onChange={(v) => handleDataChange("image", v)}
                 type="file"
             />
 
@@ -162,20 +128,32 @@ class Conference extends React.Component {
         </React.Fragment>
     ))
 
-    _cardActions = () => (this.props.canEdit && (
+    const cardActions = () => (props.canEdit && (
         <CardActions>
-            {!this.props.newConf ? (
+            {!props.newConf ? (
                 <Stack direction={"row"} justifyContent={"flex-between"}>
-                    <Button size="small" color={"error"} onClick={this.deleteConference}>
+                    <Button size="small" color={"error"} onClick={deleteConference}>
                         Delete
                     </Button>
-                    <Button size="small" onClick={this.updateConference}>
-                        Update
+                    <Button
+                        size="small"
+                        onClick={() => {
+                            updateConference()
+                            setState({...state, conferenceSlugName: state.conference.slug})
+                            props.setActiveConference(state.conference.slug)
+                            props.setUpdateKostyl(!props.updateKostyl)
+                        }}>
+                        UPDATE
                     </Button>
                 </Stack>
             ) : (
-                <Button size="small" color={"success"}
-                        onClick={this.createConference}
+                <Button
+                    size="small"
+                    color={"success"}
+                    onClick={() => {
+                        createConference();
+                        props.setUpdateKostyl(!props.updateKostyl)
+                    }}
                 >
                     Create
                 </Button>
@@ -184,24 +162,24 @@ class Conference extends React.Component {
     ))
 
 
-    _leftSectionEditable = () => (
+    const leftSectionEditable = () => (
         <Stack direction={"column"} spacing={1.2}>
             {/*brief*/}
             <TextField
                 label={"Brief"}
                 size="small"
                 variant={"standard"}
-                value={this.state?.conference?.brief}
-                onChange={(v) => this.handleDataChange("brief", v.target.value)}
+                value={state?.conference?.brief}
+                onChange={(v) => handleDataChange("brief", v.target.value)}
             />
 
             {/*date_from - date_to*/}
             <MuiDateRangePicker
-                canEdit={this.props.canEdit}
-                fromValueHandler={(newFrom) => this.handleDataChange("date_from", newFrom)}
-                toValueHandler={(newTo) => this.handleDataChange("date_to", newTo)}
-                fromValue={this.state?.conference?.date_from}
-                toValue={this.state?.conference?.date_to}
+                canEdit={props.canEdit}
+                fromValueHandler={(newFrom) => handleDataChange("date_from", newFrom)}
+                toValueHandler={(newTo) => handleDataChange("date_to", newTo)}
+                fromValue={state?.conference?.date_from}
+                toValue={state?.conference?.date_to}
                 variant={"standard"}
                 sx={{justifyContent: "space-between"}}
             />
@@ -211,33 +189,33 @@ class Conference extends React.Component {
 
                 <TextField
                     label="address"
-                    value={this.state?.conference?.address}
+                    value={state?.conference?.address}
                     variant="standard"
-                    onChange={(v) => this.handleDataChange("address", v.target.value)}
+                    onChange={(v) => handleDataChange("address", v.target.value)}
                     name="address"
                 />
 
                 <TextField
                     label="price"
-                    value={this.state?.conference?.price || 0}
+                    value={state?.conference?.price || 0}
                     InputProps={{
                         inputComponent: MoneyFieldInputProps,
                     }}
                     variant="standard"
-                    onChange={(v) => this.handleDataChange("price", v.target.value)}
+                    onChange={(v) => handleDataChange("price", v.target.value)}
                     name="price"
                 />
             </Stack>
         </Stack>
     )
 
-    _leftSectionStatic = () => (
+    const leftSectionStatic = () => (
         <React.Fragment>
             {/*brief*/}
-            {this.state?.conference?.brief && (
+            {state?.conference?.brief && (
                 <Stack direction={"row"} spacing={1}>
                     <HistoryEduIcon size={"small"}/>
-                    <Typography color="text.secondary">{this.state?.conference?.brief}</Typography>
+                    <Typography color="text.secondary">{state?.conference?.brief}</Typography>
                 </Stack>
             )}
 
@@ -245,11 +223,11 @@ class Conference extends React.Component {
             <Stack direction={"row"} spacing={1}>
                 <CalendarMonthIcon/>
                 <Typography color="text.secondary">
-                    {format(parseISO(this.state?.conference?.date_from), 'MMM dd, yyy')}
+                    {format(parseISO(state?.conference?.date_from), 'MMM dd, yyy')}
                 </Typography>
                 <Typography color="text.secondary">{' - '}</Typography>
                 <Typography color="text.secondary">
-                    {format(parseISO(this.state?.conference?.date_to), 'MMM dd, yyy')}
+                    {format(parseISO(state?.conference?.date_to), 'MMM dd, yyy')}
                 </Typography>
             </Stack>
 
@@ -257,33 +235,33 @@ class Conference extends React.Component {
             <Stack spacing={2} direction={"row"} justifyContent={"space-between"}>
                 <Stack direction={"row"} spacing={1}>
                     <LocationOnIcon size={"small"} color={"inherit"}/>
-                    <Typography>{this.state?.conference?.address}</Typography>
+                    <Typography>{state?.conference?.address}</Typography>
                 </Stack>
-                {this.state?.conference?.price && (
+                {state?.conference?.price && (
                     <Stack direction={"row"} spacing={1}>
                         <EuroIcon size={"small"} color={"inherit"}/>
-                        <Typography>{this.state?.conference?.price}</Typography>
+                        <Typography>{state?.conference?.price}</Typography>
                     </Stack>
                 )}
             </Stack>
         </React.Fragment>
     )
 
-    _leftSection = () => (
-        this.props.canEdit ? (
-            this.leftSectionEditable()
+    const leftSection = () => (
+        props.canEdit ? (
+            leftSectionEditable()
         ) : (
-            this.leftSectionStatic()
+            leftSectionStatic()
         )
     )
 
-    _rightSection = () => (
+    const rightSection = () => (
         <React.Fragment>
             <Stack direction={"column"} spacing={2}>
 
                 <Button
                     style={{background: 'rgba(217,223,231,0.62)', borderRadius: '8px'}}
-                    href={"/users/" + this.state.conference.organization.user.username}
+                    href={"/users/" + state.conference.organization.user.username}
                 >
                     <Stack
                         spacing={2}
@@ -291,14 +269,16 @@ class Conference extends React.Component {
                         style={{margin: "4px"}}
                     >
                         <Avatar
-                            alt={this.state.conference.organization.user.username}
+                            alt={state.conference.organization.user.username}
                             style={{height: "40%", margin: "auto 0"}}
                             src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                         />
                         <Stack direction={"column"}>
-                            <Typography color={"primary.main"}>{this.state.conference.organization.user.name}</Typography>
-                            <Typography variant={"body1"} color={"text.secondary"}>{this.state.conference.organization.user.email}</Typography>
-                            <Typography variant={"body1"} color={"text.secondary"}>{this.state.conference.organization.user.city}, {this.state.conference.organization.user.country}</Typography>
+                            <Typography color={"primary.main"}>{state.conference.organization.user.name}</Typography>
+                            <Typography variant={"body1"}
+                                        color={"text.secondary"}>{state.conference.organization.user.email}</Typography>
+                            <Typography variant={"body1"}
+                                        color={"text.secondary"}>{state.conference.organization.user.city}, {state.conference.organization.user.country}</Typography>
                         </Stack>
                     </Stack>
 
@@ -312,61 +292,58 @@ class Conference extends React.Component {
         </React.Fragment>
     )
 
-    render() {
 
-        return (
-            this.state.loaded && (
-                <>
-                    <Card >
-                        <CustomCardMedia
-                            src={"http://localhost:8000/media/static/conf_default.jpg"}
-                        />
-                        <CardContent>
+    return (
+        state.loaded && (
+            <>
+                <Card>
+                    <CustomCardMedia
+                        src={"http://localhost:8000/media/static/conf_default.jpg"}
+                    />
+                    <CardContent>
 
-                            {this.imageEdit()}
+                        {imageEdit()}
 
-                            <EditableTypography
-                                canEdit={this.props.canEdit}
-                                variant="h1"
-                                initialValue={this.state?.conference?.name}
-                                onValidate={this.handleDataValidation}
-                                onSave={(v) => this.handleDataChange("name", v)}
-                                label="Conference Name"
+                        <EditableTypography
+                            canEdit={props.canEdit}
+                            variant="h1"
+                            initialValue={state?.conference?.name}
+                            onSave={(v) => handleDataChange("name", v)}
+                            label="Conference Name"
+                            onValidate={() => true}
+                            level="inherit"
+                            fontSize="3em"
+                            className={"font-semibold"}
+                            // mb="0.25em"
+                        >
+                            {state?.conference?.name}
+                        </EditableTypography>
 
-                                level="inherit"
-                                fontSize="3em"
-                                className={"font-semibold"}
-                                // mb="0.25em"
-                            >
-                                {this.state?.conference?.name}
-                            </EditableTypography>
+                        <Divider flexItem style={{marginBottom: "10px"}}/>
 
-                            <Divider flexItem style={{marginBottom: "10px"}}/>
-
-                            <div className={"row"} style={{justifyContent: "space-between", padding: "0px 24px"}}>
-                                <div className={"col-6"}>
-                                    {this.leftSection()}
-                                </div>
-                                <div className={"col-6"}>
-                                    {this.rightSection()}
-                                </div>
+                        <div className={"row"} style={{justifyContent: "space-between", padding: "0px 24px"}}>
+                            <div className={"col-6"}>
+                                {leftSection()}
                             </div>
+                            <div className={"col-6"}>
+                                {rightSection()}
+                            </div>
+                        </div>
 
-                            <Scheduler
-                                conference={this.state.conference.slug}
-                                canEdit={this.props.canEdit}
-                            />
+                        <Scheduler
+                            conference={state.conference.slug}
+                            canEdit={props.canEdit}
+                            setFatherKostyl={() => setUpdateKostyl(!updateKostyl)}
+                        />
 
-                        </CardContent>
+                    </CardContent>
 
-                        {this.cardActions()}
+                    {cardActions()}
 
-                    </Card>
-                </>
-            )
+                </Card>
+            </>
         )
-    }
+    )
 }
-
 
 export default withSnackbar(Conference)
