@@ -22,6 +22,7 @@ urlpatterns = [
     path('api/get_users_organizations', views.ConferenceUserGetOrganizations.as_view(), name='api_get-users-organizations'),
     path('api/manipulate_info_user', views.ConferenceUserGetInfo.as_view(), name='api_get-info-user'),
     path('api/login', views.ConferenceUserSigninAPIView.as_view(), name='api-login-view'),
+    path('api/get_invite_context', views.InviteAPIView.as_view(), name='api-invite-view'),
     path('api/', include(router.urls)),  # move to routers
 
     path('invites', views.InviteView.as_view(), name='invites-page'),
