@@ -89,7 +89,7 @@ let date_format = {
     year: 'numeric'
 }
 
-const TooltipStyled = ({title, color, icon}) => {
+export const TooltipStyled = ({title, color, icon, onclickHandler}) => {
     return (
         <Tooltip title={
                 <Typography variant="subtitle2">
@@ -98,7 +98,7 @@ const TooltipStyled = ({title, color, icon}) => {
             }
                  placement="right"
         >
-             <IconButton color={color}>
+             <IconButton color={color} onClick={onclickHandler}>
                  {icon}
               </IconButton>
          </Tooltip>

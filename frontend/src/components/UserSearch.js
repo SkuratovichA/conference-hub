@@ -3,11 +3,14 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
-import {getUsers} from "../actions/UserFunctions"
+import {createInvite, getToken, getUsers} from "../actions/UserFunctions"
 import {useEffect, useState} from "react";
 import {Box, Grid, List, Paper, Typography} from "@mui/material";
 import {ListItem} from "@mui/joy";
 import {fullNameFilter} from "./OrganizationMembers";
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import {TooltipStyled} from "./Notification";
+import {useSnackbar} from "notistack";
 
 const filterOptions = createFilterOptions({
   matchFrom: 'any',
@@ -32,6 +35,19 @@ const sortByFullName = (a, b) => {
 export const UserSearchNonMembers = ({keyword}) => {
     const [users, setUsers] = useState([]);
     const [foundUsers, setFound] = useState([]);
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+    let token = getToken()
+
+    const addMember = (user) => {
+      console.log(user)
+      createInvite(token, user.user.username)
+        .then(response => {
+          if (response === true){
+              enqueueSnackbar("Membership invite sent successfully.",{variant: "success"})
+          }
+        }
+      )
+    }
 
     useEffect(() => {
         getUsers("researchers")
@@ -74,7 +90,7 @@ export const UserSearchNonMembers = ({keyword}) => {
             {foundUsers.map((value) => (
               <ListItem key={i++} sx={{width: "100%"}}>
                 <Paper sx={{ width: "100%", fullWidth: true }} elevation={3}>
-                  <Grid container>
+                  <Grid container direction="row" justifyContent="space-evenly" alignItems="center">
                     <Grid item md={10} px={2} py={2}>
                       <Typography gutterBottom variant="h5">
                           {value.user.name} {value.last_name}
@@ -82,6 +98,13 @@ export const UserSearchNonMembers = ({keyword}) => {
                       <Typography variant="subtitle1">
                         Email: {value.user.email}
                       </Typography>
+                    </Grid>
+                    <Grid item md={2} px={2} py={2}>
+                      <TooltipStyled
+                        onclickHandler={()=>{addMember(value)}}
+                        color={"success"}
+                        title={"Send a membership invitation"}
+                        icon={<GroupAddIcon/>}/>
                     </Grid>
                   </Grid>
                 </Paper>

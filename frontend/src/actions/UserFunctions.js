@@ -21,6 +21,26 @@ export const getInvitesInfo = async (token) => {
 
     return success ? data : []
 }
+
+export const createInvite = async (token, username) => {
+    // console.log(username)
+    // return true
+    let response = await fetch('http://localhost:8000/users/api/get_invite_context', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token,
+            },
+            body: JSON.stringify({
+                data: {
+                    user: username
+                },
+            })
+        })
+
+    let success = response.status >= 200 && response.status <= 299
+    return success
+}
 export const getInfoUser = async (token) => {
     if (token === null) {
         return {}

@@ -53,6 +53,19 @@ class InviteAPIView(APIView):
             content = serialize_organization_context(request)
         return Response(content, status=status.HTTP_200_OK)
 
+    def post(self, request, *args, **kwargs):
+        if request.user.is_organization:
+            researcher = users_models.ConferenceUserModel.objects.get(username=request.data['data']['user']).researcher
+            invite = users_models.OrganizationEmployeeModel(
+                researcher=researcher,
+                organization=request.user.organization,
+                rejected=False,
+                approved=False,
+                finished=False
+            )
+            invite.save()
+
+        return Response(status=status.HTTP_201_CREATED)
 
 class InviteView(LoginRequiredMixin, generic.ListView):
     # model = users_models.ConferenceUserModel
