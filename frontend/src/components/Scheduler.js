@@ -184,7 +184,6 @@ export default function Scheduler({
                     case "update":
                         console.log('new event values', newEventValues)
                         conferenceCRUDHandler("updateEvent", conference, null, newEventValues)
-                        alert("update event")
                         break
                     default:
                         return
