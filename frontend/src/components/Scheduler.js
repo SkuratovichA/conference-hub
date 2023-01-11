@@ -52,7 +52,8 @@ function classNames(...classes) {
 export default function Scheduler({
     conference,
     canEdit,
-    setFatherKostyl
+    setFatherKostyl,
+    fatherKostyl
 }) {
     const eventTypes = {
         "lecture": 0,
@@ -475,7 +476,7 @@ export default function Scheduler({
                                 setRightSideState("viewingEvents");
                                 setNewEventValues(defaultEventState)
                                 setChangeKostyli(!changeKostyli)
-                                setFatherKostyl()
+                                setFatherKostyl(!fatherKostyl)
                             }}
                             color={"error"}
                         >
@@ -485,7 +486,7 @@ export default function Scheduler({
                             sx={{float: "right",}}
                             onClick={() => {
                                 manipulateEvent()
-                                setFatherKostyl()
+                                setFatherKostyl(!fatherKostyl)
                                 setChangeKostyli(!changeKostyli)
                             }}
                             disabled={!canCreateEvent()}
@@ -548,7 +549,7 @@ export default function Scheduler({
                                         onClick={() => {
                                             manipulateEvent("delete")
                                             setChangeKostyli(!changeKostyli)
-                                            setFatherKostyl()
+                                            setFatherKostyl(!fatherKostyl)
                                         }}
                                     >
                                         DELETE
@@ -558,6 +559,7 @@ export default function Scheduler({
                                         onClick={() => {
                                             manipulateEvent("update")
                                             setChangeKostyli(!changeKostyli)
+                                            setFatherKostyl(!fatherKostyl)
                                         }}
                                     >
                                         UPDATE

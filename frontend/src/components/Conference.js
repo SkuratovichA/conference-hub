@@ -289,7 +289,7 @@ function Conference(props) {
 
                 <AvatarGroup max={4}>
                     <Avatar alt="Skuratovich Aliaksandr"
-                            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"/>
+                            src="http://localhost:8000/media/static/default.png"/>
                 </AvatarGroup>
             </Stack>
         </React.Fragment>
@@ -336,7 +336,8 @@ function Conference(props) {
                         <Scheduler
                             conference={state.conference.slug}
                             canEdit={props.canEdit}
-                            setFatherKostyl={() => setUpdateKostyl(!updateKostyl)}
+                            setFatherKostyl={setUpdateKostyl}
+                            fatherKostyl={updateKostyl}
                         />
 
                     </CardContent>
