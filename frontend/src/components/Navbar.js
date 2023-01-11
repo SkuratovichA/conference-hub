@@ -50,13 +50,54 @@ const Navbar = () => {
     let [invites, setInvites] = useState([])
     let [invite_num, setInvNum] = useState(0)
 
+  const setStatus = (invite_id) =>{
+      let result = invites.organizations.map(invite=> invite.inv_id === invite_id ?{... invite, status : true}: invite)
+      setInvNum(invite_num-1)
+    invites.organizations = [...result]
+    setInvites({...invites})
+  }
+
+    const addStatus = (members) => {
+        let unread = 0;
+        members.forEach(member => {
+          member.status = member.approved || member.rejected
+          if (!member.status) unread++;
+        })
+        return [members, unread]
+    }
+
+
+const filterByRead = (invites) => {
+      if (invites){
+          let membership = invites.organizations
+
+      membership.sort((a,b)=>{
+        if (a.status === b.status){
+          let a_date = new Date(a.date_sent)
+          let b_date = new Date(b.date_sent)
+          // console.log(a_date,b_date)
+          return a_date < b_date
+        }
+        else {
+          return a.status > b.status
+        }
+      })
+      invites.organizations = [...membership]
+      setInvites({...invites})
+      }
+
+}
     useEffect(() => {
       if (user){
         getInvitesInfo(token)
         .then(response => {
             setInvites(response);
             if (!user.is_organization){
-              setInvNum((response.organizations?.length + response.conferences?.length) || 0)
+              let [new_response, number_unread] = addStatus(response.organizations)
+              response.organizations = [...new_response]
+              setInvites({...response})
+              setInvNum(number_unread)
+              filterByRead(response)
             }
             console.log(response);
           }
@@ -115,7 +156,10 @@ const Navbar = () => {
             ) : (
                 <span>
                     <IconButton aria-label="notification"
-                        onClick={() => setDrawer(true)}
+                        onClick={() => {
+                          setDrawer(true);
+                          filterByRead(invites)
+                        }}
                 >
                     <Badge color="secondary" badgeContent={invite_num}>
                       <NotificationsIcon fontSize={"medium"} />
@@ -174,7 +218,7 @@ const Navbar = () => {
                 sx: { width: "50%" },
               }}
             >
-                <InviteContext.Provider value={invites}>
+                <InviteContext.Provider value={[invites,setStatus]}>
                 {user["is_organization"] === true ? (
                   <Box>
                     <Toolbar sx={{background: "#1976d2", color: "#ffffff"}}>
