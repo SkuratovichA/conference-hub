@@ -58,8 +58,6 @@ class EventModel(models.Model):
     def get_researchers(self):
         if self.type == 'lecture':
             return self.lecture.researchers.all()
-        else:
-            return None
 
 
 class LunchModel(models.Model):

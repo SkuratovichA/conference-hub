@@ -169,7 +169,8 @@ function Conference(props) {
         <Stack direction={"column"} spacing={1.2}>
             {/*brief*/}
             <TextField
-                label={"Brief"}
+                label={"Description"}
+                multiline
                 size="small"
                 variant={"standard"}
                 value={state?.conference?.brief}
@@ -274,7 +275,7 @@ function Conference(props) {
                         <Avatar
                             alt={state.conference.organization.user.username}
                             style={{height: "40%", margin: "auto 0"}}
-                            src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                            src="http://localhost:8000/media/static/default.png"
                         />
                         <Stack direction={"column"}>
                             <Typography color={"primary.main"}>{state.conference.organization.user.name}</Typography>
@@ -288,8 +289,11 @@ function Conference(props) {
                 </Button>
 
                 <AvatarGroup max={4}>
-                    <Avatar alt="Skuratovich Aliaksandr"
-                            src="http://localhost:8000/media/static/default.png"/>
+                    {state.conference.visitors.map(el => {
+                        console.log(el.email)
+                        return <Avatar alt={el.username} src="http://localhost:8000/media/static/default.png"/>
+                        }
+                    )}
                 </AvatarGroup>
             </Stack>
         </React.Fragment>

@@ -16,6 +16,7 @@ urlpatterns = [
     path('api/get_events/<slug:slug>', views.ConferenceGetEventsAPI.as_view(), name='api_get_events-conf'),
     path('api/create_event/<slug:slug>', views.ConferenceCreateEventAPI.as_view(), name='api_create_event-conf'),
     path('api/delete_event/<slug:slug>', views.ConferenceDeleteEventAPI.as_view(), name='api_delete_event-conf'),
+    path('api/update_event/<slug:slug>', views.ConferenceUpdateEventAPI.as_view(), name='api_update_event-conf'),
 
     path('<slug:username>/display', views.DisplayConferenceView.as_view(), name='conf_display-page'),
     path('<slug:username>/my_lectures', views.UserEventsView.as_view(), name='user_lectures-page'),

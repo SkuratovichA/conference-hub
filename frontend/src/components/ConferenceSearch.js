@@ -16,6 +16,9 @@ import {getInfoUser, getToken} from "../actions/UserFunctions";
 import {useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 
+import {TextField, IconButton} from '@mui/material';
+import ManageSearchIcon from '@mui/icons-material/ManageSearch';
+
 const ConferenceSearch = (props) => {
     let params = queryString.parse(props.router.location.search)
     let navigate = useNavigate()
@@ -81,20 +84,31 @@ const ConferenceSearch = (props) => {
                 padding={"2% 2% 2% 2%"}
                 // justifyContent={"space-between"}
             >
-                <Button
-                    onClick={() => {
-                        setActiveConference(null)
-                    }}
-                >
-                    CHANGE VIEW
-                </Button>
-
                 <Grid
                     container xs={12} sm={12} md={12} xl={12} lg={12} spacing={4}
                     style={{margin: "0 auto"}}
                 >
                     <Grid xs={10}>
-                        <Typography variant="h2" align="left">Conferences</Typography>
+                        <Button
+                            onClick={() => {
+                                setActiveConference(null)
+                            }}
+                        >
+                            <Typography variant="h2" align="left">Conferences</Typography>
+                        </Button>
+                        <TextField
+                            fullWidth
+                            id="standard-bare"
+                            variant="standard"
+                            label="Search Conferences"
+                            InputProps={{
+                                endAdornment: (
+                                    <IconButton>
+                                        <ManageSearchIcon/>
+                                    </IconButton>
+                                ),
+                            }}
+                        />
                     </Grid>
 
 

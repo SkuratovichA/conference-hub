@@ -42,6 +42,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import GroupIcon from '@mui/icons-material/Group';
 import {conferenceCRUDHandler} from "../actions/ConferenceFunctions";
+import {EuroSymbol} from "@mui/icons-material";
 
 
 function classNames(...classes) {
@@ -67,7 +68,7 @@ export default function Scheduler({
         participants: [],
         date_time: null,
         date_time_end: null,
-        brief: "",
+        description: "",
         start: "12:00",
         end: "12:45",
         price: 0,
@@ -146,25 +147,28 @@ export default function Scheduler({
                     location: "somewhere",
                     participants:
                         researchers
-                            .filter((res) => newEventValues.participants.includes(res.repr))
-                            .map((it) => it.username),
+                            .filter(res => newEventValues.participants.includes(res.repr))
+                            .map(it => it.email)
+                    ,
                     date_time: _date + "T" + newEventValues.start,
                     date_time_end: _date + "T" + newEventValues.end,
-                    brief: newEventValues.brief
+                    description: newEventValues.description,
+                    price: newEventValues['price']
                 }
+
                 setRightSideState("viewingEvents")
                 setNewEventValues(defaultEventState)
 
                 let duration = differenceInSeconds(parseISO(new_event['date_time_end']), parseISO(new_event['date_time']))
-                console.log(duration)
                 new_event = {
                     name: new_event['name'],
                     date_time: new_event['date_time'],
                     date_time_end: new_event['date_time_end'],
                     duration: duration,
                     location: new_event['location'],
-                    description: new_event['brief'],
+                    description: new_event['description'],
                     type: new_event['type'],
+                    price: new_event['price'],
                 }
                 conferenceCRUDHandler("createEvent", conference, null, new_event)
                 break
@@ -178,7 +182,8 @@ export default function Scheduler({
                         break
 
                     case "update":
-                        alert("update event")
+                        console.log('new event values', newEventValues)
+                        conferenceCRUDHandler("updateEvent", conference, null, newEventValues)
                         break
                     default:
                         return
@@ -279,8 +284,6 @@ export default function Scheduler({
     )
 
     const newEventHandleChanges = (event) => {
-        console.log(event.target.name)
-        console.log(event.target.value)
         setNewEventValues({
             ...newEventValues,
             [event.target.name]: event.target.value,
@@ -340,15 +343,16 @@ export default function Scheduler({
                         )}
                     </Stack>
 
-                    {/*brief*/}
+                    {/*brief description */}
                     <TextField
-                        defaultValue={newEventValues.brief}
+                        defaultValue={newEventValues.description}
                         style={{width: "100%"}}
                         // id={"event-create-brief"}
                         type="text"
-                        label="Brief"
+                        label="Description"
+                        multiline
                         variant={variant}
-                        name="brief"
+                        name="description"
                         onChange={newEventHandleChanges}
                     />
 
@@ -503,7 +507,6 @@ export default function Scheduler({
                         <Paper elevation={0} style={{maxHeight: 350, overflow: 'auto'}}>
                             <ol className="mt-4 space-y-1 text-sm leading-6 text-gray-500 mr-10">
                                 {selectedDayEvents.map((event) => {
-                                        console.log('event: ', event)
                                         return (
                                             <EventListItem
                                                 onClick={() => {
@@ -621,7 +624,7 @@ function Event({event}) {
                         </Typography>
                     </Stack>
 
-                    <Typography>{event.brief}</Typography>
+                    <Typography>{event.description}</Typography>
 
                     <Stack direction={"row"} spacing={1.2}>
                         <AccessTimeIcon size={"small"}/>
@@ -655,7 +658,10 @@ function EventListItem({event, onClick}) {
     }
 
     const getProp = (a, prop, className) => {
-        return a[prop] ? <p className={className}>{a[prop]}</p> : null;
+        return a[prop] ? <p className={className}>
+            {prop === 'price' && <EuroSymbol size={'small'}/>}{' '}
+            {a[prop]}
+        </p> : null;
     }
 
     return (
@@ -667,9 +673,9 @@ function EventListItem({event, onClick}) {
 
                 <div className="flex-auto ">
                     <Stack direction={"row"} sx={{justifyContent: "space-between"}}>
-                                                                                       {getProp(event, "name", "font-semibold text-gray-900")}
-                                                                                       {getProp(event, "type", "text-gray-400")}
-                                                                                       </Stack>
+                        {getProp(event, "name", "font-semibold text-gray-900")}
+                        {getProp(event, "type", "text-gray-400")}
+                    </Stack>
 
                     <p className="mt-0.5">
                         <time dateTime={event.startDatetime}>{format(startDateTime, 'h:mm a')}</time>
@@ -696,48 +702,3 @@ let colStartClasses = [
     'col-start-6',
     'col-start-7',
 ]
-
-
-// UseCase: When send invite to each user from a user list when creating a conference
-// function sends an invite for an event to a particular user
-// conference: this.state.conference
-// event: eventId
-// user: userEmail
-// organization username: this.state.user
-// _sendInviteOnEventToUser(userEmail, eventId) {
-//
-// }
-
-// TODO: move it to another component
-// // logged in researcher can add itself to an event
-// // researcher: this.state.user
-// // conference: this.state.conference.?slug
-// _addUserToEvent(eventId) {
-//
-// }
-
-// event - a new event to add to a backend and frontend (maybe?)
-// _addEvent(event) {
-// this.setState({...this.state, events: [...this.state.events, event] })
-// this.conferenceCRUDHandler("addEvent", this.state.conference.slug)
-// }
-
-// _deleteEvent(eventId) {
-// this.setState({...this.state, events: [...this.state.events.remove(eventId)] })
-// this.conferenceCRUDHandler("deleteEvent", this.state.conference.slug)
-// }
-// _getEvents() {
-// let events = this.conferenceCRUDHandler("getEvents", this.state.conference.slug)
-// this.setState({...this.state, events: events })
-// }
-
-// _updateEvent(eventId) {
-// maybe move to Events component
-// }
-
-// get a list of conference visitors
-// _getVisitors(conference) {
-// let visitors = this.conferenceCRUDHandler("getVisitors", this.state.conference.slug)
-// this.setState({...this.state, visitors: visitors})
-// return visitors
-// }
