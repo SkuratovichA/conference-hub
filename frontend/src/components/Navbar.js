@@ -56,7 +56,7 @@ const Navbar = () => {
         .then(response => {
             setInvites(response);
             if (!user.is_organization){
-              setInvNum(response.organizations.length+response.conferences.length)
+              setInvNum((response.organizations?.length + response.conferences?.length) || 0)
             }
             console.log(response);
           }
