@@ -1,31 +1,28 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Grid, IconButton, Paper, Tooltip, Typography} from "@mui/material";
 import Box from "@mui/joy/Box";
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import {getToken, updateInvite} from "../actions/UserFunctions";
+import {InviteContext} from './Navbar'
 
 export const NotificationItem = ({invite}) => {
 
-  let [read, setRead] = useState(false)
+  let [invites, setStatus] = useContext(InviteContext)
+
   let token = getToken()
-  useEffect(()=>{
-      if (invite.approved || invite.rejected){
-        setRead(true)
-      }
-    },[invite])
 
   const reactToInvitation = (method, invite_id) => {
     updateInvite(token,invite_id, method)
       .then(response => {
         if (response === true){
-          setRead(true)
+          setStatus(invite_id)
         }
       })
   }
     return (
 
-             <Paper sx={{ width: "100%", fullWidth: true, opacity: read === true? 0.35 : 1 }} elevation={3}>
+             <Paper sx={{ width: "100%", fullWidth: true, opacity: invite.status === true? 0.35 : 1 }} elevation={3}>
                  <Grid container>
                      <Grid item md={10} px={2} py={2}>
 
@@ -40,7 +37,7 @@ export const NotificationItem = ({invite}) => {
                          </Typography>
 
                      </Grid>
-                   {read === true ? (
+                   {invite.status === true ? (
                      <Grid item md={2} py={2}>
                        <Typography variant="body2"  color="text.secondary" sx={{opacity: 1}}>
                          {invite.approved? "APPROVED" : invite.rejected? "REJECTED" : "ERROR"}

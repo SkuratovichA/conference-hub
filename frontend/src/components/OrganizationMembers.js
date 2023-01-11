@@ -10,7 +10,7 @@ import {InviteContext} from "./Navbar";
 
 const OrganizationMembers = () => {
 
-    const invites = useContext(InviteContext)
+    const [invites, setState] = useContext(InviteContext)
 
     if (invites === undefined){
         return (
