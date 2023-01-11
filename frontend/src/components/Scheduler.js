@@ -614,7 +614,7 @@ function Event({event}) {
                     <Stack direction={"row"} justifyContent={"space-between"}>
                         <Typography variant={"body1"} className="text-gray-400">{event.type}</Typography>
                         <Typography variant={"body1"}>
-                            {event.participants.length}
+                            {event.participants?.length || 0}
                             <GroupIcon size={"small"}/>
                         </Typography>
                     </Stack>
@@ -659,7 +659,7 @@ function EventListItem({event, onClick}) {
     return (
         <li
             onClick={() => onClick()}
-            className="flex items-center px-4 py-2 space-x-4 group rounded-xl cursor-pointer hover:ring focus:outline-none focus-within:bg-gray-100 hover:opacity-36"
+            className="flex mb-0 items-center px-4 py-2 space-x-4 group rounded-xl cursor-pointer hover:ring focus:outline-none focus-within:bg-gray-100 hover:opacity-36"
             style={{background: backgrounds[event.type], width: "100%"}}
         >
 

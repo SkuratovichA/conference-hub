@@ -12,7 +12,7 @@ import {MuiCard} from './ConferenceCard'
 
 export const ConferenceGrid = (
     {
-        conferences,
+        // conferences,
         user,
         tightLeft,
         conferenceOnClick,
@@ -27,6 +27,17 @@ export const ConferenceGrid = (
         xl: tightLeft? 12: 3
     }
 
+    const [conferences, setConferences] = React.useState([])
+
+    React.useEffect(() => {
+        conferenceCRUDHandler("fetch_all", null, null, null, null)
+            .then(resp_conf => {
+                setConferences(resp_conf)
+            })
+
+    }, [updateKostyl])
+
+    console.log('conference grid rerenders')
     return (
 
         <Box style={{maxHeight: '100vh', 'overflowX': 'hidden', 'overflowY': 'scroll', justifyContent: "center"}}>
@@ -37,7 +48,6 @@ export const ConferenceGrid = (
                             <Card>
                                 <CreateConferenceDialog
                                     user={user}
-                                    updateKostyl={updateKostyl}
                                     setUpdateKostyl={setUpdateKostyl}
                                 />
                             </Card>

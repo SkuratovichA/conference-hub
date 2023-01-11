@@ -11,7 +11,6 @@ import {useParams, useLocation, useNavigate} from "react-router-dom";
 
 export default function CreateConferenceDialog({
     user,
-    updateKostyl,
     setUpdateKostyl
 }) {
     const [open, setOpen] = React.useState(false)
@@ -41,10 +40,10 @@ export default function CreateConferenceDialog({
                     user={user}
                     open={open}
                     slug={null}
-                    onClose={() => { setOpen(false); setUpdateKostyl(!updateKostyl) }}
+                    onClose={() => { setOpen(false); setUpdateKostyl() }}
                     canEdit={true}
                     newConf={true}
-                    callBackOnCreate={() => {setOpen(false) ; setUpdateKostyl(!updateKostyl)}}
+                    callBackOnCreate={() => {setOpen(false) ; setUpdateKostyl()}}
             />
         </React.Fragment>
     );

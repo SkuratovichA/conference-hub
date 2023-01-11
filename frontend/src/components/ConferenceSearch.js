@@ -54,9 +54,6 @@ const ConferenceSearch = (props) => {
                 setUserInfo(resp_user)
                 setLoaded(true)
             })
-            .catch(err => {
-                console.error(err)
-            })
 
     }, [activeConference, updateKostyl])
 
@@ -68,12 +65,12 @@ const ConferenceSearch = (props) => {
 
     let conferenceGrid = (
         <ConferenceGrid
-            conferences={conferences}
+            // conferences={conferences}
             user={userinfo}
             tightLeft={activeConference}
             conferenceOnClick={updateActiveConference}
-            updatekostyl={updateKostyl}
-            setUpdateKostyl={setUpdateKostyl}
+            updateKostyl={updateKostyl}
+            setUpdateKostyl={() => setUpdateKostyl(!updateKostyl)}
         />
     )
 

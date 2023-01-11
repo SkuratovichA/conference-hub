@@ -138,10 +138,13 @@ function Conference(props) {
                     <Button
                         size="small"
                         onClick={() => {
+                            console.log('b', state.conference.name, state.conferenceSlugName)
                             updateConference()
-                            setState({...state, conferenceSlugName: state.conference.slug})
-                            props.setActiveConference(state.conference.slug)
+                            let newSlug = state.conference.name.replace(' ', "")
+                            setState({...state, conference: {...state.conference, slug: newSlug} , conferenceSlugName: newSlug})
+                            props.setSlug(newSlug)
                             props.setUpdateKostyl(!props.updateKostyl)
+                            console.log('a', state.conference.name, state.conferenceSlugName)
                         }}>
                         UPDATE
                     </Button>
