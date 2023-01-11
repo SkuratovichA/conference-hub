@@ -2,6 +2,7 @@
 # author: Shchapaniak Andrei
 
 from django.contrib.auth.decorators import login_required
+import datetime
 from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.utils import timezone
@@ -21,13 +22,12 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework import status
 from datetime import date
 
-
 import logging
-
 
 logger = logging.getLogger(__name__)
 
-class ConferenceGetOneAPi(APIView):
+
+class ConferenceGetOneAPI(APIView):
     queryset = conf_models.ConferenceModel
     serializer_class = sers.ConferenceSerializerSlug
     lookup_field = 'slug'
@@ -40,7 +40,7 @@ class ConferenceGetOneAPi(APIView):
         return Response(content, status=status.HTTP_200_OK)
 
 
-class ConferenceGetAllAPi(generics.RetrieveAPIView):
+class ConferenceGetAllAPI(generics.RetrieveAPIView):
     queryset = conf_models.ConferenceModel
     serializer_class = sers.ConferenceSerializer
 
@@ -50,7 +50,70 @@ class ConferenceGetAllAPi(generics.RetrieveAPIView):
         return Response(content, status=status.HTTP_200_OK)
 
 
-class ConferenceOrganizationManipulateAPi(APIView):
+class ConferenceCreateEventAPI(APIView):
+
+    def post(self, request, *args, **kwargs):
+        data = request.data['data']
+        data['duration'] = datetime.timedelta(seconds=int(data['duration']))
+        conference = ConferenceModel.objects.get(slug=kwargs['slug'])
+
+        new_event = conf_models.EventModel(
+            conference=conference,
+            **data
+        )
+        new_event.save()
+        logger.debug('new id' + str(new_event.event_id))
+        return Response(status=status.HTTP_201_CREATED)
+
+
+class ConferenceDeleteEventAPI(APIView):
+
+    def post(self, request, *args, **kwargs):
+        event_id = request.data['data']['event_id']
+        conference = ConferenceModel.objects.get(slug=kwargs['slug'])
+
+        event = conf_models.EventModel.objects.get(
+            conference=conference,
+            event_id=event_id
+        )
+        logger.debug('event to delete: ', event)
+        event.delete()
+
+        return Response(status=status.HTTP_201_CREATED)
+
+
+class ConferenceGetEventsAPI(APIView):
+
+    def get(self, request, *args, **kwargs):
+        content = {}
+        logger.debug(
+            list(kwargs.items())
+        )
+        conf = conf_models.ConferenceModel.objects.get(slug=kwargs['slug'])
+        logger.debug(f'conference: {conf}')
+        try:
+            events = conf_models.EventModel.objects.filter(conference=conf)
+        except conf_models.EventModel.DoesNotExist:
+            # TODO: переписсть на нормальныййвид
+            events = [{
+                # 'id': 1,
+                # 'brief': "description",
+                # 'name': 'Skuratovich Aliaksandr',
+                # 'type': "poster",
+                # 'location': "somewhere",
+                # 'participants': ['aaa'],
+                # 'imageUrl': 'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+                # 'startDatetime': '2022-12-13T15:00',
+                # 'endDatetime': '2022-12-13T15:30',
+            }]
+
+        content['events'] = list(map(lambda x: sers.EventSerializer(x).data, events))
+        logger.debug(content['events'])
+
+        return Response(content, status=status.HTTP_200_OK)
+
+
+class ConferenceOrganizationManipulateAPI(APIView):
     queryset = conf_models.ConferenceModel
     serializer_class = sers.ConferenceSerializerSlug
     permission_classes = (IsAuthenticated,)
@@ -87,12 +150,16 @@ class ConferenceOrganizationManipulateAPi(APIView):
         request.data['data']['date_from'] = (request.data['data']['date_from']).split('T', 1)[0]
         request.data['data']['date_to'] = (request.data['data']['date_to']).split('T', 1)[0]
 
-        org = u_models.OrganizationModel.objects.get(user__username=request.data['data']['organization']['user']['username'])
+        org = u_models.OrganizationModel.objects.get(
+            user__username=request.data['data']['organization']['user']['username'])
 
-        object1 = conf_models.ConferenceModel(date_to=date.today(), date_from=date.today(), organization=org,
-                                              price=request.data['data']['price'], address=request.data['data']['address'],
-                                              name=request.data['data']['name'], slug=request.data['data']['slug'],
-                                              brief=request.data['data']['brief'])
+        object1 = conf_models.ConferenceModel(
+            date_to=date.today(),
+            date_from=date.today(),
+            organization=org,
+            price=request.data['data']['price'], address=request.data['data']['address'],
+            name=request.data['data']['name'], slug=request.data['data']['slug'],
+            brief=request.data['data']['brief'])
 
         object1.save()
 
@@ -107,34 +174,9 @@ class ConferenceOrganizationManipulateAPi(APIView):
         #     return Response(status=status.HTTP_201_CREATED)
         #
         # print(serializer.errors)
-        #return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+        # return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
         return Response(status=status.HTTP_201_CREATED)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 class DisplayConferenceView(generic.ListView):
@@ -235,4 +277,3 @@ class ConferenceInfoView(generic.DetailView):
 class ConferencesListView(generic.ListView):
     template_name = 'conferences/conferences.html'
     model = ConferenceModel
-

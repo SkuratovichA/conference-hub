@@ -16,53 +16,46 @@ import {getInfoUser, getToken} from "../actions/UserFunctions";
 import {useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 
-const ConferenceSearch = ( props ) => {
+const ConferenceSearch = (props) => {
     let params = queryString.parse(props.router.location.search)
     let navigate = useNavigate()
 
     let {authTokens} = useContext(authContext)
     let [loaded, setLoaded] = useState(false)
     let [conferences, setConfs] = useState(false)
-    let [activeConference, setAC] = useState(params.conference_name)
+    let [activeConference, setActiveConference] = useState(params.conference_name)
     let [userinfo, setUserInfo] = useState({})
     let [manipulate, setManipulate] = useState(false)
+    let [updateKostyl, setUpdateKostyl] = useState(false)
 
     const updateActiveConference = (conferenceName) => {
-        console.log('UAUAUAUAU', conferenceName)
-
         if (conferenceName !== null) {
             conferenceCRUDHandler("fetch_one", conferenceName, null, null)
                 .then(resp => {
                     if (resp.organization?.user?.username === userinfo.user?.username) {
                         setManipulate(true)
-                    }
-                    else {
+                    } else {
                         setManipulate(false)
                     }
                 })
         }
-        setAC(conferenceName)
+        setActiveConference(conferenceName)
     }
 
     let token = authTokens?.access ? "Bearer " + authTokens.access : null
 
     useEffect(() => {
         conferenceCRUDHandler("fetch_all", null, null, null, null)
-        .then(resp_conf => {
-            setConfs(resp_conf)
-            return getInfoUser(token)
-        })
-        .then(resp_user => {
-            setUserInfo(resp_user)
-            setLoaded(true)
-        })
-        .catch(err => {
-            console.error(err)
-        })
+            .then(resp_conf => {
+                setConfs(resp_conf)
+                return getInfoUser(token)
+            })
+            .then(resp_user => {
+                setUserInfo(resp_user)
+                setLoaded(true)
+            })
 
-        console.log('active conf = ', activeConference)
-
-    }, [activeConference, ])
+    }, [activeConference, updateKostyl])
 
     if (loaded === false) {
         return ""
@@ -72,10 +65,12 @@ const ConferenceSearch = ( props ) => {
 
     let conferenceGrid = (
         <ConferenceGrid
-            conferences={conferences}
+            // conferences={conferences}
             user={userinfo}
             tightLeft={activeConference}
             conferenceOnClick={updateActiveConference}
+            updateKostyl={updateKostyl}
+            setUpdateKostyl={() => setUpdateKostyl(!updateKostyl)}
         />
     )
 
@@ -87,12 +82,11 @@ const ConferenceSearch = ( props ) => {
                 // justifyContent={"space-between"}
             >
                 <Button
-                        onClick={() => {
-                            setAC(null)
-                        }
-                    }
+                    onClick={() => {
+                        setActiveConference(null)
+                    }}
                 >
-                    CLICK ME
+                    CHANGE VIEW
                 </Button>
 
                 <Grid
@@ -108,7 +102,7 @@ const ConferenceSearch = ( props ) => {
                         <Grid
                             container
                             xs={12} sm={12} md={8} xl={8} lg={8}
-                            style={{ justifyContent: "center"}}
+                            style={{justifyContent: "center"}}
                         >
                             <Box style={{maxHeight: '100vh', 'overflowY': 'scroll', 'width': '90%'}}>
                                 <Conference
@@ -117,9 +111,12 @@ const ConferenceSearch = ( props ) => {
                                     newConf={false}
                                     owner={userinfo}
                                     slug={activeConference}
+                                    setSlug={setActiveConference}
                                     callBackOnDelete={() => {
-                                        setAC(null)
+                                        setActiveConference(null)
                                     }}
+                                    updateKostyl={updateKostyl}
+                                    setUpdateKostyl={setUpdateKostyl}
                                     key={activeConference}
                                 />
                             </Box>

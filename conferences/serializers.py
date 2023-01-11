@@ -58,6 +58,25 @@ class Base64ImageField(serializers.ImageField):
 
         return extension
 
+
+class LunchSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = conf_models.LunchModel
+
+
+class LectureSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = conf_models.LectureModel
+
+
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = conf_models.EventModel
+
+
 class ConferenceSerializer(serializers.ModelSerializer):
     visitors = ConferenceUserSerializer(many=True)
     organization = OrganizationInfoSerializer(many=False)

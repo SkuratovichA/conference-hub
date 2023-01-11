@@ -18,6 +18,7 @@ import {
     parse,
     parseISO,
     startOfToday,
+    differenceInSeconds
 } from 'date-fns'
 import {
     Autocomplete,
@@ -40,101 +41,8 @@ import ClearIcon from '@mui/icons-material/Clear'
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import GroupIcon from '@mui/icons-material/Group';
+import {conferenceCRUDHandler} from "../actions/ConferenceFunctions";
 
-let events = [
-    {
-        id: 1,
-        brief: "Brief",
-        name: 'Lecture One',
-        type: "lecture",
-        location: "somewhere",
-        participants: ['Leslie Alexander'],
-        startDatetime: '2022-05-11T13:00',
-        endDatetime: '2022-05-11T14:30',
-    },
-    {
-        id: 6,
-        brief: "description",
-        name: 'How to make a video',
-        type: "lecture",
-        participants: ['Shchapaniak Andrei'],
-        location: "somewhere",
-        imageUrl: 'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        startDatetime: '2022-12-13T15:00',
-        endDatetime: '2022-12-13T15:30',
-    },
-    {
-        id: 7,
-        brief: "description",
-        name: 'one more',
-        type: "lecture",
-        location: "somewhere",
-        participants: ['Shchapaniak Andrei'],
-        imageUrl: 'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        startDatetime: '2022-12-13T15:00',
-        endDatetime: '2022-12-13T15:30',
-    },
-
-    {
-        id: 8,
-        brief: "description",
-        name: 'Skuratovich Aliaksandr',
-        type: "lunch",
-        location: "somewhere",
-        participants: ['Shchapaniak Andrei'],
-        imageUrl: 'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        startDatetime: '2022-12-13T15:00',
-        endDatetime: '2022-12-13T15:30',
-        price: "100$",
-        menu: "suka",
-    },
-    {
-        id: 9,
-        brief: "description",
-        name: 'Skuratovich Aliaksandr',
-        type: "lunch",
-        location: "somewhere",
-        participants: ['aaa'],
-        imageUrl:
-            'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        startDatetime: '2022-12-13T15:00',
-        endDatetime: '2022-12-13T15:30',
-        price: "100$",
-        menu: "suka",
-    },
-    {
-        id: 10,
-        brief: "description",
-        name: 'Skuratovich Aliaksandr',
-        type: "poster",
-        location: "somewhere",
-        participants: ['aaa'],
-        imageUrl:
-            'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-        startDatetime: '2022-12-13T15:00',
-        endDatetime: '2022-12-13T15:30',
-    },
-]
-
-function manageEvents(action, conference, event) {
-    // first stage of testing. Just add & delete & modify an event
-    switch (action) {
-        case "create":
-            let new_pk = Math.max(...events.map((it) => it.id)) + 1
-            event["id"] = new_pk
-            console.log('adding: ', event)
-            events.push(event)
-            console.log(events)
-            break;
-        case "delete":
-            break;
-        case "edit":
-            break;
-        case "fetch":
-            return events
-            break;
-    }
-}
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -142,21 +50,23 @@ function classNames(...classes) {
 
 
 export default function Scheduler({
-                                      conference,
-                                      canEdit,
-                                  }) {
+    conference,
+    canEdit,
+    setFatherKostyl,
+    fatherKostyl
+}) {
     const eventTypes = {
         "lecture": 0,
         "poster": 1,
         "lunch": 2
     }
     let defaultEventState = ({
-        id: null, // just for compatibility
+        event_id: null, // just for compatibility
         name: "",
         type: "",
         participants: [],
-        startDatetime: null,
-        endDatetime: null,
+        date_time: null,
+        date_time_end: null,
         brief: "",
         start: "12:00",
         end: "12:45",
@@ -164,6 +74,8 @@ export default function Scheduler({
         modified: false
     })
     const variant = "standard" // outline
+
+    const [eventsState, setEvents] = useState([])
 
     let today = startOfToday()
     let [selectedDay, setSelectedDay] = useState(today)
@@ -175,6 +87,8 @@ export default function Scheduler({
     const [newEventValues, setNewEventValues] = useState(defaultEventState)
     const [researchers, setResearchers] = useState([])
     const [loading, setLoading] = useState(true)
+
+    const [changeKostyli, setChangeKostyli] = useState(false)
 
     useEffect(
         () => {
@@ -189,9 +103,14 @@ export default function Scheduler({
                         })))
                     }
                 )
+            conferenceCRUDHandler("fetchEvents", conference)
+                .then((newEvents) => {
+                        setEvents(newEvents)
+                    }
+                )
             setLoading(false)
         },
-        []
+        [changeKostyli]
     )
     if (loading) {
         return <></>
@@ -212,8 +131,8 @@ export default function Scheduler({
         setCurrentMonth(format(firstDayNextMonth, 'MMM-yyyy'))
     }
 
-    let selectedDayEvents = manageEvents("fetch", null, null).filter((event) =>
-        isSameDay(parseISO(event.startDatetime), selectedDay)
+    let selectedDayEvents = eventsState.filter((event) =>
+        isSameDay(parseISO(event.date_time), selectedDay)
     )
 
     const manipulateEvent = (optionalAction) => {
@@ -229,21 +148,35 @@ export default function Scheduler({
                         researchers
                             .filter((res) => newEventValues.participants.includes(res.repr))
                             .map((it) => it.username),
-                    startDatetime: _date + "T" + newEventValues.start,
-                    endDatetime: _date + "T" + newEventValues.end,
+                    date_time: _date + "T" + newEventValues.start,
+                    date_time_end: _date + "T" + newEventValues.end,
+                    brief: newEventValues.brief
                 }
                 setRightSideState("viewingEvents")
                 setNewEventValues(defaultEventState)
-                manageEvents("create", null, new_event)
+
+                let duration = differenceInSeconds(parseISO(new_event['date_time_end']), parseISO(new_event['date_time']))
+                console.log(duration)
+                new_event = {
+                    name: new_event['name'],
+                    date_time: new_event['date_time'],
+                    date_time_end: new_event['date_time_end'],
+                    duration: duration,
+                    location: new_event['location'],
+                    description: new_event['brief'],
+                    type: new_event['type'],
+                }
+                conferenceCRUDHandler("createEvent", conference, null, new_event)
                 break
 
             case "viewingEvent":
                 switch (optionalAction) {
                     case "delete":
-                        alert("delete event")
+                        conferenceCRUDHandler("deleteEvent", conference, null, newEventValues)
                         setRightSideState('viewingEvents')
                         setNewEventValues(defaultEventState)
                         break
+
                     case "update":
                         alert("update event")
                         break
@@ -259,49 +192,6 @@ export default function Scheduler({
 
     }
 
-    // UseCase: When send invite to each user from a user list when creating a conference
-    // function sends an invite for an event to a particular user
-    // conference: this.state.conference
-    // event: eventId
-    // user: userEmail
-    // organization username: this.state.user
-    // _sendInviteOnEventToUser(userEmail, eventId) {
-    //
-    // }
-
-    // TODO: move it to another component
-    // // logged in researcher can add itself to an event
-    // // researcher: this.state.user
-    // // conference: this.state.conference.?slug
-    // _addUserToEvent(eventId) {
-    //
-    // }
-
-    // event - a new event to add to a backend and frontend (maybe?)
-    // _addEvent(event) {
-    // this.setState({...this.state, events: [...this.state.events, event] })
-    // this.conferenceCRUDHandler("addEvent", this.state.conference.slug)
-    // }
-
-    // _deleteEvent(eventId) {
-    // this.setState({...this.state, events: [...this.state.events.remove(eventId)] })
-    // this.conferenceCRUDHandler("deleteEvent", this.state.conference.slug)
-    // }
-    // _getEvents() {
-    // let events = this.conferenceCRUDHandler("getEvents", this.state.conference.slug)
-    // this.setState({...this.state, events: events })
-    // }
-
-    // _updateEvent(eventId) {
-    // maybe move to Events component
-    // }
-
-    // get a list of conference visitors
-    // _getVisitors(conference) {
-    // let visitors = this.conferenceCRUDHandler("getVisitors", this.state.conference.slug)
-    // this.setState({...this.state, visitors: visitors})
-    // return visitors
-    // }
 
     const calendar = () => (
         <div className="md:pr-14">
@@ -376,8 +266,8 @@ export default function Scheduler({
                         </button>
 
                         <div className="w-1 h-1 mx-auto mt-1">
-                            {manageEvents("fetch", null, null).some((event) =>
-                                isSameDay(parseISO(event.startDatetime), day)
+                            {eventsState.some((event) =>
+                                isSameDay(parseISO(event.date_time), day)
                             ) && (
                                 <div className="w-1 h-1 rounded-full bg-sky-500"></div>
                             )}
@@ -389,6 +279,8 @@ export default function Scheduler({
     )
 
     const newEventHandleChanges = (event) => {
+        console.log(event.target.name)
+        console.log(event.target.value)
         setNewEventValues({
             ...newEventValues,
             [event.target.name]: event.target.value,
@@ -424,7 +316,7 @@ export default function Scheduler({
                         />
 
                         {/*Type*/}
-                        {newEventValues?.id !== null ? (
+                        {newEventValues?.event_id !== null ? (
                             <p className="text-gray-400">{newEventValues.type}</p>
                         ) : (
                             <FormControl sx={{minWidth: "30%", float: "right"}}>
@@ -448,20 +340,20 @@ export default function Scheduler({
                         )}
                     </Stack>
 
-                    {/*Brief*/}
+                    {/*brief*/}
                     <TextField
-                        value={newEventValues.brief}
+                        defaultValue={newEventValues.brief}
                         style={{width: "100%"}}
                         // id={"event-create-brief"}
                         type="text"
                         label="Brief"
                         variant={variant}
-                        onChange={newEventHandleChanges}
                         name="brief"
+                        onChange={newEventHandleChanges}
                     />
 
                     {/*Participants*/}
-                    {newEventValues?.id === null && newEventValues.type !== "lunch" && (
+                    {newEventValues.event_id === null && newEventValues.type !== "lunch" && (
                         <Autocomplete
                             multiple
                             freeSolo
@@ -490,16 +382,16 @@ export default function Scheduler({
                         />
                     )}
 
-                    {/*Start time - end time*/}
+                    {/*start time - end time*/}
                     <Stack spacing={1} direction={"row"} justifyContent={"space-between"}>
                         <TextField
                             style={{width: "100%"}}
                             id={"event-create-time-start"}
                             label={"Start"}
                             type={"time"}
-                            // defaultValue={format(parseISO(newEventValues.endDatetime), 'h:mm')}
-                            value={
-                                newEventValues?.id !== null ? format(parseISO(newEventValues.startDatetime), 'HH:mm') : ''
+                            // defaultValue={format(parseISO(newEventValues.date_time_end), 'h:mm')}
+                            defaultValue={
+                                newEventValues.event_id !== null ? format(parseISO(newEventValues.date_time), 'HH:mm') : ''
                             }
                             InputLabelProps={{shrink: true}}
                             inputProps={{step: 60 * 15}}
@@ -508,8 +400,8 @@ export default function Scheduler({
                             name="start"
 
                             error={
-                                newEventValues?.id !== null ? (
-                                    newEventValues.endDatetime > newEventValues.startTime
+                                newEventValues.event_id !== null ? (
+                                    newEventValues.date_time_end > newEventValues.startTime
                                 ) : (
                                     newEventValues.modified && newEventValues.start >= newEventValues.end)
                             }
@@ -519,9 +411,9 @@ export default function Scheduler({
                             id={"event-create-time-end"}
                             label={"End"}
                             type={"time"}
-                            // defaultValue={format(parseISO(newEventValues.endDatetime), 'h:mm')}
-                            value={
-                                newEventValues?.id !== null ? format(parseISO(newEventValues.endDatetime), 'HH:mm') : ''
+                            // defaultValue={format(parseISO(newEventValues.date_time_end), 'h:mm')}
+                            defaultValue={
+                                newEventValues.event_id !== null ? format(parseISO(newEventValues.date_time_end), 'HH:mm') : ''
                             }
                             InputLabelProps={{shrink: true}}
                             inputProps={{step: 60 * 15}}
@@ -531,8 +423,8 @@ export default function Scheduler({
                             name="end"
 
                             error={
-                                newEventValues?.id !== null ? (
-                                    newEventValues.endDatetime > newEventValues.startTime
+                                newEventValues?.event_id !== null ? (
+                                    newEventValues.date_time_end > newEventValues.startTime
                                 ) : (
                                     newEventValues.modified && newEventValues.start >= newEventValues.end)
                             }
@@ -583,6 +475,8 @@ export default function Scheduler({
                             onClick={() => {
                                 setRightSideState("viewingEvents");
                                 setNewEventValues(defaultEventState)
+                                setChangeKostyli(!changeKostyli)
+                                setFatherKostyl(!fatherKostyl)
                             }}
                             color={"error"}
                         >
@@ -590,7 +484,11 @@ export default function Scheduler({
                         </Button>
                         <Button
                             sx={{float: "right",}}
-                            onClick={() => manipulateEvent()}
+                            onClick={() => {
+                                manipulateEvent()
+                                setFatherKostyl(!fatherKostyl)
+                                setChangeKostyli(!changeKostyli)
+                            }}
                             disabled={!canCreateEvent()}
                         >
                             ADD EVENT
@@ -603,17 +501,21 @@ export default function Scheduler({
                         {headerPart("Events for")}
 
                         <Paper elevation={0} style={{maxHeight: 350, overflow: 'auto'}}>
-                            <ol className="mt-4 space-y-1 text-sm leading-6 text-gray-500">
-                                {selectedDayEvents.map((event) => (
-                                    <EventListItem
-                                        onClick={() => {
-                                            setRightSideState("viewingEvent");
-                                            setNewEventValues({...event, modified: false, start: null, end: null})
-                                        }}
-                                        event={event}
-                                        key={event.id}
-                                    />
-                                ))}
+                            <ol className="mt-4 space-y-1 text-sm leading-6 text-gray-500 mr-10">
+                                {selectedDayEvents.map((event) => {
+                                        console.log('event: ', event)
+                                        return (
+                                            <EventListItem
+                                                onClick={() => {
+                                                    setRightSideState("viewingEvent");
+                                                    setNewEventValues({...event, modified: false, start: null, end: null})
+                                                }}
+                                                event={event}
+                                                key={event.event_id}
+                                            />
+                                        )
+                                    }
+                                )}
                                 {selectedDayEvents.length === 0 &&
                                     <p>No events for today.</p>
                                 }
@@ -623,7 +525,10 @@ export default function Scheduler({
                         {canEdit && (
                             <Stack>
                                 <Button
-                                    onClick={() => setRightSideState("creatingEvent")}
+                                    onClick={() => {
+                                        setRightSideState("creatingEvent")
+                                        setChangeKostyli(!changeKostyli)
+                                    }}
                                 >
                                     ADD EVENT
                                 </Button>
@@ -641,13 +546,21 @@ export default function Scheduler({
                                     <Button
                                         color={"error"}
                                         xs={{float: "left"}}
-                                        onClick={() => manipulateEvent("delete")}
+                                        onClick={() => {
+                                            manipulateEvent("delete")
+                                            setChangeKostyli(!changeKostyli)
+                                            setFatherKostyl(!fatherKostyl)
+                                        }}
                                     >
                                         DELETE
                                     </Button>
                                     <Button
                                         xs={{float: "right"}}
-                                        onClick={() => manipulateEvent("update")}
+                                        onClick={() => {
+                                            manipulateEvent("update")
+                                            setChangeKostyli(!changeKostyli)
+                                            setFatherKostyl(!fatherKostyl)
+                                        }}
                                     >
                                         UPDATE
                                     </Button>
@@ -703,7 +616,7 @@ function Event({event}) {
                     <Stack direction={"row"} justifyContent={"space-between"}>
                         <Typography variant={"body1"} className="text-gray-400">{event.type}</Typography>
                         <Typography variant={"body1"}>
-                            {event.participants.length}
+                            {event.participants?.length || 0}
                             <GroupIcon size={"small"}/>
                         </Typography>
                     </Stack>
@@ -713,9 +626,9 @@ function Event({event}) {
                     <Stack direction={"row"} spacing={1.2}>
                         <AccessTimeIcon size={"small"}/>
                         <Typography>
-                            {format(parseISO(event.startDatetime), 'h:mm a')}
+                            {format(parseISO(event.date_time), 'h:mm a')}
                             {' '}-{' '}
-                            {format(parseISO(event.endDatetime), 'h:mm a')}
+                            {format(parseISO(event.date_time_end), 'h:mm a')}
                         </Typography>
                     </Stack>
 
@@ -732,8 +645,8 @@ function Event({event}) {
 }
 
 function EventListItem({event, onClick}) {
-    let startDateTime = parseISO(event.startDatetime)
-    let endDateTime = parseISO(event.endDatetime)
+    let startDateTime = parseISO(event.date_time)
+    let endDateTime = parseISO(event.date_time_end)
 
     const backgrounds = {
         'lunch': 'rgba(189,158,154,0.4)',
@@ -748,26 +661,28 @@ function EventListItem({event, onClick}) {
     return (
         <li
             onClick={() => onClick()}
-            className="flex mb-0 items-center px-4 py-2 space-x-4 group rounded-xl focus-within:bg-gray-100 hover:opacity-32"
+            className="flex mb-0 items-center px-4 py-2 space-x-4 group rounded-xl cursor-pointer hover:ring focus:outline-none focus-within:bg-gray-100 hover:opacity-36"
             style={{background: backgrounds[event.type], width: "100%"}}
         >
-            <div className="flex-auto">
-                <Stack direction={"row"} sx={{justifyContent: "space-between"}}>
-                    {getProp(event, "name", "font-semibold text-gray-900")}
-                    {getProp(event, "type", "text-gray-400")}
-                </Stack>
 
-                <p className="mt-0.5">
-                    <time dateTime={event.startDatetime}>{format(startDateTime, 'h:mm a')}</time>
-                    {' '}-{' '}
-                    <time dateTime={event.endDatetime}>{format(endDateTime, 'h:mm a')}</time>
-                </p>
+                <div className="flex-auto ">
+                    <Stack direction={"row"} sx={{justifyContent: "space-between"}}>
+                                                                                       {getProp(event, "name", "font-semibold text-gray-900")}
+                                                                                       {getProp(event, "type", "text-gray-400")}
+                                                                                       </Stack>
 
-                <Stack direction="row" sx={{justifyContent: "space-between"}}>
-                    {getProp(event, "location", "text-gray-500")}
-                    {getProp(event, "price", "text-gray-400")}
-                </Stack>
-            </div>
+                    <p className="mt-0.5">
+                        <time dateTime={event.startDatetime}>{format(startDateTime, 'h:mm a')}</time>
+                        {' '}-{' '}
+                        <time dateTime={event.date_time_end}>{format(endDateTime, 'h:mm a')}</time>
+                    </p>
+
+                    <Stack direction="row" sx={{justifyContent: "space-between"}}>
+                        {getProp(event, "location", "text-gray-500")}
+                        {getProp(event, "price", "text-gray-400")}
+                    </Stack>
+                </div>
+
         </li>
     )
 }
@@ -781,3 +696,48 @@ let colStartClasses = [
     'col-start-6',
     'col-start-7',
 ]
+
+
+// UseCase: When send invite to each user from a user list when creating a conference
+// function sends an invite for an event to a particular user
+// conference: this.state.conference
+// event: eventId
+// user: userEmail
+// organization username: this.state.user
+// _sendInviteOnEventToUser(userEmail, eventId) {
+//
+// }
+
+// TODO: move it to another component
+// // logged in researcher can add itself to an event
+// // researcher: this.state.user
+// // conference: this.state.conference.?slug
+// _addUserToEvent(eventId) {
+//
+// }
+
+// event - a new event to add to a backend and frontend (maybe?)
+// _addEvent(event) {
+// this.setState({...this.state, events: [...this.state.events, event] })
+// this.conferenceCRUDHandler("addEvent", this.state.conference.slug)
+// }
+
+// _deleteEvent(eventId) {
+// this.setState({...this.state, events: [...this.state.events.remove(eventId)] })
+// this.conferenceCRUDHandler("deleteEvent", this.state.conference.slug)
+// }
+// _getEvents() {
+// let events = this.conferenceCRUDHandler("getEvents", this.state.conference.slug)
+// this.setState({...this.state, events: events })
+// }
+
+// _updateEvent(eventId) {
+// maybe move to Events component
+// }
+
+// get a list of conference visitors
+// _getVisitors(conference) {
+// let visitors = this.conferenceCRUDHandler("getVisitors", this.state.conference.slug)
+// this.setState({...this.state, visitors: visitors})
+// return visitors
+// }
