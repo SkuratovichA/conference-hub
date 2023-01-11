@@ -65,6 +65,9 @@ export const MemberItem = ({member}) => {
                       <Typography gutterBottom variant="h5">
                           {member.res_name} {member.res_surname}
                       </Typography>
+                   <Typography variant={"body1"}>
+                     Email: {member.res_email}
+                   </Typography>
                      <Typography variant="body2"  color="text.secondary">
                         Membership request send on: {member.date_sent}
                      </Typography>

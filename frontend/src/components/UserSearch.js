@@ -60,7 +60,7 @@ export const UserSearchNonMembers = ({keyword}) => {
     let i = 0;
     if (foundUsers.length === 0) {
       return (
-        <Typography > No researcher with such name was found anywhere in the system. Typo?</Typography>
+        <Typography variant={"h6"}> No researcher with such name was found anywhere in the system. Typo?</Typography>
       )
     }
     return (
@@ -69,7 +69,7 @@ export const UserSearchNonMembers = ({keyword}) => {
             pb: 2,
             overflow: 'auto',
         }}>
-          <Typography > No such researcher found among members. Add a new member?</Typography>
+          <Typography variant="h6"> No members found. Add a new member?</Typography>
           <List sx={{ bgcolor: 'background.paper'}}>
             {foundUsers.map((value) => (
               <ListItem key={i++} sx={{width: "100%"}}>
@@ -78,6 +78,9 @@ export const UserSearchNonMembers = ({keyword}) => {
                     <Grid item md={10} px={2} py={2}>
                       <Typography gutterBottom variant="h5">
                           {value.user.name} {value.last_name}
+                      </Typography>
+                      <Typography variant="subtitle1">
+                        Email: {value.user.email}
                       </Typography>
                     </Grid>
                   </Grid>
