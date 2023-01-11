@@ -17,6 +17,7 @@ import FestivalIcon from '@mui/icons-material/Festival';
 import DynamicFeedIcon from '@mui/icons-material/DynamicFeed';
 import UsersNotifications from "./UsersNotifications";
 import OrganizationMembers from "./OrganizationMembers";
+import Box from "@mui/joy/Box";
 
 let navbarState = false
 let countBucketGlobal = 2
@@ -177,7 +178,13 @@ const Navbar = () => {
                 {user["is_organization"] === true ? (
                     <OrganizationMembers/>
                 ) : (
+                  <Box>
+                    <Toolbar sx={{background: "#1976d2", color: "#ffffff"}}>
+                      <Typography variant="h5" sx={{fontWeight: 'bold'}} > User's Notifications </Typography>
+                  </Toolbar>
                     <UsersNotifications/>
+                  </Box>
+
                 )}
                 </InviteContext.Provider>
             </Drawer>)}
