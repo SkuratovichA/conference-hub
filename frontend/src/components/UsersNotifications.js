@@ -7,7 +7,7 @@ import {NotificationItem} from "./Notification";
 import {InviteContext} from "./Navbar";
 
 const UsersNotifications = () => {
-    const invites = useContext(InviteContext)
+    const [invites, setStatus] = useContext(InviteContext)
     let i = 0;
 
     return (
