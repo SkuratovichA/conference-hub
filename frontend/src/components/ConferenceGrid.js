@@ -37,7 +37,6 @@ export const ConferenceGrid = (
 
     }, [updateKostyl])
 
-    console.log('conference grid rerenders')
     return (
 
         <Box style={{maxHeight: '100vh', 'overflowX': 'hidden', 'overflowY': 'scroll', justifyContent: "center"}}>

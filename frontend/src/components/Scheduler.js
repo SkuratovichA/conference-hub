@@ -42,6 +42,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import GroupIcon from '@mui/icons-material/Group';
 import {conferenceCRUDHandler} from "../actions/ConferenceFunctions";
+import {EuroSymbol} from "@mui/icons-material";
 
 
 function classNames(...classes) {
@@ -150,13 +151,13 @@ export default function Scheduler({
                             .map((it) => it.username),
                     date_time: _date + "T" + newEventValues.start,
                     date_time_end: _date + "T" + newEventValues.end,
-                    brief: newEventValues.brief
+                    brief: newEventValues.brief,
+                    price: newEventValues['price']
                 }
                 setRightSideState("viewingEvents")
                 setNewEventValues(defaultEventState)
 
                 let duration = differenceInSeconds(parseISO(new_event['date_time_end']), parseISO(new_event['date_time']))
-                console.log(duration)
                 new_event = {
                     name: new_event['name'],
                     date_time: new_event['date_time'],
@@ -165,6 +166,7 @@ export default function Scheduler({
                     location: new_event['location'],
                     description: new_event['brief'],
                     type: new_event['type'],
+                    price: new_event['price']
                 }
                 conferenceCRUDHandler("createEvent", conference, null, new_event)
                 break
@@ -655,7 +657,10 @@ function EventListItem({event, onClick}) {
     }
 
     const getProp = (a, prop, className) => {
-        return a[prop] ? <p className={className}>{a[prop]}</p> : null;
+        return a[prop] ? <p className={className}>
+            {prop === 'price' && <EuroSymbol size={'small'}/>}{' '}
+            {a[prop]}
+        </p> : null;
     }
 
     return (
@@ -667,9 +672,9 @@ function EventListItem({event, onClick}) {
 
                 <div className="flex-auto ">
                     <Stack direction={"row"} sx={{justifyContent: "space-between"}}>
-                                                                                       {getProp(event, "name", "font-semibold text-gray-900")}
-                                                                                       {getProp(event, "type", "text-gray-400")}
-                                                                                       </Stack>
+                        {getProp(event, "name", "font-semibold text-gray-900")}
+                        {getProp(event, "type", "text-gray-400")}
+                    </Stack>
 
                     <p className="mt-0.5">
                         <time dateTime={event.startDatetime}>{format(startDateTime, 'h:mm a')}</time>
@@ -696,48 +701,3 @@ let colStartClasses = [
     'col-start-6',
     'col-start-7',
 ]
-
-
-// UseCase: When send invite to each user from a user list when creating a conference
-// function sends an invite for an event to a particular user
-// conference: this.state.conference
-// event: eventId
-// user: userEmail
-// organization username: this.state.user
-// _sendInviteOnEventToUser(userEmail, eventId) {
-//
-// }
-
-// TODO: move it to another component
-// // logged in researcher can add itself to an event
-// // researcher: this.state.user
-// // conference: this.state.conference.?slug
-// _addUserToEvent(eventId) {
-//
-// }
-
-// event - a new event to add to a backend and frontend (maybe?)
-// _addEvent(event) {
-// this.setState({...this.state, events: [...this.state.events, event] })
-// this.conferenceCRUDHandler("addEvent", this.state.conference.slug)
-// }
-
-// _deleteEvent(eventId) {
-// this.setState({...this.state, events: [...this.state.events.remove(eventId)] })
-// this.conferenceCRUDHandler("deleteEvent", this.state.conference.slug)
-// }
-// _getEvents() {
-// let events = this.conferenceCRUDHandler("getEvents", this.state.conference.slug)
-// this.setState({...this.state, events: events })
-// }
-
-// _updateEvent(eventId) {
-// maybe move to Events component
-// }
-
-// get a list of conference visitors
-// _getVisitors(conference) {
-// let visitors = this.conferenceCRUDHandler("getVisitors", this.state.conference.slug)
-// this.setState({...this.state, visitors: visitors})
-// return visitors
-// }

@@ -59,10 +59,32 @@ class ConferenceCreateEventAPI(APIView):
 
         new_event = conf_models.EventModel(
             conference=conference,
-            **data
+            **{ k: data[k] for k in [
+                "name",
+                "date_time",
+                "date_time_end",
+                "duration",
+                "location",
+                "description",
+                "type",
+            ] }
         )
         new_event.save()
-        logger.debug('new id' + str(new_event.event_id))
+
+        match new_event.type:
+            case "lecture":
+                nm = conf_models.LectureModel(
+                    event=new_event,
+                    # menu=data['menu']
+                )
+                nm.save()
+            case "lunch":
+                nm = conf_models.LunchModel(
+                    event=new_event,
+                    price=int(data['price'])
+                )
+                nm.save()
+
         return Response(status=status.HTTP_201_CREATED)
 
 
@@ -94,21 +116,20 @@ class ConferenceGetEventsAPI(APIView):
         try:
             events = conf_models.EventModel.objects.filter(conference=conf)
         except conf_models.EventModel.DoesNotExist:
-            # TODO: переписсть на нормальныййвид
             events = [{
-                # 'id': 1,
-                # 'brief': "description",
-                # 'name': 'Skuratovich Aliaksandr',
-                # 'type': "poster",
-                # 'location': "somewhere",
-                # 'participants': ['aaa'],
-                # 'imageUrl': 'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-                # 'startDatetime': '2022-12-13T15:00',
-                # 'endDatetime': '2022-12-13T15:30',
             }]
 
         content['events'] = list(map(lambda x: sers.EventSerializer(x).data, events))
-        logger.debug(content['events'])
+
+        def improve_event(event):
+            dd = { "lunch": conf_models.LunchModel,  }
+            if event['type'] in dd.keys():
+                event['price'] = int(dd[event['type']].objects.get(event__pk=event['event_id'], event__conference=conf).price.amount)
+            return event
+
+        content['events'] = list(map(lambda x: improve_event(x), content['events']))
+
+        logger.debug(f"\n\n{content['events']}\n\n")
 
         return Response(content, status=status.HTTP_200_OK)
 
