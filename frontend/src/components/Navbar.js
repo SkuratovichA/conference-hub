@@ -176,7 +176,13 @@ const Navbar = () => {
             >
                 <InviteContext.Provider value={invites}>
                 {user["is_organization"] === true ? (
+                  <Box>
+                    <Toolbar sx={{background: "#1976d2", color: "#ffffff"}}>
+                      <Typography variant="h5" sx={{fontWeight: 'bold'}} > Organization's Members </Typography>
+                  </Toolbar>
                     <OrganizationMembers/>
+                  </Box>
+
                 ) : (
                   <Box>
                     <Toolbar sx={{background: "#1976d2", color: "#ffffff"}}>

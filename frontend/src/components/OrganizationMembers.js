@@ -11,6 +11,12 @@ import {InviteContext} from "./Navbar";
 const OrganizationMembers = () => {
 
     const invites = useContext(InviteContext)
+
+    if (invites === undefined){
+        return (
+          <Typography>Loading members...</Typography>
+        )
+    }
     // the value of the search field
     const [name, setName] = useState('');
     // the search result
@@ -44,12 +50,7 @@ const OrganizationMembers = () => {
 
     let i = 0;
     return (
-        <Box>
-            <Toolbar sx={{background: "#1976d2", color: "#ffffff"}}>
-                <Typography variant="h5" sx={{fontWeight: 'bold'}} > Organization's Members </Typography>
-            </Toolbar>
-            {invites ? (
-                <span>
+        <span>
                 <TextField
                 onChange={timeoutFilter}
                 onKeyDown={(e)=>{
@@ -90,11 +91,7 @@ const OrganizationMembers = () => {
             </Box>
 
         ) : (<UserSearchNonMembers keyword={name.toLowerCase()}/>)}
-            </span>) : (
-            <Typography>Loading members...</Typography>
-            )}
-        </Box>
-    )
+        </span>)
 }
 
 
