@@ -58,10 +58,6 @@ export const UserSearchNonMembers = ({keyword}) => {
     }, []);
 
     useEffect(()=>{
-        if (keyword === ''){
-            setFound([])
-            return
-        }
         if (users.length > 0) {
             let result = users.filter((user)=>{
                 let name = (user.user.name).toLowerCase();
