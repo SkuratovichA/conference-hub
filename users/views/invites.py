@@ -67,6 +67,23 @@ class InviteAPIView(APIView):
 
         return Response(status=status.HTTP_201_CREATED)
 
+    def put(self, request):
+        if self.modify_invite(request, action='approved'):
+            return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_418_IM_A_TEAPOT)
+
+    def delete(self, request):
+        if self.modify_invite(request, action='rejected'):
+            return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_418_IM_A_TEAPOT)
+
+    def modify_invite(self, request, action):
+        invite = users_models.OrganizationEmployeeModel.objects.get(id=request.data['data']['invite_id'])
+        setattr(invite, action, True)
+        invite.save()
+        return True
+
+
 class InviteView(LoginRequiredMixin, generic.ListView):
     # model = users_models.ConferenceUserModel
     template_name = 'users/invites/invites.html'

@@ -41,6 +41,26 @@ export const createInvite = async (token, username) => {
     let success = response.status >= 200 && response.status <= 299
     return success
 }
+
+export const updateInvite = async (token, invite_id, method) => {
+
+    let response = await fetch('http://localhost:8000/users/api/get_invite_context', {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token,
+            },
+            body: JSON.stringify({
+                data: {
+                    invite_id: invite_id
+                },
+            })
+        })
+
+    let success = response.status >= 200 && response.status <= 299
+    return success
+}
+
 export const getInfoUser = async (token) => {
     if (token === null) {
         return {}
