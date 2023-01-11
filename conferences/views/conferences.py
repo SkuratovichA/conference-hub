@@ -37,6 +37,8 @@ class ConferenceGetOneAPI(APIView):
         conf = conf_models.ConferenceModel.objects.get(slug=kwargs['slug'])
         content['conf'] = sers.ConferenceSerializer(conf).data
 
+        logger.debug(f'\n\n{content["conf"]}\n\n')
+
         return Response(content, status=status.HTTP_200_OK)
 
 
@@ -59,7 +61,7 @@ class ConferenceCreateEventAPI(APIView):
 
         new_event = conf_models.EventModel(
             conference=conference,
-            **{ k: data[k] for k in [
+            **{k: data[k] for k in [
                 "name",
                 "date_time",
                 "date_time_end",
@@ -67,7 +69,7 @@ class ConferenceCreateEventAPI(APIView):
                 "location",
                 "description",
                 "type",
-            ] }
+            ]}
         )
         new_event.save()
 
@@ -84,6 +86,30 @@ class ConferenceCreateEventAPI(APIView):
                     price=int(data['price'])
                 )
                 nm.save()
+
+        return Response(status=status.HTTP_201_CREATED)
+
+
+class ConferenceUpdateEventAPI(APIView):
+
+    def post(self, request, *args, **kwargs):
+        data = request.data['data']
+        event_id = data['event_id']
+        conference = ConferenceModel.objects.get(slug=kwargs['slug'])
+
+        event = conf_models.EventModel.objects.get(
+            conference=conference,
+            event_id=event_id
+        )
+        logger.debug( 'OLD VALUES:' + '\n\t '.join([f'{k}: {v}' for k, v in data.items()]) )
+
+        for k, v in data.items():
+            if k in ['name', 'description', 'data_time', 'date_time_end'] and getattr(event, k) != v:
+                setattr(event, k, v)
+                logger.debug(f'------ updating {k} -> {v}')
+
+        event.save()
+        logger.debug( 'NEW VALUES:' + '\n\t '.join([f'{k}: {v}' for k, v in data.items()]) )
 
         return Response(status=status.HTTP_201_CREATED)
 
@@ -122,14 +148,13 @@ class ConferenceGetEventsAPI(APIView):
         content['events'] = list(map(lambda x: sers.EventSerializer(x).data, events))
 
         def improve_event(event):
-            dd = { "lunch": conf_models.LunchModel,  }
+            dd = {"lunch": conf_models.LunchModel, }
             if event['type'] in dd.keys():
-                event['price'] = int(dd[event['type']].objects.get(event__pk=event['event_id'], event__conference=conf).price.amount)
+                event['price'] = int(
+                    dd[event['type']].objects.get(event__pk=event['event_id'], event__conference=conf).price.amount)
             return event
 
         content['events'] = list(map(lambda x: improve_event(x), content['events']))
-
-        logger.debug(f"\n\n{content['events']}\n\n")
 
         return Response(content, status=status.HTTP_200_OK)
 
@@ -183,19 +208,6 @@ class ConferenceOrganizationManipulateAPI(APIView):
             brief=request.data['data']['brief'])
 
         object1.save()
-
-        # request.data['data']['image'] =
-        # name_org = request.data['data']['organization']['user']['username']
-        # print(name_org)
-        # del request.data['data']['organization']
-
-        # serializer = sers.ConferenceSerializer(data=request.data['data'])
-        # if serializer.is_valid():
-        #     serializer.save()
-        #     return Response(status=status.HTTP_201_CREATED)
-        #
-        # print(serializer.errors)
-        # return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
 
         return Response(status=status.HTTP_201_CREATED)
 

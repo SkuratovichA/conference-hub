@@ -11,6 +11,7 @@ from .conferences import (
     ConferenceGetEventsAPI,
     ConferenceCreateEventAPI,
     ConferenceDeleteEventAPI,
+    ConferenceUpdateEventAPI
 )
 from .events import (
     EventInfoView,

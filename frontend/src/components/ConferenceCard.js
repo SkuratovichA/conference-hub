@@ -12,7 +12,6 @@ import {addRemoveBucket} from "../actions/OtherFunctions";
 import { useSnackbar } from 'notistack';
 
 
-// TODO: populate cards with data
 export const MuiCard = (props) => {
     const conference_j = props.conference
 

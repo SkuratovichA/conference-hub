@@ -68,7 +68,7 @@ export default function Scheduler({
         participants: [],
         date_time: null,
         date_time_end: null,
-        brief: "",
+        description: "",
         start: "12:00",
         end: "12:45",
         price: 0,
@@ -147,13 +147,15 @@ export default function Scheduler({
                     location: "somewhere",
                     participants:
                         researchers
-                            .filter((res) => newEventValues.participants.includes(res.repr))
-                            .map((it) => it.username),
+                            .filter(res => newEventValues.participants.includes(res.repr))
+                            .map(it => it.email)
+                    ,
                     date_time: _date + "T" + newEventValues.start,
                     date_time_end: _date + "T" + newEventValues.end,
-                    brief: newEventValues.brief,
+                    description: newEventValues.description,
                     price: newEventValues['price']
                 }
+
                 setRightSideState("viewingEvents")
                 setNewEventValues(defaultEventState)
 
@@ -164,9 +166,9 @@ export default function Scheduler({
                     date_time_end: new_event['date_time_end'],
                     duration: duration,
                     location: new_event['location'],
-                    description: new_event['brief'],
+                    description: new_event['description'],
                     type: new_event['type'],
-                    price: new_event['price']
+                    price: new_event['price'],
                 }
                 conferenceCRUDHandler("createEvent", conference, null, new_event)
                 break
@@ -180,6 +182,8 @@ export default function Scheduler({
                         break
 
                     case "update":
+                        console.log('new event values', newEventValues)
+                        conferenceCRUDHandler("updateEvent", conference, null, newEventValues)
                         alert("update event")
                         break
                     default:
@@ -281,8 +285,6 @@ export default function Scheduler({
     )
 
     const newEventHandleChanges = (event) => {
-        console.log(event.target.name)
-        console.log(event.target.value)
         setNewEventValues({
             ...newEventValues,
             [event.target.name]: event.target.value,
@@ -342,15 +344,16 @@ export default function Scheduler({
                         )}
                     </Stack>
 
-                    {/*brief*/}
+                    {/*brief description */}
                     <TextField
-                        defaultValue={newEventValues.brief}
+                        defaultValue={newEventValues.description}
                         style={{width: "100%"}}
                         // id={"event-create-brief"}
                         type="text"
-                        label="Brief"
+                        label="Description"
+                        multiline
                         variant={variant}
-                        name="brief"
+                        name="description"
                         onChange={newEventHandleChanges}
                     />
 
@@ -505,7 +508,6 @@ export default function Scheduler({
                         <Paper elevation={0} style={{maxHeight: 350, overflow: 'auto'}}>
                             <ol className="mt-4 space-y-1 text-sm leading-6 text-gray-500 mr-10">
                                 {selectedDayEvents.map((event) => {
-                                        console.log('event: ', event)
                                         return (
                                             <EventListItem
                                                 onClick={() => {
@@ -623,7 +625,7 @@ function Event({event}) {
                         </Typography>
                     </Stack>
 
-                    <Typography>{event.brief}</Typography>
+                    <Typography>{event.description}</Typography>
 
                     <Stack direction={"row"} spacing={1.2}>
                         <AccessTimeIcon size={"small"}/>
